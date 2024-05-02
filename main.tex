@@ -65,6 +65,7 @@
 \def\ket#1{\mathinner{|#1\rangle}}
 
 \def\cnot{\mathop{\mathrm{CNOT}}}
+\def\CNOT{\mathop{\mathrm{CNOT}}}
 
 \def\qft{\mathop{\mathrm{QFT}}\nolimits}
 
@@ -76,96 +77,155 @@
 
 \newpage\section{Kvantarvutus}
 
-Kvantarvutuse mudeleid on mitmeid.
-Selles töös kasutame mudelit, mille kesksetes mõisteteks on kvantbitt ja kvantvärav.
-Esimene on klassikalise biti, teine kvantvärava analoog.
+Mudeleid kvantavutuseks on mitmeid.
+Selles töös kasutame kvantbittidel ja -väravatel põhinevat mudelit, mida kutsutakse ahelamudeliks.
 
-Klassikalist biti tõlgendatakse tõeväärtusena.
-Sellel on kaks võimaliku väärtust \(0\) ja \(1\).
-Kvantbitt on kahe-tasemelise kvantmehaanilise süsteemi mudel.
-Eristatakse kahte sõltumatud olekut \(\ket0\) ja \(\ket1\), kuid võimalikud olekud on ka superpositsioonid \(\alpha\ket0+\beta\ket1\).
+Klassikalist biti tõlgendatakse tõeväärtusena: sellel on kaks võimaliku väärtust \(0\) ja \(1\).
+Kvantbitil on võimalike väärtusi lõpmata arv.
 
-Kvantbitt on Hilberti ruumi objekt, kuid seda võib kitsamalt võtta kompleksse vektorruumi objektina.
-Kvantbiti oleku üldkuju on
-\begin{equation}
-    \ket\psi=\alpha\ket0+\beta\ket1\rlap{.}
-\end{equation}
-Siin töös on
-\begin{equation}
-    \ket0=\begin{pmatrix}
+Üldiselt on kvantbitt Hilberti ruumi objekti, kuid kitsamalt võib seda käsitleda kompleksse vektorruumi \(\mathbb{C}^2\) objektina.
+Iga kvantbiti oleku saab kirja panna superpositsioonina
+\begin{align}\label{f:superpos}
+    \ket\psi = \alpha\ket0 + \beta\ket1 \rlap{,}
+    \qquad\text{kus}\qquad \alpha, \beta \in \mathbb{C}
+    \quad\text{ja}\quad \abs{\alpha}^2 + \abs{\beta}^2 = 1
+\end{align}
+ning \(\ket0\) ja \(\ket1\) on kaks sõltumatud olekut.
+
+Selles töös tähistame
+\begin{align}
+    \ket0 = \begin{pmatrix}
         0 \\
-        1
-    \end{pmatrix}
-    \qquad\mathrm{ja}\qquad
-    \ket1=\begin{pmatrix}
         1 \\
-        0
-    \end{pmatrix}\rlap{,}
-\end{equation}
-Pauli \(Z\) maatriksi omavektorid.
-Kehtib
-\begin{equation}
-    \abs{\alpha}^2+\abs{\beta}^2=1\rlap{,}
-    \qquad
-    \alpha, \beta \in \mathbb{C}\rlap{.}
-\end{equation}
-
-Loogikaväravad teostavad loogikatehteid.
-Kvantväravad teostavad unitaarseid operatsioone.
-On vaid üks ühebitine loogikavärav.
-Ühebitiseid kvantväravaid on lõpmata palju.
-
-Kõik võimalikud unitaarsed operatsioonid saab siiski esitada lõpliku arvu kvantväravate kaudu.
-Sellised kvantväravad moodustavad universaalse komplekti.
-Selleks, et oleks võimalik esitada kõik mitmekvantbitised operatsioonid, peab vähemalt üks univeraalse komplekti värav olema kahekvantbitine.
-Siin töös eeldame, et saame kasutada väravaid \(R_y(\theta)\), \(R_y(\theta)\), \(R_z(\theta)\) ja \(\cnot\), mis moodustavad univeraalse komplekti.
-Need on maatrikskujul
-\begin{equation}
-    R_x(\theta)=\begin{pmatrix}
-        \cos\frac{\theta}{2} & -i\sin\frac{\theta}{2} \cr
-        -i\sin\frac{\theta}{2} & \cos\frac{\theta}{2} \cr
-    \end{pmatrix}\rlap{,}
-\end{equation}
-\begin{equation}
-    R_y(\theta)=\begin{pmatrix}
-        \cos\frac{\theta}{2} & -\sin\frac{\theta}{2} \cr
-        \sin\frac{\theta}{2} & \cos\frac{\theta}{2} \cr
-    \end{pmatrix}\rlap{,}
-\end{equation}
-\begin{equation}
-    R_z(\theta)=\begin{pmatrix}
-        e^{-i\frac{\theta}{2}} & 0 \cr
-        0 & e^{i\frac{\theta}{2}} \cr
-    \end{pmatrix}\rlap{,}
-\end{equation}
-\begin{equation}
-    P(\lambda)=\begin{pmatrix}
-        1 & 0 \cr
-        0 & e^{i\lambda} \cr
     \end{pmatrix}
-\end{equation}
-ja
-\begin{equation}
-    \cnot=\begin{pmatrix}
-        1 & 0 & 0 & 0 \cr
-        0 & 0 & 0 & 1 \cr
-        0 & 0 & 1 & 0 \cr
-        0 & 1 & 0 & 0 \cr
-    \end{pmatrix}\rlap{.}
-\end{equation}
-Kõik teised väravad anname selle komplekti väravate kaudu.
+    \qquad\text{ja}\qquad \ket1 = \begin{pmatrix}
+        1 \\
+        0 \\
+    \end{pmatrix} \rlap{,}
+\end{align}
+mis on antud Pauli \(Z\) operaatori baasis, mida kutsutakse ka (kvant)arvutuslikuks baasiks.
 
-Kvantväravatest saab kokku panna kvantahela, mis on kvantväravast keerulisema arvutuse kirjeldus.
-Tihti esitatakse kvantehalaid skemaatiliselt: iga kvantbitt on traat ja iga kvantahel traatidega ühendatud kast.
+Klassikalised (loogika)väravad teostavad loogikatehteid.
+Ühel klassikalisel bitil on võimalik vaid üks unikaalne loogika tehe, kahel bitil juba neli.
+Kvant(loogika)väravad teostavad unitaarseid operatsioone, mida kirjeldavad unitaarsed maatriksid.
+Kvantväravaid on juba ühe kvantbiti jaoks lõpmata arv.
 
-Kõnealust kvantarvutusmudelit kutsutaksegi kvantahelamudeliks.
+Ometi leidub mitu sellist kvantväravate komplekti, mille kaudu saab kirja panna kõik teised kvantväravad. 
+Ühe sellise univeraalse kompletki moodustavad \(R_x(\theta)\), \(R_y(\theta)\), \(R_z(\theta)\), \(P(\lambda)\) ja \(\CNOT\), mis on toodud tabelis~\ref{tab:gates}, kus need on defineeritud maatrikskujul.
+Vähemalt üks univeraalse komplekti värav peab olema kahekvantbitine ja põimiv, antud juhul on selleks \(\CNOT\).
 
-\TODO{Siin peaks olema lõik selle kohta, mis on kvantarvutite eelis klassikalise arvutite ees.}
+Kõik teised selles töös kasutatavad väravad on samuti toodud tabelis~\ref{tab:gates}, kus need on defineeritud äsjanimetatud universaalse komplekti kaudu, mitte maatrikskujul.
 
-Põhjalikuma ülevaate kvantarvutusest on andnud Nielsen ja Chuang~\cite{nielsen+chuang}, samuti Kaye, Laflamme ja Mosca~\cite{kaye+laflamme+mosca}.
+Mõõtmine ei ole unitaarne operatsioon ja seega ei teosta seda kvantvärav.
+Tabelis~\ref{tab:gates} pole seda operaatorina tähistatud ega defineeritud.
+Samas tähistatakse seda ahelas kvantväravatega sarnaselt.
 
-\TODO{Kas siia panna tabel kõikide kasutatud väravatega?}
-\TODO{Millal tekstis kasutada sõna operaator, millal sõna värav?}
+Mõõtes olekut~\ref{f:superpos} on tõenäosusega \(\abs{\alpha}^2\) tulemuseks \(0\) ja tõenäosusega \(\abs{\beta}^2\) tulemuseks \(1\).
+Mitme kvantbiti mõõtmisel on tulemuseks klassikaliste bittide jada.
+Üldjuhul tuleb kvantarvuti programmi käitada mitu korda, misjuhul on võimalik leida tulemuste tõenõosusjaotus.
+
+\begin{table}[]
+    \centering
+    \begin{tabular}{||c|c|c|c||}
+        \hline
+        Nimetus & Operaatori tähis & Operatori definitsioon & Tähsitus kvantahelas \\
+        \hline\hline
+        Pööre x-telje sihis & \(R_x(\theta)\) & \(
+        \begin{pmatrix}
+            \cos\frac{\theta}{2} & -i\sin\frac{\theta}{2} \\
+        -i\sin\frac{\theta}{2} & \cos\frac{\theta}{2} \\
+        \end{pmatrix}
+        \) & \lower6pt\hbox{\begin{tikzpicture}
+            \begin{yquant}
+                qubit {} q[1];
+                box {\(R_x(\theta)\)} q[0];
+            \end{yquant}
+        \end{tikzpicture}} \\
+        Pööre y-telje sihis & \(R_y(\theta)\) & \(
+        \begin{pmatrix}
+            \cos\frac{\theta}{2} & -\sin\frac{\theta}{2} \\
+            \sin\frac{\theta}{2} & \cos\frac{\theta}{2} \\
+        \end{pmatrix}
+        \) & \lower6pt\hbox{\begin{tikzpicture}
+            \begin{yquant}
+                qubit {} q[1];
+                box {\(R_y(\theta)\)} q[0];
+            \end{yquant}
+        \end{tikzpicture}} \\
+        Pööre z-telje sihis & \(R_z(\theta)\) & \(
+        \begin{pmatrix}
+            e^{-i\frac{\theta}{2}} & 0 \\
+            0 & e^{i\frac{\theta}{2}} \\
+        \end{pmatrix}
+        \) & \lower6pt\hbox{\begin{tikzpicture}
+            \begin{yquant}
+                qubit {} q[1];
+                box {\(R_z(\theta)\)} q[0];
+            \end{yquant}
+        \end{tikzpicture}} \\
+        Faasioperaator & \(P(\lambda)\) & \(
+        \begin{pmatrix}
+            1 & 0 \\
+            0 & e^{i\lambda} \\
+        \end{pmatrix}
+        \) & \lower6pt\hbox{\begin{tikzpicture}
+            \begin{yquant}
+                qubit {} q[1];
+                box {\(P(\theta)\)} q[0];
+            \end{yquant}
+        \end{tikzpicture}} \\
+        Juhitud eitus & \(\CNOT\) & \(
+        \begin{pmatrix}
+            1 & 0 & 0 & 0 \\
+            0 & 0 & 0 & 1 \\
+            0 & 0 & 1 & 0 \\
+            0 & 1 & 0 & 0 \\
+        \end{pmatrix}
+        \) & \lower6pt\hbox{\begin{tikzpicture}
+            \begin{yquant}
+                qubit {juhtbitt} ctrl;
+                qubit {sihtbitt} trgt;
+                cnot trgt | ctrl;
+            \end{yquant}
+        \end{tikzpicture}} \\
+        \hline
+        Mõõtmine & --- & --- & \lower6pt\hbox{\begin{tikzpicture}
+            \begin{yquant}
+                qubit {} q[1];
+                measure q[0];
+            \end{yquant}
+        \end{tikzpicture}} \\
+        \hline
+    \end{tabular}
+    \caption{Operaatorid ja neile vastavad kvantväravad}
+    \label{tab:gates}
+\end{table}
+
+Kvantahel on operaatorite rakendamise korra kirjeldus.
+Joonis~\ref{fig:circuits} on näide kvantahelast.
+Igale bitile vastab aheals traat.
+Kõik ühel traadil olevad kastid on operaatorid, mis mõjuvad sellele kvantbitile.
+Kui kasti läbib mitu traati, mõjub see mitmele kvantbitile.
+Juhtbitt on väravaga ühendatud katsutiga, milleks on vertikaalne joon täpiga lõpus.
+Väravad on ajalises järjestuses.
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \begin{yquant}
+            qubit {} q[5];
+            box {} q[0];
+            box {} (q[1, 2]);
+            box {} q[3] | q[2];
+            box {} (q[1, 2, 3]) | q[4];
+            measure q[0, 1, 2];
+        \end{yquant}
+    \end{tikzpicture}
+    \caption{Kvantahela näide}
+    \label{fig:circuits}
+\end{figure}
+
+Pikemalt tutvustavad kvantahelamudelit \cite{nielsen+chuang} ja \cite{kaye+laflamme+mosca}.
 
 
 \newpage\section{Elektronstruktuuri ülesanne}
