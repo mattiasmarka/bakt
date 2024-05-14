@@ -121,7 +121,7 @@ Hatree ühikutes on molekulaarse süsteemi hamiltoniaani üldkuju
     H = \underbrace{-\sum_{i=1}^N\frac{1}{2}\nabla_i^2}_\mathrm{(a)}
         \underbrace{-\sum_{A=1}^M\frac{1}{2M_A}\nabla_A^2}_\mathrm{(b)}
         \underbrace{-\sum_{i=1}^N\sum_{A=1}^M\frac{Z_A}{r_{iA}}}_\mathrm{(c)}
-        \underbrace{+\sum_{i=1}^n\sum_{j>i}^N\frac{1}{r_ij}}_\mathrm{(d)}
+        \underbrace{+\sum_{i=1}^n\sum_{j>i}^N\frac{1}{r_{ij}}}_\mathrm{(d)}
         \underbrace{+\sum_{A=1}^M\sum_{B>A}^M\frac{Z_AZ_B}{R_{AB}}}_\mathrm{(e)}\rlap{,}
 \end{equation}
 kus (a) on elektronide kineetilise energia liige, (b) on tuumade kineetilise energia liige, (c) on tuumade ja elektronide tõmbumise liige, (d) on elektronide omavahelise tõukumise liige ja (e) on tuumade omavahelise tõukumise liige.
@@ -146,7 +146,7 @@ Lihtsustatud hamiltoniaani
 \begin{equation}\label{hborn}
     H = \underbrace{-\sum_{i=1}^N\frac{1}{2}\nabla_i^2}_\mathrm{(a)}
         \underbrace{-\sum_{i=1}^N\sum_{A=1}^M\frac{Z_A}{r_{iA}}}_\mathrm{(c)}
-        \underbrace{+\sum_{i=1}^n\sum_{j>i}^N\frac{1}{r_ij}}_\mathrm{(d)}\rlap{,}
+        \underbrace{+\sum_{i=1}^n\sum_{j>i}^N\frac{1}{r_{ij}}}_\mathrm{(d)}\rlap{,}
 \end{equation}
 nimetatakse elektrooniliseks hamiltoniaaniks.
 Elektroonilise hamiltoniaani jaoks on tuumade kohavektorid parameetrid, eksplitsiitset sõltuvust ei ole~\cite{szabo+ostlnud}.
@@ -249,19 +249,20 @@ Teised on virutaalssed orbitaalid~\cite{szab0+ostlnud}.
 Slateri determindi omadusi, seega antisümmeetria printsiipi, võtab mugavalt arvesse abstraktne teise kvantiseerimise formalism.
 
 Teise kvantsieerimise formalismis esitatakse kõik võimalikud olekud vaakum oleku \(\ket{\mathrm{vak}}\) kaudu.
-Defineeritakse tekeoperaator \(a_i^{\dagger}\), mis lisab süsteemi juurde elektroni spinnorbitaalil \(\chi_i\).
-Näiteks
+Defineeritakse tekeoperaator \(a_i^{\dagger}\), mis lisab süsteemi juurde elektroni spinnorbitaalil \(\chi_i\),
 \begin{align}
-    a_i^{\dagger}\ket{\mathrm{vak}} &= \ket{\chi_i}\rlap{,} \\
+    a_i^{\dagger}\ket{\mathrm{vak}} = \ket{\chi_i}\rlap{.}
+\end{align}
+[XXX Seletus jargneva valemi kohta]
+\begin{align}
     a_j^{\dagger}\ket{\chi_i} & =\ket{\chi_i\chi_j}
 \end{align}
-jne.
 Samuti definereeritakse kaooperaator \(a_i\), mis teeb vastupidist.
 
 Tekke- ja kaooperaatorite omadused on antud nende antikommutatseiooni reeglitega
 \begin{align}
-    \left[a_i^{\dagger}, a_j^{\dagger}\right|&= 0\rlap{,} \\
-    \left[a_i, a_j\right|&= 0\rlap{,}
+    \left[a_i^{\dagger}, a_j^{\dagger}\right|= 0\rlap{,} \quad\quad
+    \left[a_i, a_j\right|= 0\rlap{,}
 \end{align}
 ja
 \begin{equation}
@@ -598,8 +599,6 @@ kus \(\ket{j}\) ja \(\ket{k}\) \(n\)-kvantbitised
 baasivektorid~\cite{nielsen+chuang, kaye+laflamme+mosca}. Et tegemist on
 lineaarse operatsiooniga, piisab vaadata mõju baasivektoritele.
 
-\comment{
-%%%%%%%%%%%%%%%%%%%%%%%%%%5
 \begin{figure}
     \centering
     \begin{tikzpicture}[scale=0.8]
@@ -638,8 +637,6 @@ lineaarse operatsiooniga, piisab vaadata mõju baasivektoritele.
     \caption{Kvantarvutusliku Fourier' teisneduse ahel~\cite{nielsen+chuang, kaye+laflamme+mosca}}
     \label{fig:qft}
 \end{figure}
-%%%%%%%%%%%%%%%%%%
-}
 
 Näitame, et kvantarvutusliku Fourier' teisenduse realiseerib ahel joonisel~\ref{fig:qft}.
 
@@ -785,8 +782,6 @@ Faasi hindamise ülesandes on eesmärgiks leida unitaarse operaatori omaväärtu
 Valemis~\ref{f:eigen} on faas on määratud suurusega \(\phi \in [0, 1)\).
 Näitame, et \(\phi\) leidmiseks sobib ahel joonisel~\ref{fig:pea}.
 
-\comment{
-%%%%%%%%%%%%%
 \begin{figure}[h]
     \centering
     \begin{tikzpicture}
@@ -820,8 +815,6 @@ Näitame, et \(\phi\) leidmiseks sobib ahel joonisel~\ref{fig:pea}.
     \caption{Kvantahel \(U\) faasi hindamiseks \cite{nielnse+chuang, kaye+laflamme+mosca}}
     \label{fig:pea}
 \end{figure}
-%%%%%%
-}
 
 Joonise~\ref{fig:pea} ahelas on kaks kvantregistrit.
 Faasi hindamise registrit kujutavad ülemised \(n\) traati.
@@ -1213,8 +1206,6 @@ Sellise liikme eksponent on globaalse faasi operaator, mille juhtimiseta juhul v
 Samas juhitud globaalse faasi operaator rakendaine muudab suhtelise faasi ja seda peab arvestama.
 Juhtitud globaalse faasi operaatori võib asendanda juhtkvantvitil rakendatud suhtelise faasi opetaatoriga, nagu näha joonisel~\ref{fig:globphase}.
 
-\comment{
-%%%%%%%%%%%
 \begin{figure}[h]
     \centering
     \begin{tikzpicture}
@@ -1235,8 +1226,6 @@ Juhtitud globaalse faasi operaatori võib asendanda juhtkvantvitil rakendatud su
     \label{fig:globphase}
     \TODO{Üks traat on puudu}
 \end{figure}
-%%%%%%%%%%5
-}
 
 
 Viimaks tuleb koostada faasi hindamise kvantahel ja seda käitada.
