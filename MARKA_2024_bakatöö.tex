@@ -56,225 +56,279 @@
 
 \chapter{Sissejuhatus}
 
-[Oli varem: ``Molekulaarse hamiltoniaani simuleerimise etapid'']
+Kvantarvutuste valdkonna üks peamine arengumotivatsioon on alati olnud soov simuleerida keerulisi kvantsüteeme.
+Juba 1980ndatel, kui kvantarvutuste valdkond oli alles tekkimas, käisid Juri Manin ja Richard Feynman teineteiest eraldi välja idee, et kvantsüsteemide simulateerimise ülesannete lahendamiseks võiksid hästi sobida just kvantarvutid~\cite{manin, feynman}.
 
-Suur pilt. Feynman 1980: füüsika simuleerimine. Kvantfüüsika simuleerimine.
-Kvantarvutid.
+Simulatsiooniülesande saab analüütiliselt lahendada vaid lihtsaimate kvantsüsteemide jaoks, mille tuntuimad näited on harmooniline ostsillaator ja vesiniku aatom.
+Keerukamate süsteemide klassikaliseks simuleerimiseks kasutatakse numbriliseid meetodeid~\cite{whitfield+etal2011, szabo+ostlund}.
 
-Kvantmehaanika v laiemalt kvantteooria olulisus. Praktiline kasu: molekulid
-(kvantkeemia; farmaatsiatööstus), tahkised (materjaliteadus); moodsa füüsika
-üks edukamaid teooriad.
+Kvantsüsteemi simuleerimisülesande klassikaline lahendamine on aga möödapääsmatult ebaefektiivne: Schrödingeri võrrandi klassikalise lahendamise ressursikulu sõltub süsteemi suurusest eksponentsiaalselt~\cite{whitfield+etal2011, mcardle+etal, cao+etal, kassal+etal}.
+Klassikaliselt ei pruugi suuremaid ülesandeid olla kunagi võimalik lahendada, ammugi täpselt.
 
-Käesolev töö: kvantkeemia. Kitsamalt: hakkame lahendama esimest olulist
-ülesannet: molekuli põhienergia.
+Samas on teada mitu tähtsat kvantalgoritmi, mille teoreetiline efektiivsus ületab klassikalise analoogi oma.
+Arvatakse, et nende algoritmidega saab tulevikus lahendada ülesandeid, mille klassikalist lahendamist peetakse jäädavalt liiga kulukaks.
+Need algoritmid on võimalikud tänu kvantarvutuse ainulaadsetele vahenditele.
 
-Kuidas arvutatakse. Hetkepilt kvantarvutuses: kiire ajalugu. NISQ.
-Veatolerantne kvantarvuti. Hakkame siseneme veatolerantsesse ajastusse.
-Käesolev töö keskendub veatolerantsele algoritmile: faasihindamine.
+Kvantsimulatsioon on kvantsüsteemide simuleerimine kvantarvutuslikult.
+Et kvantarvuti on ju ka ise kvantsüsteem, siis on sellega võimalik soodsalt simuleerida uuritava kvantsüsteemi dünaamikat.
+Seda arvasid juba Manin ja Feynman~\cite{manin, feynman}.
+Eelis klassikalise simuleerimise ees on eksponentsiaalne~\cite{whitfield+etal2011, mcardle+etal, cao+etal}.
 
----
+Siiani on kvantarvututitega õnnestunud lahendada vaid mõni üksik selline probleem, mille lahendamine on klassikaliste arvutitega on praktiliselt võimatu.
+Nimelt takistab kvantarvutite kasutamist nende ebatäiuslik riistvara: arvutuste käigus tekib müra~\cite{whitfield+etal2022}.
 
-Selles töös soovime leida molekulaarse süsteemi põhioleku energiat. Ülesande
-lahendamise sammud on järmgised.
+Siiski on kvantalgoritm mõtekas uurida tuleviku tarvis, sest kvantarvutite riistvara areneb pidevalt.
+Pretsedentdiks on klassikaliste arvutite kiire areng.
+Lähemas tulevikus võib õnnesuda kasutada hübriidalgoritme, mis põhinevad kvantarvutite ja klassikaliste arvutite koostööl~\cite{omalley+etal}.
+
+Käesoleva töö eesmärgiks on demonstreerida klassikalisest efektiivsemat kvantarvutusliku meetodid molekulaarse hamiltoniaani simuleerimiseks.
+See meetod põhineb faasi hindamise algoritmil.
+Süsteemiks on vesiniku molekul \(\rm H_2\), ülesandeks on põhienergia leidmin kui näide elektronstruktuuri ülesandest.
+
+Lahendamine algab klassikaliste eelarvutustega, mida tutvustab peatükk~\ref{chap:qchem}.
+Eelarvutuste tulemuseks on Focki ruumi hamiltoniaan teise kvantiseerimise kujul.
+
+Peatkükk~\ref{chap:qcomp} käsitleb ülesande kvantarvutusliku lahendamist.
+Sammud lahendamiseks on järgmsised~\cite{whitfield+etal2011}.
 
 \begin{enumerate}
-    \item\label{step:one} Lahendamine algab molekuli geomeetria määramisega.
-    Teada peavad olema molekulis esinevad aatomid ja nende vahelised kaugused.
-    \item\label{step:two} Geomeetria põhjal tuleb kirja panna piisavalt lihtsutatud Focki ruumi hamiltoniaan, mis tuleb esitada teise kvantsieerimise kujul.
-    Lisaks tuleb leida põhioleku kuju.
-    \item\label{step:three} Focki ruumi hamiltoniaan ja seisundid tuleb esitada kvantbittide ruumis.
-    \item\label{step:four}  Kvantbittide ruumis esitatud hamiltoniaan põhjal tuleb koostada ajalise arengu operaator ja realiseerida see kvantahelana.
-    \item\label{step:five}  Tuleb hinnata kvantahelana realiseeritud hamiltoniaani faasi.
+    \item Focki ruumi molekulaarne hamiltoniaan tuleb esitada kvantbittide ruumis.
+    Seda käsitleb alapeatükk~\ref{sec:jw}.
+    \item Kvantbittide ruumis esitatud molekulaarse hamiltoniaani põhjal tuleb koostada ajalise arengu operaator ja realiseerida see kvantväravana.
+    Seda käsitleb alepeatükk~\ref{sec:qcirc}.
+    \item Ajalise arengu operaatori omaväärtused saab leida kasutades faasi hindamise algoritmi.
+    Seda käsitleb alepeatükk~\ref{sec:pea}.
 \end{enumerate}
+Selguse huvides on sammud tekstis esitatud vastupidises järjekorras.
 
-Samme~\ref{step:one} ja~\ref{step:two} käsitleb peatükk~\ref{chap:esp},
-samme~\ref{step:three} ja~\ref{step:four} peatükk~\ref{chap:qubit},
-sammu~\ref{step:five} peatükk~\ref{chap:five}. Samme~\ref{step:one}
-kuni~\ref{step:four} võib pidada ettevalmituseks, need viiakse läbi
-klassikaliselt. Samm~\ref{step:five} on kvantarvutuslik.
+Selles töös on arvutuste läbiviimiseks kasutatud simulaatorit.
+Kasutatud vahendeid käsitleb peatükk~\ref{chap:methods}.
+Peatükk~\ref{chap:results} tutvustab tulemusi.
 
+\chapter{Elektronstruktuuri ülesanne}
 
-\chapter{Elektronstruktuuri ülesanne}\label{chap:esp}
+\section{Molekulaarse süsteemi hamiltoniaani üldkuju}
 
-Selle peatüki teemaks on elektronstruktuuri ülesande lahendamise klassikalised etapid.
+Molekuli keemilised omadused määrab elektronstruktuur.
+Tuumade mõju pole üldjuhul oluline.
+Siin töös pakubki huvi vaid elektronstruktuur, mida kirjeldab elektronide hamiltoniaan.
 
-Esiteks, jaotises~\ref{born-oppeheimer}, lihtsustame üldist molekulaarset hamiltoniaani tehes Born-Oppenheimeri lähenduse.
+Et elektronide ja tuumade dünaamika pole sõltumatu, siis ei saa elektronide hamiltoniaani aprioorselt kirja panna.
 
-Järgmisena, jaotises~\ref{hartree+slater}, esitame lainefunktsiooni Slateri determinandina, mis on Hatree korrutise üldistus.
+Molekuli kui terviku hamiltoniaan on
+\begin{align}\label{eq:molham}
+    H_\text{mol} = \underbrace{\sum_{i = 1}^N \frac{1}{2} \nabla_i^2}_\text{(a)}
+    \underbrace{- \sum_{A = 1}^M \frac{1}{2 M_A} \nabla_A^2}_\text{(b)}
+    \underbrace{- \sum_{i = 1}^N \sum_{A = 1}^M \frac{Z_A}{r_{iA}}}_\text{(c)}
+    \underbrace{+ \sum_{i = 1}^N \sum_{j > i}^N \frac{1}{r_{ij}}}_\text{(d)}
+    \underbrace{+ \sum_{A = 1}^M \sum_{B > A}^M \frac{Z_A Z_B}{r_{AB}}}_\text{(e)} \rlap{,}
+\end{align}
+kus \(M_A\) on tuuma \(A\) ja elektroni massi suhe, \(Z_A\) on tuuma \(A\) aatomnumber, \(r_{ij}\) on elektronide \(i\) ja \(j\) vahekaugus ning \(R_{AB}\) on tuumade \(A\) ja \(B\) vahekaugus.
+Valemis esinevad järgmised liimed: (a) on elektronide kineetilise energia liige, (b) tuumade kineetilise energia liige, (c) elektronide ja tuumade tõmbumise liige, (d) elektrinode omavahelise tõukumise operaator ja (e) tuumade omavahelise tõukumise liige.
+See valem kirjeldab nii tuumasid kui ka elektrone~\cite{szabo+ostlund}.
 
-Jaotises~\ref{hatree-fock} lihtsustame hamiltoniaani edasi tehes Hartree-Focki lähenduse.
+Elektronide hamiltoniaani saamiseks tuleb valemist~\eqref{eq:molham} eraldada elektronide osa.
 
-Viimaks, jaotises~\ref{secquant}, esitame hamiltoniaani teise kvantiseerimise kujul.
+\section{Born-Oppenheimeri lähendus}\label{sec:bo}
 
-Et arvutustamiseks kastuame hiljm valmisteeki, siis esitame siin vaid
-lahendamise üldskeemi. Lähtume Szabo ja Ostlundi
-käsitlusest~\cite{szabo+ostlund}.
+Valemist~\eqref{eq:molham} elektronide osa eraldamiseks tehakse kvantkeemias keskne Born-Oppeheimeri lähendus, mille põhimõtte on järgmine.
 
+Et tuumad on palju raskemad kui elektronid, siis liiguvad tuumad elektronidega võrreldes palju aeglasemalt.
+Born-Oppenheimeri lähenduses on tuumad üldse paigal: elektronid liiguvad tuumade tekitatud statsionaarses väljas~\cite{szabo+ostlund}.
 
-\section{Molekulaarse süsteemi hamiltoniaan}
+Selles lähenduses kaob valemist~\eqref{eq:molham} tuumade kineetilise energia liige~(b)~\cite{szabo+ostlund}.
 
-Selles töö eesmärgiks on molekuli põhioleku energia leidmine, mis tähendab
-hamiltoniaani omaväärtuse leidmist. Selleks on tarvis teada hamiltoniaani kuju.
+Tuumade omavahelise tõmbumise liige~(e) on aga konstante.
+Et konstandi võrra erinevatel operaatoritel on samad omafunktsioonid, võib liikme~(e) üldse arvestamata jätta~\cite{szabo+ostlund}.
 
-Hatree ühikutes on molekulaarse süsteemi hamiltoniaani üldkuju
-\begin{equation}\label{hgeneric}
-    H = \underbrace{-\sum_{i=1}^N\frac{1}{2}\nabla_i^2}_\mathrm{(a)}
-        \underbrace{-\sum_{A=1}^M\frac{1}{2M_A}\nabla_A^2}_\mathrm{(b)}
-        \underbrace{-\sum_{i=1}^N\sum_{A=1}^M\frac{Z_A}{r_{iA}}}_\mathrm{(c)}
-        \underbrace{+\sum_{i=1}^n\sum_{j>i}^N\frac{1}{r_{ij}}}_\mathrm{(d)}
-        \underbrace{+\sum_{A=1}^M\sum_{B>A}^M\frac{Z_AZ_B}{R_{AB}}}_\mathrm{(e)}\rlap{,}
-\end{equation}
-kus (a) on elektronide kineetilise energia liige, (b) on tuumade kineetilise energia liige, (c) on tuumade ja elektronide tõmbumise liige, (d) on elektronide omavahelise tõukumise liige ja (e) on tuumade omavahelise tõukumise liige.
+Tulemuseks on vaid elektronkatet kirjeldav hamiltoniaan
+\begin{align}\label{eq:elham}
+    H_\text{elek} = \underbrace{\sum_{i = 1}^N \frac{1}{2} \nabla_i^2}_\text{(a)}
+    \underbrace{- \sum_{i = 1}^N \sum_{A = 1}^M \frac{Z_A}{r_{iA}}}_\text{(c)}
+    \underbrace{+ \sum_{i = 1}^N \sum_{j > i}^N \frac{1}{r_{ij}}}_\text{(d)} \rlap{,}
+\end{align}
+mida kutsutaksegi elektronide hamiltoniaaniks~\cite{szabo+ostlund}.
 
-Valmeis~\eqref{hgeneric} \(r_{ij} = r_i - r_j\), kus \(r_i\) ja \(r_j\) on vastavalt \(i\)-nda ja \(j\)-nda elektroni kohavektorid, ja \(r_{AB} = r_A - r_B\), kus \(r_A\) ja \(r_B\) on vstavalt \(A\)-nda ja \(B\)-nda tuuma kohavektorid.
-Teisisõnu, üldkujul sõltub molekulaarse hamiltoniaani nii elektronide kui ka tuumade asukohtadest eksplitsiitselt~\cite{szabo+ostlnud}.
+Hamiltoniaan~\eqref{eq:elham} erineb küll hamiltoniaanist~\eqref{eq:molham} omaväärtuste poolest, kuid kehtib
+\begin{align}
+    E_\text{mol} = E_\text{elek} + E_\text{tuum} \rlap{,}
+\end{align}
+kus \(E_\text{mol}\) on vana ja \(E_\text{elek}\) uue hamiltoniaani omaväärtus.
+\(E_\text{mol}\) on molekuli kui terviku energia.
+\(E_\text{elek}\) on elektronkatte energia.
+\(E_\text{tuum}\) on tuumade energia, mille võrra~\eqref{eq:elham} ja \eqref{eq:molham} omaväärtused erinevad.
+Elektronstruktuuri ülesandes pakubki aga huvi vaid \(E_\text{elek}\)~\cite{szabo+ostlund}.
 
+Edaspidi tähsitame \(H = H_\text{elek}\) ja \(E = E_\text{elek}\).
 
-\section{Born-Oppenheimeri lähendus}\label{born-oppeheimer}
+Valemit~\eqref{eq:elham} on vaja edasi lihtsutada, sest hetkel on tegemist mitme keha probleemiga.
 
-Born-Oppeheimeri lähendus lubab hamiltoniaani~\eqref{hgeneric} lihtsustada, mis on vajalik arvutusressurside kokku hoidmiseks.
+\section{Hartree korrutis ja Slateri determinant}\label{sec:hpsd}
 
-Born-Oppehnimeri lähendus võtab arvesse järgmist.
+See alapeatükk keskendub elektronkatte lainefunktsioonile, milleks on kaks põhjust.
+Esiteks on vaja lainefunktsiooni täpsustada valemi~\eqref{eq:elham} edasiseks lihtsustamiseks.
+Teiseks on hiljem vaja teada põhioleku lainefunktsiooni kuju, et leida põhioleku energia.
 
-Tuumad on elektronidega võrreldes peaaegu paigal, sest need on elektronidega võrreldes rasked.
-Seega jätame valmeis~\eqref{hgeneric} arvestamata liikme (b).
+Lainefunktsiooni \(\Psi\) jaoks on kaks tingimust.
+Ühest küljest peab see rahuldama Scrödingeri võrrandit
+\begin{align}
+    H_\text{elek} \Psi = E_\text{elek} \Psi \rlap{.}
+\end{align}
+Teisalt peab see rahuldama antisümmetria printsiipi
+\begin{align}
+    \Psi(\vec{x_1}, \ldots, \vec{x_i}, \ldots, \vec{x_j}, \ldots, \vec{x_N})
+    = -\Psi(\vec{x_1}, \ldots, \vec{x_j}, \ldots, \vec{x_i}, \ldots, \vec{x_N}) \rlap{,}
+\end{align}
+kus \(\vec{x_1}\) kuni \(\vec{x_N}\) on osakeste \(1\) kuni \(N\) üldised koordinaadid, mis sisaldavad informatsiooni nii osakeste asukohtade kui ka spinnide kohta.
+Antiümmeetria printsiib on Pauli keelu printsiibi üldisem sõnastus~\cite{szabo+ostlund}.
 
-Elektronid liiguvad tuumade poolt tekitatud väljas, mille võime liikumatute tuumade korral lugeda statsionaarseks.
-Sellest johtuvalt jätame valemis~\eqref{hgeneric} arvestamata liikme (e), mis on konstantne ja mille arvestamata jätmisel omafunktsioonid ei muutu.
+Sobiva lainefunktsiooni saab molekulaarobitaalide teooriast.
 
-Lihtsustatud hamiltoniaani
-\begin{equation}\label{hborn}
-    H = \underbrace{-\sum_{i=1}^N\frac{1}{2}\nabla_i^2}_\mathrm{(a)}
-        \underbrace{-\sum_{i=1}^N\sum_{A=1}^M\frac{Z_A}{r_{iA}}}_\mathrm{(c)}
-        \underbrace{+\sum_{i=1}^n\sum_{j>i}^N\frac{1}{r_{ij}}}_\mathrm{(d)}\rlap{,}
-\end{equation}
-nimetatakse elektrooniliseks hamiltoniaaniks.
-Elektroonilise hamiltoniaani jaoks on tuumade kohavektorid parameetrid, eksplitsiitset sõltuvust ei ole~\cite{szabo+ostlnud}.
-
-
-\section{Hartree korrutis ja Slateri determinant}\label{hartree+slater}
-
-Hetkel ei võta me arvesse Pauli keeluprintsiipi, kuivõrd me pole üldse arvestanud spinni.
-Hamiltoniaan~\eqref{hborn} ei keela mitmel sama spinninga elektronil asuda samas ruumipiirkonnas.
-
-Seega nõutakse, et Schrödingeri võrrandi rahuldamisele lisaks peab fermionide süsteemi lainefunktsioon olema antisümmeetriline.
-Peab kehtima
-\begin{equation}
-    \Psi(x_1,\ldots x_i,\ldots x_j,\ldots x_N)=-\Psi(x_1,\ldots x_j,\ldots x_i,\ldots x_N)
-\end{equation}
-kus \(x_1\) kuni \(x_N\) on üldised koordinaadid, mis võtavad arvesse nii koordinaate \(r_i\) kui ka spinni \(\omega\).
-Antisümmeetria printsiibi kehtimine tagab Pauli keeluprintsiibi kehtimise.
-
-Ühe elektroni auskohta ja spinni kirjeldab spinnorbitaal
-\begin{equation}\label{spinorb}
-    \chi_i(x_1,\ldots x_N) = \begin{cases}
-        \alpha(\omega)\phi_i(r_1,\ldots r_N) & \text{kui \(i\) ei jagu \(2\)-ga,} \\
-        \beta(\omega)\phi_i(r_1,\ldots r_N) & \text{kui \(i\) jagub \(2\)-ga,} \\
+Selles teoorias nimetatakse spinnorbitaaliks funktsiooni
+\begin{align}\label{eq:spinorb}
+    \chi_j(\vec{x_i}) = \begin{cases}
+        \alpha(\omega_i) \phi_j(\vec{r_i})\text{,} & \text{kui \(i\) ei jagu \(2\)-ga} \\
+        \beta(\omega_i) \phi_{j-1}(\vec{r_i})\text{,} & \text{kui \(i\) jagub \(2\)-ga} \\
     \end{cases}
-\end{equation}
-kus \(i=1,\ldots, K\).
-Valemis~\eqref{spinorb} vastab \(\alpha(\omega)\) spinn-üles olukorrale ja \(\beta(\omega)\) spinn-aalla olukorrale.
-Funktsioonid \(\phi_i\) on ruumilised orbitaalid, need võtavad arvesse elektroni ruumilist paiknemist.
-Ruumiliste orbitaalide arv on üldjuhul lõpmatu, kuid piisav täpsus on võimalik saavutada ka siis, kui võta arvesse vaid \(K\) ruumilist orbitaali, mis peavad katma antud ülesande jaoks olulise alamruumi.
+\end{align}
+Spinnorbitaal on ühe elektroniga moleklulaarse süsteemi lainefunktsiooniks.
+Valemis~\eqref{eq:spinorb} on \(x_i\) elektroni \(i\) üldine koordinaat, mis koosneb kahest osast: \(\omega_i\) kirjeldab selle elektroni spinni, \(\vec{r_i}\) ruumilist paiknemist.
+\(\alpha(\omega_i)\) vastab spinn-alla olukorrale ja \(\beta(\omega_i)\) spinn-üles olukorrale.
+\(x_j(x_i)\) on ruumiline orbitaal ehk elektroni lainefunktsioon, mis ei arvesta spinni.
+Iga ruumilise orbitaali kohta on võimalik kaks spinnorbitaali~\cite{szabo+ostlund}.
 
-Spinnorbitaalidest saab moodustada Hatree korrutise
-\begin{equation}\label{hp}
-    \Psi^{HP}(x_1,\ldots x_N) = \chi_i(x_1)\chi_j(x_2)\cdots\chi_k(x_N)\rlap{,}
-\end{equation}
-\TODO{Szabo ja Ostlundi raamatus on siin vist paremal pool \(x_1\), \(\ldots\) \(x_N\) paksus kirjas, mis on eelnevat arvestades loogiline.}
-kus
-\begin{equation}
-    h(i)\chi_j(x_i) = \epsilon_j \chi_j(x_i)\rlap{.}
-\end{equation}
-Kui kehtib
-\begin{equation}
-    H\Psi^{HP}=E\Psi^{HP}\rlap{,}
-\end{equation}
-siis
-\begin{equation}
-    E=\epsilon_1+\epsilon_2+\cdots\epsilon_N\rlap{.}
-\end{equation}
+Spinnorbitaalide korrutist
+\begin{align}\label{eq:hp}
+    \Psi^\text{HP}(\vex{x_1}, x_2, \ldots, \vec{x_N})
+    = \chi_i(\vec{x_1}) \chi_j(\vec{x_2}) \cdots \chi_i(\vex{x_N})
+\end{align}
+nimetatakse Hartree korrutiseks.
+Kui antisümmeetria printsiipi poleks vaja arvestada, siis oleks Hartree korrutis teineteisega mitteinterakteeruvate elektronidega süsteemi lainefunktsiooniks.
+Näitame seda.
 
-Siiski on Hatree korrutisel puudused, mistõttu ei saa seda kasutada lainefunktsioonina.
-Valemist~\eqref{hp} tulenevalt on
-\begin{equation}\label{hp}
-    \abs{\Psi^{HP}(x_1,\ldots x_N)}^2dx_1\cdots dx_N = \abs{\chi_i(x_1)}^2dx_1\abs{\chi_j(x_2)}^2dx_2\cdots\abs{\chi_k(x_N)}^2dx_N\rlap{,}
-\end{equation}
-mis tähendab, et esimese elektroni leidmise tõenäosus \(dx_1\)-ga määratud olekust on sõltumatu teise elektroni leidmise tõenäosusest \(dx_2\)-ga määratud olekust jne.
-Samas teame, et ühe elektroni leidmine kindlast ruumipiirkonnast muudab vähem tõenäolisemaks sealtsamast teise sama spinniga elektroni leidmise.
+Sellisel lihtsustatud juhul oleks elektronid sõltumatud: süsteemi hamiltoniaani saaks kirja panna kujul
+\begin{align}
+    H = \sum_i^N h(i) \rlap{,}
+\end{align}
+kus \(h(i)\) on iga üksiku elektroni hamiltoniaan.
+Et kehtib
+\begin{align}
+    E = \sum_i^N \epsilon_i \rlap{,}
+    \qquad \text{kus} \qquad
+    H \Psi^\text{HP} = E \Psi^\text{HP}
+    \quad \text{ja} \quad
+    h(i) \chi_j(\vec{x_i}) = \epsilon_j \chi_j(\vec{x_i})
+\end{align}
+siis sellise süsteemi koguenergia oleks üksikute elektronide energiate summa, mis näitabki Hartree korrutise sobivust lainefunktsiooniks mitme elektroniga süsteemi lihtsustatud juhul.
 
-Veel enam, Hartree korrutisena kui lainefunktsioon võimaldab öelda, et esimene elektron
-on \(dx_1\)-ga määratud orbitaalil, teine elektron on \(dx_2\)-ga määratud orbitaalil jne. Füüsikaliselt lubatav on aga vaid selline lainefunktsioon, mis ei võimalda elektronidel vahet teha.
-
-Hatree korrutise edasiarendus on Slater determinant
-\begin{equation}
-    \Psi(x_1,\ldots x_N) = \frac{1}{\sqrt{N!}}\begin{pmatrix}
-        \chi_i(x_1) & \chi_j(x_1) & \cdots & \chi_k(x_1) \\
-        \chi_i(x_2) & \chi_j(x_2) & \cdots & \chi_k(x_2) \\
+Kuigi me seda siin ei näita, siis arvestab antisümmeetria printsiipi ja elektronide vastasmõju Hartree korrutise edasiarendus
+\begin{align}\label{eq:slater}
+    \Psi(\vec{x_1}, \vec{x_2}, \ldots, \vec{x_n})
+    = \frac{1}{\sqrt{N!}} \begin{vmatrix}
+        \chi_i(\vex{x_1}) & \chi_j(\vex{x_2}) & \cdots & \chi_k(\vex{x_2}) \\
+        \chi_i(\vex{x_2}) & \chi_j(\vex{x_2}) & \cdots & \chi_k(\vex{x_2}) \\
         \vdots & \vdots & & \vdots \\
-        \chi_i(x_N) & \chi_j(x_N) & \cdots & \chi_k(x_N) \\
-    \end{pmatrix}\rlap{,}
-\end{equation}
-millel Hatree korrutise puudusi pole.
+        \chi_i(\vex{x_N}) & \chi_j(\vex{x_N}) & \cdots & \chi_k(\vex{x_N}) \\
+    \end{vmatrix} \rlap{,}
+\end{align}
+mida kutsutakse Slateri determinandiks.
+Pikemalt käsitleb Slateri determinandi omadusi~\cite{szabo+ostlund}.
+Oluline on, et Slateri determinant sobib elektronide lainefunktsiooniks.
 
+Slateri determinandi~\eqref{eq:slater} lühitähistus on \(\ket{\chi_i\chi_j\cdots\chi_k}\), mis tähendab, et elektron \(1\) asub spinnorbitaalil \(\chi_i\), elektron \(2\) spinnorbitaalil \(\chi_j\) jne.
 
-\section{Hartree-Focki lähendus}\label{hatree-fock}
+\section{Hartree-Focki lähendus}\label{sec:hf}
 
-Ka liikumatute tuumade puhul on \(n > 2\) elektroniga molekulide elektronstruktuuri ülesanne \(n\) keha probleem.
-Vajalikuks osutuab Hatree-Focki lähendus, mille järgi üksik elektron liigub tuumade ja teiste elektronide mõju keskmistamisel saadud väljas.
+Alapeatükis~\ref{sec:bo} selgus, et Born-Oppeheimeri lähenduse tulemuseks on mitme keha probleem, mille lahendamine on teadagi keeruline.
 
-Varasema põhjal teame, et lainefunktsioon esitub Slateri determinandina.
-Variatsiooniprintsiibist tulenevalt on põhioleku lainefunktsioon \(\ket{\Psi_0}\) selline, mille puhul
-\begin{equation}
-    E_0 = \bra{\Psi_0}H\ket{\Psi_0}
-\end{equation}
+Ülesanne muutub ühe keha probleemiks Hartree-Focki lähenduses, kus teise elektronide mõju igale elektronile võetakse arvesse statsionaarse väljana.
+See lähendus on kvantkeemias laialt kasutuses ja annab enamasti piisavalt täpse tulemuse~\cite{szabo+ostlund}.
+
+Varasemast teame, et mitme elektroniga süsteemi põhioleku lainefunktsioon on kujul
+\begin{align}
+    \ket{\Psi_0} = \ket{\chi_1 \chi_2 \cdots \chi_N} \rlap{,}
+\end{align}
+kus \(N\) on elektronide arv.
+
+Variatsiooni printsiibist tulenevalt on põhioleku lainefunktsioon selline, mille energia
+\begin{align}
+    E_0 = \bra{\Psi_0} H \ket{\Psi_0} \rlap{.}
+\end{align}
 on minimaalne.
-Minimeerimine viib Hatree-Focki võrrandini
-\begin{equation}
-    f(i)\chi(x_i)=\epsilon\chi(x_i)\rlap{,}
-\end{equation}
-kus
-\begin{equation}
-    f(i) = -\frac{1}{2}\nabla_i^2-\sum_{A=1}^M\frac{Z_A}{r_{iA}}+\nu^{HF}(i)
-\end{equation}
-on Focki operaator, milles \(\nu^{HF}(i)\) on on \(i\)-nda elektroni tajutav keskmine teiste elektronide mõjust tulenev potentsiaal.
+Energia väärtus sõltub spinnorbitaalide \(\chi_1\), \(\chi_2\), \(\ldots\), \(\chi_N\) valikust~\cite{szabo+ostlund}.
 
-Lahendanud Hatree-Focki võrrandi, saadakse \(k\) spinnorbitaali energiateka \(\epsilon_k\).
-Nendest spinnorbitaalidest \(N\) madalaima energiaga on täitedetud orbitaalid.
-Teised on virutaalssed orbitaalid~\cite{szab0+ostlnud}.
-
-
-\section{Teine kvantiseerimine}\label{secquant}
-
-Slateri determindi omadusi, seega antisümmeetria printsiipi, võtab mugavalt arvesse abstraktne teise kvantiseerimise formalism.
-
-Teise kvantsieerimise formalismis esitatakse kõik võimalikud olekud vaakum oleku \(\ket{\mathrm{vak}}\) kaudu.
-Defineeritakse tekeoperaator \(a_i^{\dagger}\), mis lisab süsteemi juurde elektroni spinnorbitaalil \(\chi_i\),
-\begin{align}
-    a_i^{\dagger}\ket{\mathrm{vak}} = \ket{\chi_i}\rlap{.}
+Energia minimeerimine viib valemini
+\begin{align}\label{eq:hf}
+    f(i) \chi(\vec{x_i}) = \epsilon \chi(\vec{x_i}) \rlap{,}
 \end{align}
-[XXX Seletus jargneva valemi kohta]
+mida kutsutakse Hartree-Focki võrrandiks~\cite{szabo+ostlund}.
+
+Valmis~\eqref{eq:hf} on
 \begin{align}
-    a_j^{\dagger}\ket{\chi_i} & =\ket{\chi_i\chi_j}
+    f(i) = -\frac{1}{2} \nabla_i^2 - \sum_{A = 1}^M \frac{Z_A}{r_{iA}} + v^\text{HF}(i)
 \end{align}
-Samuti definereeritakse kaooperaator \(a_i\), mis teeb vastupidist.
+Focki operaator.
+Viimases valemis on \(v^\text{HF}(i)\) elektroni \(i\) kogetud keskmine potentsiaal, mis on tingitud teiste elektronide mõjust~\cite{szabo+ostlund}.
 
-Tekke- ja kaooperaatorite omadused on antud nende antikommutatseiooni reeglitega
+Hartree-Focki võrrandi lahendamisprotseduuri me siin ei käsitle, vt~\cite{szabo+ostlund}.
+
+Lahendamise tulemuseks on Hartree-Focki spinnorbitaalide komplekt \(\{\chi_k\}\), millele vastab energiate komplekt \(\{\epsilon_k\}\), kusjuures \(k > N\)~\cite{szabo+ostlund}.
+
+Põhioleku lainefunktsioon on
 \begin{align}
-    \left[a_i^{\dagger}, a_j^{\dagger}\right|= 0\rlap{,} \quad\quad
-    \left[a_i, a_j\right|= 0\rlap{,}
+    \ket{\Psi_0} = \ket{\chi_a \chi_b \cdots \chi_c} \rlap{,}
 \end{align}
-ja
-\begin{equation}
-    \left[a_i^{\dagger}, a_j\right| = \delta_{ij}\rlap{.}
-\end{equation}
+kus \(\chi_a\), \(\chi_b\), \(\ldots\), \(\chi_c\) on \(N\) madalaima energiaga spinnorbitaali.
+Orbitaale \(\chi_a\), \(\chi_b\), \(\ldots\), \(\chi_c\) nimetakse täidetud orbitaalideks, ülejäänud on virtuaalised orbitaalid.
 
-Tekke- ja kaooperaatorite kaudu saab konstueerida ergastusoperaatori \(X_{i,\ldots, j}^{k,\ldots,l}\), mis tõstab elketronid spinnorbitaalidelt \(i,\ldots,j\) orbitaalidele \(k,\ldots, l\).
-Sedasi saab kõik olekud esitada põhioleku kaudu~\cite{szabo+ostlnud}
+Spinnorbitaalide kuju sõltub baasifunktsioonide komplekist, mida nimetatakse keemiliseks baasiks.
+Sama ülesande lahendamsieks võib kasutada suuremat või väiksemat keemilist baasi.
+Väiksemad keemilised baasid on küll ebatäpsemad, kuid need võimaldavad arvutusressurside kokkuhoidu.
+Tuntuim keemiline baason STO-3G, mida kutsutakse ka minimaalseks baasiks.
 
+\section{Teine kvantiseerimine}\label{sec:secquant}
 
+Enne Focki ruumist kvantbittide ruumi suundumist, mis on vajalik ülesande kvantarvutuslikuks lahendamiseks, on kasulik esitada hamiltoniaan ja lainefunktsioon teise kvantseerimise kujul.
+Teise kvantseerimise kuju võtab arvesse sümmeetria omadusi ja sedasi on võimalik probleemi lihtsustada~\cite{kassal+etal, yung+etal}.
 
-\chapter{Kvantarvutus}
+Teise kvantiseerimise formalism ehitatakse üles kahele operaatorile.
+
+Tekkeopraator \(a_i^\dagger\) tekitab süsteemi juurde elektroni spnnorbitaalile \(\chi_i\):
+\begin{align}
+    a_i^\dagger \ket{\chi_k \cdots \chi_l} = \ket{\chi_i \chi_k \cdots \chi_l} \rlap{.}
+\end{align}
+
+Kaooperaatoer \(a_i\) eemaldab süsteemist elektroni spinnorbitaalilt \(\chi_i\):
+\begin{align}
+    a_i \ket{\chi_i \chi_k \cdots \chi_l} = \ket{\chi_k \cdots \chi_l}\rlap{.}
+\end{align}
+
+Tekke- ja kaoperaatori algebralised omadused on kooskõlas determinantide omadustega, mis saavtatakse kommutatsioonireeglitega
+\begin{align}
+    \sparen{\alpha_i^\dagger, \alpha_j^\dagger} = 0 \rlap{,}
+    \qquad \sparen{\alpha_i, \alpha_j} = 0 \rlap{,}
+    \qquad \sparen{\alpha_i, \alpha_j^\dagger} = \delta_{ij} \rlap{.}
+\end{align}
+
+Teise kvantseerimise kujul antud hamiltoniaani ja lainefunktsiooni viib kvantbittide ruumi Jordan-Wigneri teisendus, mida käsitletakse alapeatükis~\ref{sec:jw}.
+
+\section{Energia leidmine}
+
+Edasine ülesanne on järgmine.
+
+Olgu meil antud molekulaarse süsteemi elektronide hamiltoniaan \(H\).
+Ülesandeks on leida olekule pòhiolekule \(\ket{\Psi_0}\) vastav energia \(E\).
+Selleks tuleb lahendada omaväärtusvõrrand
+\begin{align}
+    H \ket{\Psi_0} = E \ket{\Psi_0} \rlap{,}
+\end{align}
+mis on klassikaliset kulukas ülesanne.
+Tegemist on elektronstruktuuri ülesande ühe variandiga.
+
+Järgmise peatatükk tutvustab kvantarvutusliku meetodit selle ülesande lahendamiseks, mis on klassikalisest efektiivsem.
+Meetod töötab peale põhioleku ka teiste olekute jaoks.
+
+\chapter{Kvantarvutuslik lahendamine}\label{chap:qcomp}
 
 See peatükk tutvustab kvantahelamudeli põhitõdesid ja paneb paika tähistuse,
 mis leiab kasutust hilisemates peatükkides. Samuti on siin ära toodud mõned
@@ -573,7 +627,7 @@ Lähitulevikus võib õnnestuda ära kasutada hübriidalgoritme, mis kasutavad k
 
 
 
-\section{Faasi hindamise ALGORITM}
+\section{Faasi hindamise ALGORITM}\label{sec:pea}
 
 See peatükk käsitleb faasi hindamise ülesannet ja selle rakendamist elektronstruktuuri ülesande lahendamiseks.
 
@@ -1024,12 +1078,12 @@ Kui kehtib
 siis on tagatud, et suurima tõenäosusega mõõtmistulemus on põhineriga \(E_1\) hinnang~\cite{whitfield+etal}.
 
 
-\section{Hamiltoniaani SIMULEERIMINE}
+\section{Hamiltoniaani SIMULEERIMINE}\label{sec:qcirc}
 
 Selles peatkükis leiame kvantahela hamiltoniaani simuleerimiseks.
 
 
-\section{Jordan-Wigneri teisendus}
+\section{Jordan-Wigneri teisendus}\label{sec:jw}
 
 Järgmise peatükki tarvis on vajalik kvantahelana realiseerida unitaarset operaatorit
 \begin{equation}\label{eq:hamtime}
@@ -1170,7 +1224,7 @@ Seda meetodit ahela koostamiseks nimetatakse Suzuki-Trotteri lahutuseks või lih
 
 
 
-\chapter{Metoodika}
+\chapter{Metoodika}\label{chap:methods}
 
 Selles peatükis võtame kokku protseduuri molekuli põhienergia leidmiseks.
 Samuti tutvustame vahendeid arvutuste läbiviimiseks.
@@ -1246,7 +1300,7 @@ Trotterisammude arvu, faasi hindamise registri suuruse ja energia piirväärtuse
 Keemiliseks baasiks võtsime STO-3G.
 
 
-\chapter{Tulemused}
+\chapter{Tulemused}\label{chap:results}
 
 
 \section{Vesiniku molekuli energia}
