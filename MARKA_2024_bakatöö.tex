@@ -4,39 +4,35 @@
 \usepackage[T1]{fontenc}
 
 \usepackage{mathptmx}
-\usepackage{inconsolata}
+
+\usepackage{amsmath} 
+\usepackage{amsthm}
+\usepackage{amssymb}
 
 \usepackage[a4paper, margin=25mm]{geometry}
 
 \usepackage{setspace} \onehalfspace
 
+\usepackage[estonian]{babel}
+
 \usepackage[hidelinks]{hyperref}
 
-\usepackage[estonian]{babel}
-\addto\captionsestonian{%
-  \renewcommand{\refname}{Viidatud kirjandus}%
-  \renewcommand{\appendixname}{Lisad}%
-}
-
-\usepackage{todonotes}
-\newcommand{\TODO}{\todo[inline]}
-
-\usepackage{amsmath}
-\usepackage{amsthm}
-\usepackage{amssymb}
+\usepackage[sorting=none, style=numeric]{biblatex}
+\addbibresource{srcs.bib}
 
 \usepackage{booktabs}
 
-\newcommand*{\YQUANTON}{}
-\ifdefined\YQUANTON
+\usepackage{graphicx}
+% \newcommand*{\YQUANTJOONIS}{}
+\ifdefined\YQUANTJOONIS
   \usepackage{yquant}
 \else \fi
 
 \def\yquantjoonis#1{
-  \ifdefined\YQUANTON
-    {#1}
+  \ifdefined\YQUANTJOONIS
+    #1
   \else
-    {[joonis]}
+    [joonis]
   \fi
 }
 
@@ -45,26 +41,45 @@
 
 \def\abs#1{\left|#1\right|}
 
-\def\ket#1{\mathinner{|#1\rangle}}
-\def\bra#1{\mathinner{\langle#1|}}
+\def\bra#1{\left<#1\right|}
+\def\ket#1{\left|#1\right>}
 
-\def\CNOT{\mathop{\mathrm{CNOT}}\nolimits}
-\def\SWAP{\mathop{\mathrm{SWAP}}\nolimits}
-\def\cnot{\mathop{\mathrm{CNOT}}\nolimits}
-\def\swap{\mathop{\mathrm{SWAP}}\nolimits}
+\def\CNOT{\mathop{\rm CNOT}\nolimits}
+\def\SWAP{\mathop{\rm SWAP}\nolimits}
 
-\def\QFT{\mathop{\mathrm{QFT}}\nolimits}
-
-
-\newcommand{\comment}[1]{}
-
-\usepackage[style=numeric]{biblatex}
-\addbibresource{srcs.bib}
+\def\QFT{\mathop{\rm QFT}\nolimits}
 
 \begin{document}
 
-\tableofcontents
+\begin{titlepage}
+    \begin{center}
+        \large
+        {\sc Tartu Ülikool} \\
+        Loodus- ja täppisteaduste valdkond \\
+        Füüsika instituut \\
+        Füüsika, keemia ja materjaliteaduse õppekava \\
+    
+        \vspace{25mm}
+        \Large Mattias Märka
+        
+        \vspace{4mm}
+        \Huge Molekulaarse hamiltoniaani põhioleku energia leidmine faasi hindamise algoritmi abil
+    
+        \vspace{20mm}
+        \Large Bakalaureusetöö (6 EAP)
+    
+        \vspace{20mm}
+        \begin{flushright}
+            \Large Juhendaja: Veiko Palge, PhD
+        \end{flushright}
+    
+        \vfill
+        \large Tartu 2024
+    \end{center}
+\end{titlepage}
 
+
+\tableofcontents
 
 \chapter{Sissejuhatus}
 
@@ -89,9 +104,9 @@ Eelis klassikalise simuleerimise ees on eksponentsiaalne~\cite{whitfield+etal201
 Siiani on kvantarvututitega õnnestunud lahendada vaid mõni üksik selline probleem, mille lahendamine on klassikaliste arvutitega on praktiliselt võimatu.
 Nimelt takistab kvantarvutite kasutamist nende ebatäiuslik riistvara: arvutuste käigus tekib müra~\cite{whitfield+etal2022}.
 
-Siiski on kvantalgoritm mõtekas uurida tuleviku tarvis, sest kvantarvutite riistvara areneb pidevalt.
+Siiski on kvantalgoritme mõttekas uurida tuleviku tarvis, sest kvantarvutite riistvara areneb pidevalt.
 Pretsedentdiks on klassikaliste arvutite kiire areng.
-Lähemas tulevikus võib õnnesuda kasutada hübriidalgoritme, mis põhinevad kvantarvutite ja klassikaliste arvutite koostööl~\cite{omalley+etal}.
+Lähemas tulevikus võib õnnestuda kasutada hübriidalgoritme, mis põhinevad kvantarvutite ja klassikaliste arvutite koostööl~\cite{omalley+etal}.
 
 Käesoleva töö eesmärgiks on demonstreerida klassikalisest efektiivsemat kvantarvutusliku meetodid molekulaarse hamiltoniaani simuleerimiseks.
 See meetod põhineb faasi hindamise algoritmil.
@@ -117,7 +132,7 @@ Selles töös on arvutuste läbiviimiseks kasutatud simulaatorit.
 Kasutatud vahendeid käsitleb peatükk~\ref{chap:methods}.
 Peatükk~\ref{chap:results} tutvustab tulemusi.
 
-\chapter{Elektronstruktuuri ülesanne}
+\chapter{Elektronstruktuuri ülesanne}\label{chap:qchem}
 
 \section{Molekulaarse süsteemi hamiltoniaani üldkuju}
 
@@ -184,7 +199,7 @@ Teiseks on hiljem vaja teada põhioleku lainefunktsiooni kuju, et leida põhiole
 Lainefunktsiooni \(\Psi\) jaoks on kaks tingimust.
 Ühest küljest peab see rahuldama Scrödingeri võrrandit
 \begin{align}
-    H_\text{elek} \Psi = E_\text{elek} \Psi \rlap{.}
+    H \Psi = E \Psi \rlap{.}
 \end{align}
 Teisalt peab see rahuldama antisümmetria printsiipi
 \begin{align}
@@ -296,7 +311,7 @@ Orbitaale \(\chi_a\), \(\chi_b\), \(\ldots\), \(\chi_c\) nimetakse täidetud orb
 Spinnorbitaalide kuju sõltub baasifunktsioonide komplekist, mida nimetatakse keemiliseks baasiks.
 Sama ülesande lahendamsieks võib kasutada suuremat või väiksemat keemilist baasi.
 Väiksemad keemilised baasid on küll ebatäpsemad, kuid need võimaldavad arvutusressurside kokkuhoidu.
-Tuntuim keemiline baason STO-3G, mida kutsutakse ka minimaalseks baasiks.
+Tuntuim keemiline baas on STO-3G, mida kutsutakse ka minimaalseks baasiks.
 
 \section{Teine kvantiseerimine}\label{sec:secquant}
 
@@ -329,7 +344,7 @@ Teise kvantseerimise kujul antud hamiltoniaani ja lainefunktsiooni viib kvantbit
 Edasine ülesanne on järgmine.
 
 Olgu meil antud molekulaarse süsteemi elektronide hamiltoniaan \(H\).
-Ülesandeks on leida olekule pòhiolekule \(\ket{\Psi_0}\) vastav energia \(E\).
+Ülesandeks on leida olekule põhiolekule \(\ket{\Psi_0}\) vastav energia \(E\).
 Selleks tuleb lahendada omaväärtusvõrrand
 \begin{align}
     H \ket{\Psi_0} = E \ket{\Psi_0} \rlap{,}
@@ -340,96 +355,59 @@ Tegemist on elektronstruktuuri ülesande ühe variandiga.
 Järgmise peatatükk tutvustab kvantarvutusliku meetodit selle ülesande lahendamiseks, mis on klassikalisest efektiivsem.
 Meetod töötab peale põhioleku ka teiste olekute jaoks.
 
-\chapter{Kvantarvutuslik lahendamine}\label{chap:qcomp}
+\chapter{Kvantarvutslik lahendamine}
 
-See peatükk tutvustab kvantahelamudeli põhitõdesid ja paneb paika tähistuse,
-mis leiab kasutust hilisemates peatükkides. Samuti on siin ära toodud mõned
-kvantarvutite eelised klassikaliste arvutite ees, põhjendatud, miks
-kvantarvutus on oluline.
+\section{Kvantarvutuse põhimõisted}
 
+Selles töös kastuame kvantarvutuse ahela mudelit, mille põhimõisted on kvantbitt ja kvantvärav.
+Kvantahelamudel sarnaneb üldpildis klassikalisele ahelamudelile~\cite{nielsen+chuang, kaye+laflamme+mosca}
 
-\section{Kvantahelamudel}
-
-Siin töös kasutame kvantarvutuse ahelamudelit, mille põhimõisted on kvantbitt
-ja kvantvärav. Arvutusmudelid erinevadki teineteisest põhimõistete valiku
-poolest. Kõik mudelid võimaldavad samu arvutusi, kuid mingi valik on siiski
-vaja teha. Selles töös on valiku tegemisel lähtutud kirjanduse ja tehniliste
-vahendite kättesaadavusest.
-
-Kvantteooria bitt ja värav on klassilise teooria biti ja värava analoogid.
-Üldpildis ongi kvantteooria ahelamudel sarnane klassikalise teooria
-ahelamudeliga.
-
-Nii klassikalises kui ka kvantahelamudelis on register bittide kogum ja ahel
-väravate kogum.
-
-Võrdleme nüüd klassikalist ja kvantahelamudelit. Ühtlasi lepime kokku
-tähistuses.
-
-Klassikaline bitt on tõlgendatav tõeväärtusena. Kvantbitt on üldiselt Hilberti
-ruumi objekt, kuid siin vaatame seda kompleksse kahedimensionaalse vektorruumi
-objektina.
-
-Klassikalise biti võimalike väärtusi on kaks: neid tähistatakse \(0\) ja \(1\).
-Kvantbitil on lõpmata arv võimalike väärtusi: kõik need saab kirja panna kujul
+Informatsiooni põhiühikuks on kvantbitt, mis on üldiselt Hilberti ruumi objekt.
+Selliseks ruumiks sobib kompleksne vektorruum.
+Kõik kvantbiti olekud saab kirja panna kujul
 \begin{align}
-    \ket{\psi} = \alpha\ket{0} + \beta\ket{1} \rlap{,}
+    \ket{\phi} = \alpha \ket{0} + \beta \ket{1} \rlap{,}
+    \qquad \alpha, \beta \in \mathbb{C} \rlap{,}
     \qquad \abs{\alpha}^2 + \abs{\beta}^2 = 1 \rlap{,}
 \end{align}
-kus \(\ket{0}\) ja \(\ket{1}\) on ortonormaalsed vektorid, mis tähistavad kahe
-sõltumatut olekut. Tõenäosused leida mõõtmisel süsteem olekutes \(\ket{0}\) ja
-\(\ket1\) on vastavalt \(\abs{\alpha}^2\) ja \(\abs{\beta}^2\).
-
-Siin töös on
-\begin{align}
+kus
+\begin{align}\label{eq:compbasis}
     \ket{0} = \begin{pmatrix}
-        0 \\
         1 \\
-    \end{pmatrix}
-    \qquad \text{ja} \qquad
+        0 \\
+    \end{pmatrix} \rlap{,}
+    \qquad
     \ket{1} = \begin{pmatrix}
-        1 \\
         0 \\
-    \end{pmatrix}
+        1 \\
+    \end{pmatrix} \rlap{,}
 \end{align}
-Pauli Z operaatori omavektorite baas. Ka kõik operaatorid anname selles baasis.
+on ortonormaalsed vektorid, mis vastavad sõltumatutele olekutele.
+Baasi~\eqref{eq:compbasis}, mida siin töös läbivalt kasutame, nimetatakse arvutuslikuks baasiks~\cite{mcardle+etal, nielsen+chuang, kaye+laflamme+mosca}
 
-Klassikalises registris on kõik bitid sõltumatud. Kvantregistris võivad bitid
-olla põimitud, misjuhul pole võimalik registri olekut vaadata eraldi bittide
-olekutena. Formaalselt tähendab põimitus, et süsteemi olekut ei saa kirja panna
-vektorite tensorkorrutisena: \(\ket{\psi} \ne \ket{\psi_1} \otimes
-\ket{\psi_2}\).
-
-Klassikaline värav teostab loogikatehet. Kvantvärav teostab unitaarset
-operatsiooni.
-
-Ühebitiseid unikaalseid klassikalisi väravaid on vaid üks, kahebitiseid neli.
-Ühebitiseid unikaalseid kvantväravaid on juba ühe biti jaoks lõpmata arv.
-
-Praktikas on vaja realiseerida vaid väike arv kvantväravaid, mis moodustavad
-univeraalse komplekti, sest kõik teised väravad saab esitada selle komplekti
-väravate kaudu. Univeraalseid komplekte on palju. Ühe komplekti moodustavad
-\(R_x(\theta)\), \(R_y(\theta)\), \(R_z(\theta)\), \(P(\lambda)\), ja
-\(\CNOT\), mis on maatrikskujul defineeritud tabelis~\ref{tab:gates}. Vähemalt
-üks univeraalse komplekti värav peab olema kahebitine ja põimiv: antud juhul on
-selleks \(\CNOT\).
-
-Ühtlasi on tabelis~\ref{tab:gates} kõik teised selles töös kasutud primtiivsed
-väravad. Defineerimisel pole arvestatud globaalset faasi. Pandagu tähele, et
-tabeli~\ref{tab:gates} alumise kasti operaatorid saab kõik defineerida ülemise
-kasti operaatorite kaudu globaalse faasi täpsusega.
-
-Juhitud väravad on sellised, mis rakenduvad sihtbitile vaid sel määral, mil
-määral juhtbitt on olekus \(\ket1\), juhtibitti muutmata. Näiteks
+Kvantbittide kogumit nimetatakse kvantregistriks ja selle olekuruum on üksikuid kvantbitte iseloomustavate Hilberti ruumide tensorkorrutis. 
+Kvantregistri jaoks on võimalikud kahtemoodi olekud: produktolekud ja põimitud olekud.
+Produktolekud saab lahutada üksikute kvantbittide olekuteks:
 \begin{align}
-    \CNOT \paren{\alpha \ket{0} \otimes \ket{1} + \beta \ket{1} \otimes \ket{1}}
-    = \alpha \ket{0} \otimes \ket{1} + \beta \ket{1} \otimes \ket{0} \rlap{.}
+    \ket{\Phi}
+    = \ket{\phi_1 \phi_2 \cdots}
+    = \ket{\phi_1} \otimes \ket{\phi_2} \otimes \cdots \rlap{,}
 \end{align}
-Töös kasutatud juhitud väravaid pole tabelis~\ref{tab:gates} eraldi toodud.
+Põimitud olekut ei saa lahutada üksikute bittide olekuteks:
+\begin{align}
+    \ket{\Phi}
+    \ne \ket{\phi_1 \phi_2 \cdots} \rlap{,}
+\end{align}
+Põimitud olek on näiteks
+\begin{align}
+    \frac{1}{\sqrt{2}} \paren{\ket{00} + \ket{11}} \rlap{.}
+\end{align}
+Klassikalises teoorias on kõik bitid sõltumatud, põimitust ei esine~\cite{mcardle+etal, nielsen+chuang, kaye+laflamme+mosca}
 
-Mõõtmine pole unitaarne operatsioon ja sellega ei seostu väravat. Siiski
-tähistatakse ahelates seda väravatega sarnaselt. Tabelis~\ref{tab:gates} on
-tähistus toodud. Definitsiooni pole toodud.
+Kvantväravad sooritavad kvantbittidel unitaarsed operatsioone.
+Need võivad mõjutada ühte või rohkemat kvantbitti.
+Mitut kvantbitti mõjutavad väravad võivad olla põimivad.
+Kõik siin töös kasutatud väravad on toodud tabelis~\ref{tab:gates}~\cite{mcardle+etal, nielsen+chuang, kaye+laflamme+mosca}
 
 \begin{table}[]
     \centering
@@ -561,9 +539,28 @@ tähistus toodud. Definitsiooni pole toodud.
         \end{tikzpicture}}} \\
         \bottomrule
     \end{tabular}
-    \caption{Töös kasutatud operaatorid, nende tähtistused, definitsioonid ja tähitused ahelas}
+    \caption{Töös kasutatud operaatorid, nende tähistused, definitsioonid ja tähitused ahelas~\cite{nielsen+chuang, kaye+laflamme+mosca}}
     \label{tab:gates}
 \end{table}
+
+Võimalike kvantväravaid on lõpmatu arv, kuid on riistvaras vaja realiseerida vaid mõned väravad, mis moodustavad univeraalse komplekti.
+Kõik teised väravad saab esitada univeraalse komplekti kaudu~\cite{mcardle+etal, nielsen+chuang, kaye+laflamme+mosca}.
+
+Univeraalseid komplekte on lõpmata palju.
+Komplektis peab alati olema põimiv värav.
+Tihti võetakse põimivaks väravaks juhitud eitus ja kõik algoritmid esitatakse juhitud eituse kaudu, nagu ka siin töös~\cite{mcardle+etal, nielsen+chuang, kaye+laflamme+mosca}.
+
+Juhitud väravad on sellised, mis rakenduvad sihtbitile vaid sel määral, mil
+määral juhtbitt on olekus \(\ket1\), juhtibitti muutmata. Näiteks
+\begin{align}
+    \CNOT \paren{\alpha \ket{0} \otimes \ket{1} + \beta \ket{1} \otimes \ket{1}}
+    = \alpha \ket{0} \otimes \ket{1} + \beta \ket{1} \otimes \ket{0} \rlap{.}
+\end{align}
+Töös kasutatud juhitud väravaid pole tabelis~\ref{tab:gates} eraldi toodud.
+
+Mõõtmine pole unitaarne operatsioon ja sellega ei seostu väravat. Siiski
+tähistatakse ahelates seda väravatega sarnaselt. Tabelis~\ref{tab:gates} on
+tähistus toodud. Definitsiooni pole toodud.
 
 Kvantäravate järjestuse ja bittidele rakendamise korra määrab kvantahel.
 Joonis~\ref{fig:circuits} on näide ahelast. Igat üksikut biti või registrit
@@ -590,37 +587,33 @@ jooned) ühendavad operaatoreid juhtbitide või juhtregistritega, kui neid on.
     \label{fig:circuits}
 \end{figure}
 
-Pikemalt tutvutavad ahelamudelit \cite{nielnsen+chuang} ja
+Pikemalt tutvutavad ahelamudelit \cite{nielsen+chuang} ja
 \cite{kaye+laflamme+mosca}. Samas \cite{cao+etal} ja \cite{mcardle+etal} on
 põgusamad tutvustused, kuid suunatud justnimelt kvantsimulatsioonile.
 
+Selles töös on keskne faasi hindamise algoritm, mis on klassikalisest analoogist efektiivsem.
+Kokkuhoiu teevad võimalikuks kaks kvantarvutuse olulist võtet: kvantparallelism ja põimituse kasutamine.
 
-\subsection{LIITA EELMISEGA: Kvantarvutite eelis klassikaliste arvutite ees}
+Kvantparallelism põhineb operaatorite lineaaruselt, mis tähendab, et korraga on võimalik arvutada operaatori mõju mitmel juhul:
+\begin{align}
+    U \paren{\alpha\ket{0} + \beta\ket{1}}
+    = \alpha U \ket{0} + \beta U \ket{1} \rlap{.}
+\end{align}
+Tõsi, tulemuste välja lugemiseks tuleb kvantarvuti programmi käitada mitu korda~\cite{mcardle+etal}.
 
-Mitmed olulised ülesanded on klassikaliselt praktiliselt lahenduvad vaid lihtsamatel juhtudel.
-Kuulus näide on algarvuliste tegurite leidmise ülsanne, mille lahendamisalgoritmi keerukus on eksponetsiaalne: arvu suurenedes kulub tegurite leidmiseks eksponentsiaalselt rohkem mälu ja aega.
-Kvantalgoritmi selle ülesande lahendamiseks leidis Shor~\cite{shot} ja tema algoritmi keerukus on kõigest polünoomne.
-Seega võib kvantarvutitega olla võimalik lahendada ülesandeid, mille lahendamine klassikaliselt on põhimõtteliselt liiga kulukas~\cite{nielse+chuang, kaye+laflamme+mosca, cao+etal}.
+Põimituse kasulikust lühidalt kokku võtta ei saa: see on igas algoritmis isemoodi.
 
-Kvantalgorimtid saavad ära kasutada põimitust, mida klassikalises teoorias ei esine.
-Samuti on kvantregistrisse võimalik talletada rohkem informatsiooni kui klassikalisse registrisse.
-Uued vahendid teevadki võimalikuks uued algortmid~\cite{cao+etal}.
+Kvantparallelismi ja põimitust ei õnnestu klassikaliselt efektiivselt simuleerida.
+Sestap on neid ülesande efektiivsemaks lahendamiseks võimalik ära kasutada vaid kvantarvutil.
 
-Ka faasi hindamine on üks nendest ülesannetest, mille lahendamine on kvantarvutuslikult soodsam.
-Varsti näeme, et sellest tingituna on kvantarvutid sobivad elektronstruktuuri ülesande lahendamiseks, millega siin töös teglemegi~\cite{cao+etal, mcardle+etal}.
+\textbf{Üle kontrollida:} Põimituse klassikaline simuleerimine on näide tugevalt korreleeritud probleemist.
+Et ka mitmed kvantkeemia ja -füüsika probleemid on tugevalt korreleeritud, siis arvatakse, et nende lahendamiseks sobivad just kvantarvutid~\cite{cao+etal}.
 
-Ei saa mainimata jätta, et siiani pole kvantarvutuslikult olnud võimalik lahendada ühtegi ülesannet, mis on klassikaliselt lahendamiseks liiga raske.
-Nimelt pole kvantarvutite riistvara selleks veel piisavalt arenenud.
-Siiski on mõtet kvantalgortmide uurimisega tegeleda tuleviku tarvis.
-Lähitulevikus võib õnnestuda ära kasutada hübriidalgoritme, mis kasutavad klassikalist ja kvantarvutit vaheldumisi~\cite{omalley+etal}.
+\section{Faasi hindamise algoritm}\label{sec:pea}
 
+See alapeatükk käsitleb faasi hindamise algoritmi ja selle rakendamist elektronstruktuuri ülesande lahendamiseks.
 
-
-\section{Faasi hindamise ALGORITM}\label{sec:pea}
-
-See peatükk käsitleb faasi hindamise ülesannet ja selle rakendamist elektronstruktuuri ülesande lahendamiseks.
-
-Jaotise~\ref{sec:qft} teemaks on kvantarvtuslik Fouirer' teisendus ja pöördteisendus, mis on vajalikud peatüki järgmises osas~\ref{sec:untiary}.
+Jaotise~\ref{sec:qft} teemaks on kvantarvtuslik Fouirer' teisendus ja pöördteisendus, mis on vajalikud peatüki järgmises osas~\ref{sec:unitary}.
 
 Jaotis~\ref{sec:unitary} käsitleb unitaarse operaatori omaväärtuste leidmist, milleks ongi faasi hindamise algoritm mõeldud.
 
@@ -799,7 +792,7 @@ Valemite \ref{f:qftdef} ja \ref{f:cftdef} võrdlusest selgub, et kvantarvutuslik
 Klassikaliselt kulub Fourier' teisenduse läbi viimiseks \(N \log{N}=n 2^n \) sammu, kvantavutuslikult vaid \(\log^2{N} = n^2\) sammu.
 Pealt näha on antud ülesande lahendamine kvantarvutuslikult oluliselt efektiivsem kui klassikaliselt~\cite{nielsen+chuang}.
 
-Paraku talletub Fourier' teisenduse tulemus kvantarvutusliku Fourier' teisenduse käigus lõppoleku amplituudidesse ja pole seega otseselt mõõdetav~\cite{nielnse+chuang}.
+Paraku talletub Fourier' teisenduse tulemus kvantarvutusliku Fourier' teisenduse käigus lõppoleku amplituudidesse ja pole seega otseselt mõõdetav~\cite{nielsen+chuang}.
 Sellest tulenevalt ei saa kvantarvutusliku Fourier' teisendust kasutada lihtsalt klassikalise Fourier' teisenduse kiiremaks läbiviimiseks.
 
 
@@ -814,6 +807,7 @@ Unitaarse operaatori \(U\) jaoks kehtib omaväärtusvõrrand
     U \ket{u} = e^{2\pi i\phi} \ket{u}\rlap{,}
 \end{align}
 kus \(\ket{u}\) on \(U\) omavektor ja \(e^{2\pi i\phi}\) omaväärtus.
+NB! Tegemist on kvantbittie ruumi objektidega.
 Faasi hindamise ülesandes on eesmärgiks leida unitaarse operaatori omaväärtus, mida kutsutakse ka selle operaatori faasiks.
 
 Valemis~\ref{f:eigen} on faas on määratud suurusega \(\phi \in [0, 1)\).
@@ -844,8 +838,8 @@ Näitame, et \(\phi\) leidmiseks sobib ahel joonisel~\ref{fig:pea}.
             output {$\phi_n$} pea[4];
             output {$\ket u$} state;
         \end{yquant}
-        \end{tikzpicture}}
-    \caption{Kvantahel \(U\) faasi hindamiseks \cite{nielnse+chuang, kaye+laflamme+mosca}}
+    \end{tikzpicture}}
+    \caption{Kvantahel \(U\) faasi hindamiseks \cite{nielsen+chuang, kaye+laflamme+mosca}}
     \label{fig:pea}
 \end{figure}
 
@@ -1056,22 +1050,20 @@ Kui kehtib
 \end{align}
 siis on tagatud, et suurima tõenäosusega mõõtmistulemus on põhineriga \(E_1\) hinnang~\cite{whitfield+etal}.
 
-
-\section{Hamiltoniaani SIMULEERIMINE}\label{sec:qcirc}
+\section{Hamiltoniaani simuleerimine}\label{sec:qcirc}
 
 Selles peatkükis leiame kvantahela hamiltoniaani simuleerimiseks.
 
 
-\section{Jordan-Wigneri teisendus}\label{sec:jw}
+\subsection{Jordan-Wigneri teisendus}\label{sec:jw}
 
-Järgmise peatükki tarvis on vajalik kvantahelana realiseerida unitaarset operaatorit
+Faasi hindamise tarvis on vajalik kvantahelana realiseerida unitaarset operaatorit
 \begin{equation}\label{eq:hamtime}
   U = e^{-iHt}\rlap{,}
 \end{equation}
 kus \(H\) on hamiltoniaan.
-Varasemalt käsitlesime hamiltoniaani \(H\) Focki ruumi operaatorina.
-Eelmistes peatükkides oli hamiltoniaan \(H\) Focki ruum objekt.
-Selle realiseerimiseks kvantahelana viimes slles peatükis läbi Jordan-Wigneri teisenduse~\cite{jordan+wigner}, mis viib hamiltoniaani üle kvantbittide ruumi.
+Eelmistes peatükis oli hamiltoniaan \(H\) Focki ruum objekt.
+Selle realiseerimiseks kvantahelana viime nüüd peatükis läbi Jordan-Wigneri teisenduse~\cite{jordan+wigner}, mis viib hamiltoniaani üle kvantbittide ruumi.
 
 Siin töös me Jordan-Wigneri teisenduse üksikasju ei käsitle, kuid toome ära mõned selle kasulikud omadused.
 
@@ -1130,14 +1122,14 @@ siis operaatorit~\ref{eq:hamtime} realiseerib kvantahel joonisel~\ref{f:expz}.
   \label{f:expz}
 \end{figure}
 
-Teisisõnu, bitile \(j_n\) tuleb järjest rakenda bittide \(j_1\), \(j_2\), \(\cdots\), \(j_{n-1}\) juhitud \(\cnot\)-väravavaid.
+Teisisõnu, bitile \(j_n\) tuleb järjest rakenda bittide \(j_1\), \(j_2\), \(\cdots\), \(j_{n-1}\) juhitud \(\CNOT\)-väravavaid.
 Siis tuleb bitti \(j_n\) pöörata väravaga \(R_z(2a)\).
-Viimaks tuleb bitile \(j_n\) järjest rakendada bittide \(j_{n-1}\), \(j_{n-2}\), \(\cdots\), \(j_1\) jihtud \(\cnot\)-väravaid.
+Viimaks tuleb bitile \(j_n\) järjest rakendada bittide \(j_{n-1}\), \(j_{n-2}\), \(\cdots\), \(j_1\) jihtud \(\CNOT\)-väravaid.
 Bitte, mis \(j_1\), \(j_2\), \(\cdots\), \(j_n\) hulgas ei esine, ei mõjutata~\cite{mansky+etal}.
 
-Kesksele väravale \(R_z(2a)\) eelnev \(\cnot\)-väravate osa arvutab bitide \(j_1\), \(j_2\), \(\cdots\), \(j_n\) paarsuse.
+Kesksele väravale \(R_z(2a)\) eelnev \(\CNOT\)-väravate osa arvutab bitide \(j_1\), \(j_2\), \(\cdots\), \(j_n\) paarsuse.
 Keskne värav \(R_z(2a)\) teeb sobiva pöörde.
-Järgnev \(\cnot\)-väravate osa kustutab ära nüüdseks ebavajaliku informatsiooni paarsuse kohta~\cite{nielsen+chuang}.
+Järgnev \(\CNOT\)-väravate osa kustutab ära nüüdseks ebavajaliku informatsiooni paarsuse kohta~\cite{nielsen+chuang}.
 
 
 \subsection{Pauli $X$, $Y$ ja $Z$ maatriksite tensorkorrutise eksponent}
@@ -1201,69 +1193,7 @@ Seega lõpliku $\Delta t$ puhul
 kus paras $\Delta t$ väärtus tuleb enamasti leida eksperimentaalselt.
 Seda meetodit ahela koostamiseks nimetatakse Suzuki-Trotteri lahutuseks või lihtsalt trotteriseerimiseks~\cite{mansky+etal}
 
-\chapter{Metoodika}\label{chap:methods}
-
-Selles peatükis võtame kokku protseduuri molekuli põhienergia leidmiseks.
-Samuti tutvustame vahendeid arvutuste läbiviimiseks.
-
-
-\section{Lahendamise skeem}
-
-Esitame nüüd molekulaarse hamiltonaani energia leidmise sammud.
-
-Ülesande lahendamine algab molekuli geomeetria kirja panemisest.
-Tuleb määrata aatomite koosseis molekulis ja aatomite vahelised kaugused.
-Samuti tuleb valida keemiline baas.
-Sealt edasi saab leida konkreetse molekuli hamiltoniaani kuju.
-Hamiltoniaani tuleb seejärel lihtsustada Born-Oppenheimeri ja Hatree-Focki lähenduses.
-Lõpuks tuleb hamiltonaain esitada teise kvantiseerimise kujul.
-
-Samuti tuleb leida huvipakkuvale olekule võimalikult lähedane olek Hartree korrutisena.
-
-Järgmisena tuleb Focki ruumi hamiltoniaan esitada kvantbittide ruumis.
-Selleks saab kasutada Jordan-Wigneri teisendust.
-Järgmiseks tuleb kvantahelana realiseerida operaator, mis on hamiltoniaani eksponent.
-Et hamiltoniaan on pärast Jordan-Wigneri teisendust Pauli sõnede summa, siis leidub skeem selle esitamiseks kvantahalana, kuid seda võib olla vaja trotteriseerida.
-
-Faasihindamise jaoks on oluline, et unitaarne operaator oleks juhitud.
-Juhitud unitaarse operaatori saab kui kvantahelas asendada kõik pöörded juhitud pööretega.
-Nõnda toiminud, sõltub iga Pauli sõne rakendamine sellest, mis on juhtkvantbiti olek.
-Kui juhtkvantbitt on olekus \(\ket0\), pööre ei rakendu.
-Et paarsuse arvutamine ja selle tagasi panemine on pöördoperatsioonid, siis kokkuvõttes antud Pauli sõne justkui ei rakendu.
-Kui juhtkvantvitt on olekus \(\ket1\) pööre rakendub ja rakendub ka Pauli sõne tervikuna.
-
-Eraldi tuleb arvestada hamiltoniaani seda liiget, mis on ühikmaatriksite tensorkorrutis.
-Sellise liikme eksponent on globaalse faasi operaator, mille juhtimiseta juhul võib jätta arvestamata.
-Samas juhitud globaalse faasi operaator rakendaine muudab suhtelise faasi ja seda peab arvestama.
-Juhtitud globaalse faasi operaatori võib asendanda juhtkvantvitil rakendatud suhtelise faasi opetaatoriga, nagu näha joonisel~\ref{fig:globphase}.
-
-\begin{figure}[h]
-    \centering
-    \yquantjoonis{\begin{tikzpicture}
-        \begin{yquantgroup}
-            \registers{
-                qubit {} q[2];
-            }
-            \circuit{
-                box {\(GP(\alpha)\)} q[1] | q[0];
-            }
-            \equals
-            \circuit{
-                box {\(P(-\alpha)\)} q[0];
-            }
-        \end{yquantgroup}
-    \end{tikzpicture}}
-    \caption{Juhitud globaalse faasi operaaotri saab asendada juhtkvantbitile rakendatud faasi operaatoriga, mille argument peab olema vastupidine~\cite{nielsen+chuang}}
-    \label{fig:globphase}
-    \TODO{Üks traat on puudu}
-\end{figure}
-
-
-Viimaks tuleb koostada faasi hindamise kvantahel ja seda käitada.
-Trotteriseerimise sammude arv ja faasi hindamise registri suurus tuleb valida sobivalt.
-
-\TODO{Kas siin peaks olema lahendamise skeem joonisena?}
-
+\chapter{Tulemused}\label{chap:results}
 
 \section{Kasutatud vahendid}
 
@@ -1275,10 +1205,6 @@ Kvantahela koostamiseks ja selle klassikaliseks simuleerimiseks kasutasime teeki
 
 Trotterisammude arvu, faasi hindamise registri suuruse ja energia piirväärtuse valikut selgitab järgmine peatükk.
 Keemiliseks baasiks võtsime STO-3G.
-
-
-\chapter{Tulemused}\label{chap:results}
-
 
 \section{Vesiniku molekuli energia}
 
@@ -1353,7 +1279,6 @@ Nagu näha, sõltub energia hinnagu täpsus piirvääruse valikust kaootiliselt.
 Siiski energiast oluliselt suuremate piirväärtuste puhul (mida joonisel~\ref{fig:bounds} pole kujutatud), täpsus reeglina väheneb.
 Nimelt on sellisel juhul \(\phi \ll 1\) ja seega ei panusta esimesed kvantbitid tulemuse täpsusesse.
 
-
 \section{Edasiarendusi}
 
 Faasi hindamise algoritmi peamine edasiarendus on iteratiivne faasi hindamise algoritm~\cite{mcardle+etal, omalley+etal}.
@@ -1366,15 +1291,6 @@ Samuti on ahelad lühemad.
 
 Puuduseks on keerulisus ja asjaolu, et võimalik viga mõne biti välja lugemisel võib kumuleeruda.
 
-
-
-\chapter{Kokkuvõte}
-
-Käesolevas töös uuriti molekulaarse süsteemi põhienergia leidmist
-kvantarvutusliku faasi hindamise algoritmi abil.
-
 \printbibliography[heading=bibintoc, title=Kirjandus]
-
-
 
 \end{document}
