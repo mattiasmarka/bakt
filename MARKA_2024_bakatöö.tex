@@ -27,7 +27,7 @@
 
 \usepackage{booktabs}
 
-% \newcommand*{\YQUANTON}{}
+\newcommand*{\YQUANTON}{}
 \ifdefined\YQUANTON
   \usepackage{yquant}
 \else \fi
@@ -821,7 +821,7 @@ Näitame, et \(\phi\) leidmiseks sobib ahel joonisel~\ref{fig:pea}.
 
 \begin{figure}[h]
     \centering
-    \begin{tikzpicture}
+    \yquantjoonis{\begin{tikzpicture}
         \begin{yquant}
             qubit {$\ket0$} pea[1];
             qubit {$\ket0$} pea[+1];
@@ -844,7 +844,7 @@ Näitame, et \(\phi\) leidmiseks sobib ahel joonisel~\ref{fig:pea}.
             output {$\phi_n$} pea[4];
             output {$\ket u$} state;
         \end{yquant}
-        \end{tikzpicture}
+        \end{tikzpicture}}
     \caption{Kvantahel \(U\) faasi hindamiseks \cite{nielnse+chuang, kaye+laflamme+mosca}}
     \label{fig:pea}
 \end{figure}
@@ -1157,7 +1157,7 @@ Sobiv ahel on joonisel~\ref{f:zxyex}~\cite{nielsen+chuang}.
 
 \begin{figure}[h]
   \centering
-  \yquant{\begin{tikzpicture}
+  \yquantjoonis{\begin{tikzpicture}
     \begin{yquant}
       qubit {$1\colon$} q[1];
       qubit {$2\colon$} q[+1];
@@ -1200,8 +1200,6 @@ Seega lõpliku $\Delta t$ puhul
 \end{equation}
 kus paras $\Delta t$ väärtus tuleb enamasti leida eksperimentaalselt.
 Seda meetodit ahela koostamiseks nimetatakse Suzuki-Trotteri lahutuseks või lihtsalt trotteriseerimiseks~\cite{mansky+etal}
-
-
 
 \chapter{Metoodika}\label{chap:methods}
 
