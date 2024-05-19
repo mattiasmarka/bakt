@@ -17,32 +17,24 @@
 
 \usepackage[hidelinks]{hyperref}
 
+\usepackage{booktabs}
+
 \usepackage[sorting=none, style=numeric]{biblatex}
 \addbibresource{srcs.bib}
 
-\usepackage{booktabs}
-
 \usepackage{graphicx}
-% \newcommand*{\YQUANTJOONIS}{}
-\ifdefined\YQUANTJOONIS
-  \usepackage{yquant}
-\else \fi
-
-\def\yquantjoonis#1{
-  \ifdefined\YQUANTJOONIS
-    #1
-  \else
-    [joonis]
-  \fi
-}
+\usepackage{yquant} \useyquantlanguage{groups} \newcommand*{\yquanton}{}
 
 \def\paren#1{\left(#1\right)}
 \def\sparen#1{\left[#1\right]}
+\def\cparen#1{\left\{#1\right\}}
 
 \def\abs#1{\left|#1\right|}
 
-\def\bra#1{\left<#1\right|}
-\def\ket#1{\left|#1\right>}
+\def\d#1{\mathinner{d#1}}
+
+\def\bra#1{\mathinner{\langle#1|}}
+\def\ket#1{\mathinner{|#1\rangle}}
 
 \def\CNOT{\mathop{\rm CNOT}\nolimits}
 \def\SWAP{\mathop{\rm SWAP}\nolimits}
@@ -50,34 +42,6 @@
 \def\QFT{\mathop{\rm QFT}\nolimits}
 
 \begin{document}
-
-\begin{titlepage}
-    \begin{center}
-        \large
-        {\sc Tartu Ülikool} \\
-        Loodus- ja täppisteaduste valdkond \\
-        Füüsika instituut \\
-        Füüsika, keemia ja materjaliteaduse õppekava \\
-    
-        \vspace{25mm}
-        \Large Mattias Märka
-        
-        \vspace{4mm}
-        \Huge Molekulaarse hamiltoniaani põhioleku energia leidmine faasi hindamise algoritmi abil
-    
-        \vspace{20mm}
-        \Large Bakalaureusetöö (6 EAP)
-    
-        \vspace{20mm}
-        \begin{flushright}
-            \Large Juhendaja: Veiko Palge, PhD
-        \end{flushright}
-    
-        \vfill
-        \large Tartu 2024
-    \end{center}
-\end{titlepage}
-
 
 \tableofcontents
 
@@ -129,12 +93,36 @@ Sammud lahendamiseks on järgmsised~\cite{whitfield+etal2011}.
 Selguse huvides on sammud tekstis esitatud vastupidises järjekorras.
 
 Selles töös on arvutuste läbiviimiseks kasutatud simulaatorit.
-Kasutatud vahendeid käsitleb peatükk~\ref{chap:methods}.
+Metoodikat käsitleb peatükk~\ref{chap:methods}.
 Peatükk~\ref{chap:results} tutvustab tulemusi.
 
 \chapter{Elektronstruktuuri ülesanne}\label{chap:qchem}
 
-\section{Molekulaarse süsteemi hamiltoniaani üldkuju}
+Kvantkeemia põhieesmärk on lahendada elektronstruktuuri ülesanne, mille üheks näiteks on molekulaarsete energiate leidmine.
+Tegemist on olulise ülesandega: molekulaarsete energiate põhjal on võimalik ennustada reaktsioonid kulgemist.
+
+Ülesanne taandub Scrödingeri võrrandi
+\begin{align}
+    H \Psi = E\Psi
+\end{align}
+lahendamisele.
+Viimases valemis on \(H\) elektronkatte hamiltoniaan, \(\Psi\) elektronkatte olek ja \(E\) sellele vastav energia.
+Ülesandeks on leida \(E\) etteantud \(H\) ja \(\Psi\) jaoks.
+
+Selles peatükis käsitleme ülesande lahendamise eelarvutusi: \(H\) ja \(\Psi\).
+Seejuures peame silmas ülesande lahendamise ressursikulu ja vajadust esitada ülesanne hiljem kvantbittide ruumis.
+
+Alapeatükkis~\ref{sec:molham} esitame molekulaarse hamiltoniaani üldise kuju.
+
+Edasi, alapeatükis~\ref{sec:bo}, tuletame molekulaarse hamiltoniaanist elektronkatte hamiltoniaani, mida lubab teha Born-Oppehiemeri lähendus.
+
+Alepeatükis~\ref{sec:hpsd} käsitleme elektronkatte olekute kuju, täpsemalt Hartree korrutist ja Slateri determinanti.
+
+Järgmiseks, alapeatükis~\ref{sec:hf}, käsitleme Hatree-Focki lähendust, mis on vajalik elektronkatte hamiltoniaani lihtsutamiseks.
+
+Viimaks, alapeatükis~\ref{sec:secquant}, esitame ülesane arvutusteks paremini sobival teise kvantiseerimise kujul.
+
+\section{Molekulaarse süsteemi hamiltoniaani üldkuju}\label{sec:molham}
 
 Molekuli keemilised omadused määrab elektronstruktuur.
 Tuumade mõju pole üldjuhul oluline.
@@ -142,7 +130,7 @@ Siin töös pakubki huvi vaid elektronstruktuur, mida kirjeldab elektronide hami
 
 Et elektronide ja tuumade dünaamika pole sõltumatu, siis ei saa elektronide hamiltoniaani aprioorselt kirja panna.
 
-Molekuli kui terviku hamiltoniaan on
+Molekulaarne hamiltoniaan
 \begin{align}\label{eq:molham}
     H_\text{mol} = \underbrace{\sum_{i = 1}^N \frac{1}{2} \nabla_i^2}_\text{(a)}
     \underbrace{- \sum_{A = 1}^M \frac{1}{2 M_A} \nabla_A^2}_\text{(b)}
@@ -174,7 +162,7 @@ Tulemuseks on vaid elektronkatet kirjeldav hamiltoniaan
     \underbrace{- \sum_{i = 1}^N \sum_{A = 1}^M \frac{Z_A}{r_{iA}}}_\text{(c)}
     \underbrace{+ \sum_{i = 1}^N \sum_{j > i}^N \frac{1}{r_{ij}}}_\text{(d)} \rlap{,}
 \end{align}
-mida kutsutaksegi elektronide hamiltoniaaniks~\cite{szabo+ostlund}.
+mida kutsutume elektronakatte hamiltoniaaniks~\cite{szabo+ostlund}.
 
 Hamiltoniaan~\eqref{eq:elham} erineb küll hamiltoniaanist~\eqref{eq:molham} omaväärtuste poolest, kuid kehtib
 \begin{align}
@@ -194,7 +182,7 @@ Valemit~\eqref{eq:elham} on vaja edasi lihtsutada, sest hetkel on tegemist mitme
 
 See alapeatükk keskendub elektronkatte lainefunktsioonile, milleks on kaks põhjust.
 Esiteks on vaja lainefunktsiooni täpsustada valemi~\eqref{eq:elham} edasiseks lihtsustamiseks.
-Teiseks on hiljem vaja teada põhioleku lainefunktsiooni kuju, et leida põhioleku energia.
+Teiseks on oleku lainefunktsiooni kuju vaja teada oleku energia leidmiseks.
 
 Lainefunktsiooni \(\Psi\) jaoks on kaks tingimust.
 Ühest küljest peab see rahuldama Scrödingeri võrrandit
@@ -214,8 +202,8 @@ Sobiva lainefunktsiooni saab molekulaarobitaalide teooriast.
 Selles teoorias nimetatakse spinnorbitaaliks funktsiooni
 \begin{align}\label{eq:spinorb}
     \chi_j(\vec{x_i}) = \begin{cases}
-        \alpha(\omega_i) \phi_j(\vec{r_i})\text{,} & \text{kui \(i\) ei jagu \(2\)-ga} \\
-        \beta(\omega_i) \phi_{j-1}(\vec{r_i})\text{,} & \text{kui \(i\) jagub \(2\)-ga} \\
+        \alpha(\omega_i) \phi_j(\vec{r_i})\text{,} & \text{kui \(j\) ei jagu \(2\)-ga} \\
+        \beta(\omega_i) \phi_{j-1}(\vec{r_i})\text{,} & \text{kui \(j\) jagub \(2\)-ga} \\
     \end{cases}
 \end{align}
 Spinnorbitaal on ühe elektroniga moleklulaarse süsteemi lainefunktsiooniks.
@@ -260,22 +248,16 @@ Kuigi me seda siin ei näita, siis arvestab antisümmeetria printsiipi ja elektr
 \end{align}
 mida kutsutakse Slateri determinandiks.
 Pikemalt käsitleb Slateri determinandi omadusi~\cite{szabo+ostlund}.
-Oluline on, et Slateri determinant sobib elektronide lainefunktsiooniks.
-
-Slateri determinandi~\eqref{eq:slater} lühitähistus on \(\ket{\chi_i\chi_j\cdots\chi_k}\), mis tähendab, et elektron \(1\) asub spinnorbitaalil \(\chi_i\), elektron \(2\) spinnorbitaalil \(\chi_j\) jne.
+Oluline on, et Slateri determinant sobib elektronkatte lainefunktsiooniks.
 
 \section{Hartree-Focki lähendus}\label{sec:hf}
 
 Alapeatükis~\ref{sec:bo} selgus, et Born-Oppeheimeri lähenduse tulemuseks on mitme keha probleem, mille lahendamine on teadagi keeruline.
 
-Ülesanne muutub ühe keha probleemiks Hartree-Focki lähenduses, kus teise elektronide mõju igale elektronile võetakse arvesse statsionaarse väljana.
+Ülesanne muutub ühe keha probleemiks Hartree-Focki lähenduses, kus teiste elektronide mõju igale elektronile võetakse arvesse statsionaarse väljana.
 See lähendus on kvantkeemias laialt kasutuses ja annab enamasti piisavalt täpse tulemuse~\cite{szabo+ostlund}.
 
-Varasemast teame, et mitme elektroniga süsteemi põhioleku lainefunktsioon on kujul
-\begin{align}
-    \ket{\Psi_0} = \ket{\chi_1 \chi_2 \cdots \chi_N} \rlap{,}
-\end{align}
-kus \(N\) on elektronide arv.
+Varasemast teame, et mitme elektroniga süsteemi põhioleku lainefunktsioon on kujul~\eqref{eq:slater}.
 
 Variatsiooni printsiibist tulenevalt on põhioleku lainefunktsioon selline, mille energia
 \begin{align}
@@ -299,26 +281,34 @@ Viimases valemis on \(v^\text{HF}(i)\) elektroni \(i\) kogetud keskmine potentsi
 
 Hartree-Focki võrrandi lahendamisprotseduuri me siin ei käsitle, vt~\cite{szabo+ostlund}.
 
-Lahendamise tulemuseks on Hartree-Focki spinnorbitaalide komplekt \(\{\chi_k\}\), millele vastab energiate komplekt \(\{\epsilon_k\}\), kusjuures \(k > N\)~\cite{szabo+ostlund}.
+Lahendamise tulemuseks on Hartree-Focki spinnorbitaalide komplekt \(\cparen{\chi_k \middle| k = 1, \ldots, M}\), millele vastab energiate komplekt \(\cparen{\epsilon_k \middle| k = 1, \ldots, M}\), kusjuures \(M > N\)~\cite{szabo+ostlund}.
 
 Põhioleku lainefunktsioon on
 \begin{align}
     \ket{\Psi_0} = \ket{\chi_a \chi_b \cdots \chi_c} \rlap{,}
 \end{align}
 kus \(\chi_a\), \(\chi_b\), \(\ldots\), \(\chi_c\) on \(N\) madalaima energiaga spinnorbitaali.
-Orbitaale \(\chi_a\), \(\chi_b\), \(\ldots\), \(\chi_c\) nimetakse täidetud orbitaalideks, ülejäänud on virtuaalised orbitaalid.
-
-Spinnorbitaalide kuju sõltub baasifunktsioonide komplekist, mida nimetatakse keemiliseks baasiks.
-Sama ülesande lahendamsieks võib kasutada suuremat või väiksemat keemilist baasi.
-Väiksemad keemilised baasid on küll ebatäpsemad, kuid need võimaldavad arvutusressurside kokkuhoidu.
-Tuntuim keemiline baas on STO-3G, mida kutsutakse ka minimaalseks baasiks.
+Orbitaale \(\chi_a\), \(\chi_b\), \(\ldots\), \(\chi_c\) nimetakse täidetud orbitaalideks, ülejäänud on täitmata orbitaalid.
 
 \section{Teine kvantiseerimine}\label{sec:secquant}
 
-Enne Focki ruumist kvantbittide ruumi suundumist, mis on vajalik ülesande kvantarvutuslikuks lahendamiseks, on kasulik esitada hamiltoniaan ja lainefunktsioon teise kvantseerimise kujul.
-Teise kvantseerimise kuju võtab arvesse sümmeetria omadusi ja sedasi on võimalik probleemi lihtsustada~\cite{kassal+etal, yung+etal}.
+Esimese kvantiseerimise formalismis võetakse antisümmeetria printsiipi arvesse esitades lainefunktsioon Slateri determinandina.
+Täpsemalt, informatsioon antisümmeetria kohta sisaldub lainefunktsioonis ilmutatud kujul.
+Determinandis~\eqref{eq:slater} on olulised vaid diagonaalelemendid, kõik muu on vajalik vaid antisümmeetria printsiibi kehtimiseks.
 
-Teise kvantiseerimise formalism ehitatakse üles kahele operaatorile.
+Teise kvantiseerimise formalismis on lainefunktsiooni esitus soodsam:
+\begin{align}
+    \Psi(\vec{x}_1, \ldots, \vec{x}_N)=\ket{\chi_1\cdots \chi_M} \rlap{,}
+\end{align}
+kus \(\chi_1\), \(\ldots\), \(\chi_M \in \cparen{0, 1}\) viitavad vastavalt tühjadele või täidetud orbitaalidele.
+Seda nimetatakse täiteravude esituseks.
+Sama lainefunktsiooni esituses Slateri determinanina esinevad vaid täidetud orbitaalid.
+
+Täitearvude esitus on arvutuslikult soodsam: võrreldagu elementide arvu.
+Samas ei ole antisümmeetria enam kodeeritud lainefunktsiooni kujusse.
+
+Antisümmeetria printsiipi arvestatakse teise kvantiseerimise formalismis algebraliselt.
+Selleks defineeritakse kaks sobivate omadustega operaatorit: tekkeopraatoe \(a_i^\dagger\) ja kaooperaator \(a_i\)
 
 Tekkeopraator \(a_i^\dagger\) tekitab süsteemi juurde elektroni spnnorbitaalile \(\chi_i\):
 \begin{align}
@@ -330,36 +320,51 @@ Kaooperaatoer \(a_i\) eemaldab süsteemist elektroni spinnorbitaalilt \(\chi_i\)
     a_i \ket{\chi_i \chi_k \cdots \chi_l} = \ket{\chi_k \cdots \chi_l}\rlap{.}
 \end{align}
 
-Tekke- ja kaoperaatori algebralised omadused on kooskõlas determinantide omadustega, mis saavtatakse kommutatsioonireeglitega
-\begin{align}
+Kehtivad kommutatsioonireeglid
+\begin{align}\label{eq:comrules}
     \sparen{\alpha_i^\dagger, \alpha_j^\dagger} = 0 \rlap{,}
     \qquad \sparen{\alpha_i, \alpha_j} = 0 \rlap{,}
     \qquad \sparen{\alpha_i, \alpha_j^\dagger} = \delta_{ij} \rlap{.}
 \end{align}
 
-Teise kvantseerimise kujul antud hamiltoniaani ja lainefunktsiooni viib kvantbittide ruumi Jordan-Wigneri teisendus, mida käsitletakse alapeatükis~\ref{sec:jw}.
-
-\section{Energia leidmine}
-
-Edasine ülesanne on järgmine.
-
-Olgu meil antud molekulaarse süsteemi elektronide hamiltoniaan \(H\).
-Ülesandeks on leida olekule põhiolekule \(\ket{\Psi_0}\) vastav energia \(E\).
-Selleks tuleb lahendada omaväärtusvõrrand
+Elektronkatte hamiltoniaan on teise kvantiseerimise kujul
 \begin{align}
-    H \ket{\Psi_0} = E \ket{\Psi_0} \rlap{,}
+    H=\sum_{p,q}h_{pq}a_p^\dagger a_q + \frac{1}{2} \sum_{pqrs} a_p^\dagger a_q^\dagger a_r a_s \rlap{,}
 \end{align}
-mis on klassikaliset kulukas ülesanne.
-Tegemist on elektronstruktuuri ülesande ühe variandiga.
+kus
+\begin{align}\label{eq:molint1}
+    h_{pq} = \int d{\vec{x}_i} \chi_p^*(\vec{x}_i)
+    \paren{-\frac{1}{2} \nabla^2 - \sum_A \frac{Z_a}{r_iA}} \chi_q(\vec{x}_i)
+\end{align}
+ja
+\begin{align}\label{eq:molin2}
+    h_{pqrs} = \int \d{\vec{x}_1} \d{\vec{x}_2}
+    \frac{\chi_p^*(\vec{x}_1) \chi_q^*(\vec{x}_2) \chi_r(\vec{x}_2) \chi_s(\vec{x}_1)}{r_12}
+\end{align}
+on molekulaarsed integraalid, mis seovad hamiltoniaani esimese ja teise kvantiseerimise kuju.
 
-Järgmise peatatükk tutvustab kvantarvutusliku meetodit selle ülesande lahendamiseks, mis on klassikalisest efektiivsem.
-Meetod töötab peale põhioleku ka teiste olekute jaoks.
+Need integralid on kergesti klassikaliset arvutatavad.
 
-\chapter{Kvantarvutslik lahendamine}
+Antud töös ongi ülesande lahendamise eelarvutuseks integraalide \eqref{eq:molint1} ja \eqref{eq:molin2} leidmine.
 
-\section{Kvantarvutuse põhimõisted}
+Arvutamiseks tuleb valida keemiline baas \(\cparen{\chi_i \middle| i=1,\ldots, M}\), mis määrab lahendamise täpsuse.
 
-Selles töös kastuame kvantarvutuse ahela mudelit, mille põhimõisted on kvantbitt ja kvantvärav.
+\chapter{Kvantarvutuslik lahendamine}
+
+Digitaalseks simuleerimiseks tuleb Focki ruumi hamiltoniaan esitada kvantbittide ruumis.
+Edasi saab molekulaarsete energiate leidmiseks kasutada faasi hindamise algoritmi, mis on tegelikult lahendamisviis märksa üldisema ülesande joaks.
+
+Alapeatükis~\ref{sec:qubits} tuvustame kvantarvuse põhimõisteid.
+
+Järgmisena, alapeatükis~\ref{sec:pea}, tutvustame faasi hindamise algoritmi üldiselt.
+
+Alles hiljem, alepaetükis~\ref{sec:hamsim}, käsitleme molekulaarsete energiate leidmise ülesande viimist õigele kujule faasi hindamise algoritmiga lahendamiseks.
+Esimene samm selleks on Focki ruumi hamiltoniaani esitamine kvantbittide ruumis.
+Teine samm on hamiltoniaani simuleerimine kvantahelana, milleks tuleb hermiitilise operaatorit puudutav ülesanne kodeerida unitaarsete operaatorite kaudu.
+
+\section{Kvantarvutuse põhimõisted}\label{sec:qubits}
+
+Selles töös kasutame kvantarvutuse ahela mudelit, mille põhimõisted on kvantbitt ja kvantvärav.
 Kvantahelamudel sarnaneb üldpildis klassikalisele ahelamudelile~\cite{nielsen+chuang, kaye+laflamme+mosca}
 
 Informatsiooni põhiühikuks on kvantbitt, mis on üldiselt Hilberti ruumi objekt.
@@ -407,7 +412,7 @@ Klassikalises teoorias on kõik bitid sõltumatud, põimitust ei esine~\cite{mca
 Kvantväravad sooritavad kvantbittidel unitaarsed operatsioone.
 Need võivad mõjutada ühte või rohkemat kvantbitti.
 Mitut kvantbitti mõjutavad väravad võivad olla põimivad.
-Kõik siin töös kasutatud väravad on toodud tabelis~\ref{tab:gates}~\cite{mcardle+etal, nielsen+chuang, kaye+laflamme+mosca}
+Siin töös kasutatud väravad on toodud tabelis~\ref{tab:gates}~\cite{mcardle+etal, nielsen+chuang, kaye+laflamme+mosca}
 
 \begin{table}[]
     \centering
@@ -420,23 +425,29 @@ Kõik siin töös kasutatud väravad on toodud tabelis~\ref{tab:gates}~\cite{mca
             e^{-i\frac{\theta}{2}} & 0 \\
             0 & e^{i\frac{\theta}{2}} \\
         \end{pmatrix}
-        \) & \lower6pt\hbox{\yquantjoonis{\begin{tikzpicture}
+        \) & \lower6pt\hbox{
+        \ifdefined\yquanton
+        \begin{tikzpicture}
             \begin{yquant}
                 qubit {} q[1];
                 box {\(R_z(\theta)\)} q[0];
             \end{yquant}
-        \end{tikzpicture}}} \\[1em]
+        \end{tikzpicture}
+        \fi} \\[1em]
         Faasinihe & \(P(\lambda)\) & \(
         \begin{pmatrix}
             1 & 0 \\
             0 & e^{i\lambda} \\
         \end{pmatrix}
-        \) & \lower6pt\hbox{\yquantjoonis{\begin{tikzpicture}
+        \) & \lower6pt\hbox{
+        \ifdefined\yquanton
+        \begin{tikzpicture}
             \begin{yquant}
                 qubit {} q[1];
                 box {\(P(\theta)\)} q[0];
             \end{yquant}
-        \end{tikzpicture}}} \\[1em]
+        \end{tikzpicture}
+        \fi} \\[1em]
         Juhitud eitus & \(\CNOT\) & \(
         \begin{pmatrix}
             1 & 0 & 0 & 0 \\
@@ -444,79 +455,97 @@ Kõik siin töös kasutatud väravad on toodud tabelis~\ref{tab:gates}~\cite{mca
             0 & 0 & 1 & 0 \\
             0 & 1 & 0 & 0 \\
         \end{pmatrix}
-        \) & \lower6pt\hbox{\yquantjoonis{\begin{tikzpicture}
+        \) & \lower6pt\hbox{
+        \ifdefined\yquanton
+        \begin{tikzpicture}
             \begin{yquant}
                 qubit {juhtbitt} ctrl;
                 qubit {sihtbitt} trgt;
                 cnot trgt | ctrl;
             \end{yquant}
-        \end{tikzpicture}}} \\
+        \end{tikzpicture}
+        \fi} \\
         Pauli \(X\) & \(X\) & \(
         \begin{pmatrix}
             0 & 1 \\
             1 & 0 \\
         \end{pmatrix}
-        \) & \lower6pt\hbox{\yquantjoonis{\begin{tikzpicture}
+        \) & \lower6pt\hbox{
+        \ifdefined\yquanton
+        \begin{tikzpicture}
             \begin{yquant}
                 qubit {} q[1];
                 box {\(X\)} q[0];
             \end{yquant}
-        \end{tikzpicture}}} \\[1em]
+        \end{tikzpicture}
+        \fi} \\[1em]
         Pauli \(Y\) & \(Y\) & \(
         \begin{pmatrix}
             0 & -i \\
             i & 0 \\
         \end{pmatrix}
-        \) & \lower6pt\hbox{\yquantjoonis{\begin{tikzpicture}
+        \) & \lower6pt\hbox{
+        \ifdefined\yquanton
+        \begin{tikzpicture}
             \begin{yquant}
                 qubit {} q[1];
                 box {\(Y\)} q[0];
             \end{yquant}
-        \end{tikzpicture}}} \\[1em]
+        \end{tikzpicture}
+        \fi} \\[1em]
         Pauli \(Z\) & \(Z\) & \(
         \begin{pmatrix}
             1 & 0 \\
             9 & -1 \\
         \end{pmatrix}
-        \) & \lower6pt\hbox{\yquantjoonis{\begin{tikzpicture}
+        \) & \lower6pt\hbox{
+        \ifdefined\yquanton
+        \begin{tikzpicture}
             \begin{yquant}
                 qubit {} q[1];
                 box {\(Z\)} q[0];
             \end{yquant}
-        \end{tikzpicture}}} \\[1em]
+        \end{tikzpicture}
+        \fi} \\[1em]
         Hadamardi operaator & \(H\) & \(
         \frac{1}{\sqrt{2}} \begin{pmatrix}
             1 & 1 \\
             1 & -1 \\
         \end{pmatrix}
-        \) & \lower6pt\hbox{\yquantjoonis{\begin{tikzpicture}
+        \) & \lower6pt\hbox{
+        \ifdefined\yquanton\begin{tikzpicture}
             \begin{yquant}
                 qubit {} q[1];
                 box {\(H\)} q[0];
             \end{yquant}
-        \end{tikzpicture}}} \\[1em]
+        \end{tikzpicture}
+        \fi} \\[1em]
         Faasioperaator & \(S\) & \(
         \begin{pmatrix}
             1 & 0 \\
             0 & i \\
         \end{pmatrix}
-        \) & \lower6pt\hbox{\yquantjoonis{\begin{tikzpicture}
+        \) & \lower6pt\hbox{
+        \ifdefined\yquanton\begin{tikzpicture}
             \begin{yquant}
                 qubit {} q[1];
                 box {\(S\)} q[0];
             \end{yquant}
-        \end{tikzpicture}}} \\[1em]
+        \end{tikzpicture}
+        \fi} \\[1em]
         Pöördfaasioperaator & \(S^{\dagger}\) & \(
         \begin{pmatrix}
             1 & 0 \\
             0 & -i \\
         \end{pmatrix}
-        \) & \lower6pt\hbox{\yquantjoonis{\begin{tikzpicture}
+        \) & \lower6pt\hbox{
+        \ifdefined\yquanton\begin{tikzpicture}
             \begin{yquant}
                 qubit {} q[1];
                 box {\(S^{\dagger}\)} q[0];
             \end{yquant}
-        \end{tikzpicture}}} \\[1em]
+        \end{tikzpicture}
+        \fi} \\[1em]
         Bittide vahetus & \(\SWAP\) & \(
         \begin{pmatrix}
             1 & 0 & 0 & 0 \\
@@ -524,19 +553,23 @@ Kõik siin töös kasutatud väravad on toodud tabelis~\ref{tab:gates}~\cite{mca
             0 & 1 & 0 & 0 \\
             0 & 0 & 0 & 1 \\
         \end{pmatrix}
-        \) & \lower6pt\hbox{\yquantjoonis{\begin{tikzpicture}
+        \) & \lower6pt\hbox{
+        \ifdefined\yquanton\begin{tikzpicture}
             \begin{yquant}
                 qubit {} q[2];
                 swap (q[0, 1]);
             \end{yquant}
-        \end{tikzpicture}}} \\
+        \end{tikzpicture}
+        \fi} \\
         \midrule
-        Mõõtmine & --- & --- & \lower6pt\hbox{\yquantjoonis{\begin{tikzpicture}
+        Mõõtmine & --- & --- & \lower6pt\hbox{
+        \ifdefined\yquanton\begin{tikzpicture}
             \begin{yquant}
                 qubit {} q[1];
                 measure q[0];
             \end{yquant}
-        \end{tikzpicture}}} \\
+        \end{tikzpicture}
+        \fi} \\
         \bottomrule
     \end{tabular}
     \caption{Töös kasutatud operaatorid, nende tähistused, definitsioonid ja tähitused ahelas~\cite{nielsen+chuang, kaye+laflamme+mosca}}
@@ -556,7 +589,7 @@ määral juhtbitt on olekus \(\ket1\), juhtibitti muutmata. Näiteks
     \CNOT \paren{\alpha \ket{0} \otimes \ket{1} + \beta \ket{1} \otimes \ket{1}}
     = \alpha \ket{0} \otimes \ket{1} + \beta \ket{1} \otimes \ket{0} \rlap{.}
 \end{align}
-Töös kasutatud juhitud väravaid pole tabelis~\ref{tab:gates} eraldi toodud.
+Töös kasutatud juhitud väravaid pole enamasti tabelis~\ref{tab:gates} eraldi toodud.
 
 Mõõtmine pole unitaarne operatsioon ja sellega ei seostu väravat. Siiski
 tähistatakse ahelates seda väravatega sarnaselt. Tabelis~\ref{tab:gates} on
@@ -571,7 +604,8 @@ jooned) ühendavad operaatoreid juhtbitide või juhtregistritega, kui neid on.
 
 \begin{figure}
     \centering
-    \yquantjoonis{\begin{tikzpicture}
+    \ifdefined\yquanton
+    \begin{tikzpicture}
         \begin{yquant}
             qubit {} q[4];
             qubit {\(\ket{\psi}\)} q[+1];
@@ -582,14 +616,15 @@ jooned) ühendavad operaatoreid juhtbitide või juhtregistritega, kui neid on.
             measure q[0, 1, 2];
             output {\(\ket{\phi}\)} q[2];
         \end{yquant}
-    \end{tikzpicture}}
+    \end{tikzpicture}
+    \fi
     \caption{Kvantahela näide}
     \label{fig:circuits}
 \end{figure}
 
 Pikemalt tutvutavad ahelamudelit \cite{nielsen+chuang} ja
 \cite{kaye+laflamme+mosca}. Samas \cite{cao+etal} ja \cite{mcardle+etal} on
-põgusamad tutvustused, kuid suunatud justnimelt kvantsimulatsioonile.
+põgusamad tutvustused, kuid suunatud just kvantsimulatsioonile.
 
 Selles töös on keskne faasi hindamise algoritm, mis on klassikalisest analoogist efektiivsem.
 Kokkuhoiu teevad võimalikuks kaks kvantarvutuse olulist võtet: kvantparallelism ja põimituse kasutamine.
@@ -604,40 +639,39 @@ Tõsi, tulemuste välja lugemiseks tuleb kvantarvuti programmi käitada mitu kor
 Põimituse kasulikust lühidalt kokku võtta ei saa: see on igas algoritmis isemoodi.
 
 Kvantparallelismi ja põimitust ei õnnestu klassikaliselt efektiivselt simuleerida.
-Sestap on neid ülesande efektiivsemaks lahendamiseks võimalik ära kasutada vaid kvantarvutil.
+Sestap on neid ülesande efektiivsemaks lahendamiseks võimalik ära kasutada vaid kvantarvuteid.
 
 \textbf{Üle kontrollida:} Põimituse klassikaline simuleerimine on näide tugevalt korreleeritud probleemist.
 Et ka mitmed kvantkeemia ja -füüsika probleemid on tugevalt korreleeritud, siis arvatakse, et nende lahendamiseks sobivad just kvantarvutid~\cite{cao+etal}.
 
 \section{Faasi hindamise algoritm}\label{sec:pea}
 
-See alapeatükk käsitleb faasi hindamise algoritmi ja selle rakendamist elektronstruktuuri ülesande lahendamiseks.
+Selles alapeatükis keskendume faasi hindamise algoritmile.
 
-Jaotise~\ref{sec:qft} teemaks on kvantarvtuslik Fouirer' teisendus ja pöördteisendus, mis on vajalikud peatüki järgmises osas~\ref{sec:unitary}.
+Jaotises~\ref{sec:qft} käsitleme faasi hindamise algoritmi ühte põhilist osa: kvantarvutusliku Fourier' teisendust.
 
-Jaotis~\ref{sec:unitary} käsitleb unitaarse operaatori omaväärtuste leidmist, milleks ongi faasi hindamise algoritm mõeldud.
+Jaotises~\ref{sec:unit} esitame faasi hindamise algoritmi enese, keskendudes selle peamisele kasutusjuhule, milleks on unitaarse operaatori omaväärutste leidmine.
 
-Viimases jaotiseses~\ref{sec:hermit} näidatakse, kuidas faasi hindamise algoritmi on võimalik kasutada ka hermiitiliste (mitte tingimata unitaarsete) operaatorite omaväärtuste leidmiseks.
-Arutlus viiakse läbi hamiltoniaani näitel, rõhutamaks faasi hindamise algoritmi kasulikkust elektronstruktuuri ülesande lahendamisel.
-
+Jaotises~\ref{sec:hermit} näitame, kuidas faasi hindamise algoritmi õnnestub kasutada ka hermiitiliste operaatorite omaväärtuste leidmiseks.
+Viimane rakendus pakub meile huvi, sest hamiltoniaan on hermiitiline operaator.
 
 \subsection{Kvantarvutuslik Fourier' teisendus ja pöördteisendus}\label{sec:qft}
 
-Kvantarvutusliku Fourier' teisenduse algoritm ja pöördteisenduse algoritm on faasi hindamise algoritmi tähtsad osad~\cite{nielsen+chuang, kaye+laflamme+mosca}.
+Kvantarvutusliku Fourier' teisenduse algoritm ja pöördteisenduse algoritm on faasi hindamise algoritmi tähtsad osad.
 Vaatame nende tööpõhimõtet.
 
-Kvantarvtusliku Fourier' teisenduse mõju baasivektorile on
+Kvantarvtusliku Fourier' teisenduse definitsioon on
 \begin{align}\label{f:qftdef}
     \QFT\colon
     \ket{j} \mapsto \frac{1}{\sqrt{2^n}} \sum_{k=0}^{2^n-1} e^{2\pi ijk/2^n} \ket{k} \rlap{,}
 \end{align}
 kus \(\ket{j}\) ja \(\ket{k}\) \(n\)-kvantbitised
-baasivektorid~\cite{nielsen+chuang, kaye+laflamme+mosca}. Et tegemist on
-lineaarse operatsiooniga, piisab vaadata mõju baasivektoritele.
+baasivektorid. Et tegemist on lineaarse operatsiooniga, siis piisab käsitleda selle mõju baasivektoritele~\cite{nielsen+chuang, kaye+laflamme+mosca}.
 
 \begin{figure}
     \centering
-    \yquantjoonis{\begin{tikzpicture}[scale=0.8]
+    \ifdefined\yquanton
+    \begin{tikzpicture}[scale=0.8]
         \begin{yquant}
             qubit {\(\ket{j_1}\)} q[1];
             qubit {\(\ket{j_2}\)} q[+1];
@@ -663,8 +697,9 @@ lineaarse operatsiooniga, piisab vaadata mõju baasivektoritele.
             output {\(\frac{\ket0+e^{2\pi0.j_2\cdots j_n}\ket1}{\sqrt{2}}\)} q[3];
             output {\(\frac{\ket0+e^{2\pi0.j_1\cdots j_n}\ket1}{\sqrt{2}}\)} q[4];
         \end{yquant}
-    \end{tikzpicture}}
-    \caption{Kvantarvutusliku Fourier' teisneduse ahel~\cite{nielsen+chuang, kaye+laflamme+mosca}}
+    \end{tikzpicture}
+    \fi
+    \caption{Kvantarvutusliku Fourier' teisenduse ahel~\cite{nielsen+chuang, kaye+laflamme+mosca}}
     \label{fig:qft}
 \end{figure}
 
@@ -755,8 +790,8 @@ Kui sama skeemi järgida ülejäänud bitte jaoks, on lõpuks olek
     \otimes \frac{\ket{0} + e^{2\pi i0.j_n}\ket{1}}{\sqrt{2}} \rlap{.}
 \end{align}
 
-Viimaks tuleb bittide järjekorda vahetada, mida on joonise~\ref{fig:qft} ahelas tehtiud \(\SWAP\)-väravaga.
-Peala seda on olek
+Viimaks tuleb bittide järjekorda vahetada.
+Tulemuseks on
 \begin{align}\label{f:qftfinal}
     \frac{\ket{0} + e^{2\pi i0.j_n}\ket{1}}{\sqrt{2}}
     \otimes \frac{\ket{0} + e^{2\pi i0.j_{n-1}j_n}}{\sqrt{2}}
@@ -777,10 +812,10 @@ Järgnevas jaotises läheb vaja ka kvantarvutusliku Fourier' pöördteisendust, 
 \end{align}
 Pöörteisenduse ahela saamiseks tuleb teisenduse ahel pöörata: ahel tuleb koostada vastupidises järjekorras, asendades operaatorid pöördoperaatoritega~\cite{kaye+laflamme+mosca}.
 Kehtivad seosed
-\begin{align}\label{f:iqftdef}
-    H &= H^{\dagger} \rlap{,} \\
-    P(-\lambda) &= P^{\dagger}(\lambda) \rlap{,} \\
-    \SWAP &= \SWAP^{\dagger} \rlap{.}
+\begin{align}
+    H^{-1} &= H \rlap{,} \\
+    P^{-1}(\lambda) &= P(-\lambda) \rlap{,} \\
+    \SWAP^{-1} &= \SWAP \rlap{.}
 \end{align}
 
 Klassikalise Fourier' teisenduse valem on
@@ -789,33 +824,31 @@ Klassikalise Fourier' teisenduse valem on
 \end{align}
 Valemite \ref{f:qftdef} ja \ref{f:cftdef} võrdlusest selgub, et kvantarvutusliku Fourier' teisenduse käigus toimub klassikaline Fourier' teisendus, kui võtta \(N = 2^n\)~\cite{nielsen+chuang}.
 
-Klassikaliselt kulub Fourier' teisenduse läbi viimiseks \(N \log{N}=n 2^n \) sammu, kvantavutuslikult vaid \(\log^2{N} = n^2\) sammu.
-Pealt näha on antud ülesande lahendamine kvantarvutuslikult oluliselt efektiivsem kui klassikaliselt~\cite{nielsen+chuang}.
+Klassikaliselt on Fourier' teisendusel \(N \log{N}=n 2^n \) sammu, kvantavutuslikult vaid \(\log^2{N} = n^2\) sammu.
+Pealt näha on sama ülesande lahendamine kvantarvutuslikult oluliselt efektiivsem kui klassikaliselt~\cite{nielsen+chuang}.
 
-Paraku talletub Fourier' teisenduse tulemus kvantarvutusliku Fourier' teisenduse käigus lõppoleku amplituudidesse ja pole seega otseselt mõõdetav~\cite{nielsen+chuang}.
-Sellest tulenevalt ei saa kvantarvutusliku Fourier' teisendust kasutada lihtsalt klassikalise Fourier' teisenduse kiiremaks läbiviimiseks.
-
+Paraku pole kvantarvutuslikult arvutatud klassikalise Fourier' teisenduse tulemus otseselt mõõdetav, kuivõrd see on talletatud lõppoleku amplituudidesse.
+Sestap ei saa kvantarvutsliku teisendust kasutada lihtsalt klassikalise Fourier' teisenduse efektiivsema asendusena~\cite{nielsen+chuang}.
 
 Siiski õnnestub kvantarvtusliku Fourier' teisendust kasutada teatud ülesannete klassikalisest efektiivsemaks lahendamiseks.
 Antud töö jaoks on oluline, et see leiab kasutust faasi hindamise algoritmis, mida tutvustab järgmine jaotis.
 
-
-\subsection{Unitaarse operaatori omaväärtusülesanne}\label{sec:unitary}
+\subsection{Unitaarse operaatori omaväärtuste leidmine}\label{sec:unit}
 
 Unitaarse operaatori \(U\) jaoks kehtib omaväärtusvõrrand
-\begin{align}\label{f:eigen}
-    U \ket{u} = e^{2\pi i\phi} \ket{u}\rlap{,}
+\begin{align}
+    U\ket{\Psi} = e^{2\pi i\phi}\ket{\Psi} \rlap{,}
+    \qquad \phi \in [0,1) \rlap{,}
 \end{align}
-kus \(\ket{u}\) on \(U\) omavektor ja \(e^{2\pi i\phi}\) omaväärtus.
-NB! Tegemist on kvantbittie ruumi objektidega.
-Faasi hindamise ülesandes on eesmärgiks leida unitaarse operaatori omaväärtus, mida kutsutakse ka selle operaatori faasiks.
+kus \(\ket{\Psi}\) on huvi pakkuv olek ja \(e^{2\pi i\phi}\) omaväärtus, mida kutsutakse ka faasiks.
+Faasi hindamise algoritm võimaldab leida parameetri \(\phi\), millega on faas määratud.
 
-Valemis~\ref{f:eigen} on faas on määratud suurusega \(\phi \in [0, 1)\).
-Näitame, et \(\phi\) leidmiseks sobib ahel joonisel~\ref{fig:pea}.
+Näitame, et ülesande lahendamiseks sobib ahel joonisel~\ref{fig:pea}.
 
 \begin{figure}[h]
     \centering
-    \yquantjoonis{\begin{tikzpicture}
+    \ifdefined\yquanton
+    \begin{tikzpicture}
         \begin{yquant}
             qubit {$\ket0$} pea[1];
             qubit {$\ket0$} pea[+1];
@@ -838,7 +871,8 @@ Näitame, et \(\phi\) leidmiseks sobib ahel joonisel~\ref{fig:pea}.
             output {$\phi_n$} pea[4];
             output {$\ket u$} state;
         \end{yquant}
-    \end{tikzpicture}}
+    \end{tikzpicture}
+    \fi
     \caption{Kvantahel \(U\) faasi hindamiseks \cite{nielsen+chuang, kaye+laflamme+mosca}}
     \label{fig:pea}
 \end{figure}
@@ -851,11 +885,11 @@ Kõige alumine traat on olekuregister.%
 Järgime joonise~\ref{fig:pea} ahela loogikat samm-sammult.
 
 Joonisel~\ref{fig:pea} on eeldatud, et olekuregister on juba \(U\) omaolekus
-\(\ket{u}\), praktikas tuleb see olek kuidagi prepareerida.
+\(\ket{u}\), praktikas tuleb see olek kuidagi ette valmistada.
 
-Esimese sisulise sammuna tuleb faasi hindamise registrile mõjuda kvantarvutusliku Fourier' teisenduse väravaga.%
-\footnote{Kvantarvutuslku Fourier' teisenduse värava realiseerimist kvantahalana käsitles eelmine jaotis~\ref{sec:qft}.}
-Kui eeldada, et faasi hindamise registri kvantbitid olid enne kõik olekus \(\ket{0}\), siis on kvantarvutusliku Fourier' teisenduse tulemuseks olek
+Esimese sisulise sammuna tuleb faasi hindamise registrile mõjuda kvantarvutusliku Fourier' teisenduse väravaga.
+Selle värava realiseerib eelmises jaotises esitatud ahel.
+Kui faasi hindamise registri kvantbitid olid enne kõik olekus \(\ket{0}\), siis on kvantarvutusliku Fourier' teisenduse värava rakendamise järel on tulemuseks olek
 \begin{align}\label{f:peainit}
     \underbrace{\frac{\ket{0}+\ket{1}}{\sqrt{2}}
     \otimes \cdots
@@ -951,12 +985,12 @@ sest
 globaalse faasi täpsusega.
 
 Lõpuks tuleb faasi hindamise registrile mõjuda kvantarvutusliku Fourier' pöördteisendse väravaga.
-Valemite~\ref{f:qftfinal}, \ref{f:qftfinaltrans} ja \ref{f:iqftdef} põhjal on tulemuseks
+Valemite \ref{f:qftdef}, \ref{f:qftfinal} ja \ref{f:qftfinaltrans} põhjal on tulemuseks
 \begin{align}\label{f:peafinal}
     \ket{\phi_1} \otimes \ket{\phi_2} \otimes \cdots \otimes \ket{\phi_n} \otimes \ket{u} \rlap{.}
 \end{align}
 
-Kui süsteem on olekus~\ref{f:peafinal}, siis faasi hindamise registri mõõtmine annab tulemuseks klassikaliste bittide jada
+Kui süsteem on olekus~\ref{f:peafinal}, siis faasi hindamise registri mõõtmise tulemuseks klassikaliste bittide jada
 \begin{align}
     \phi_1, \phi_2, \cdots, \phi_n \rlap{,}
 \end{align}
@@ -976,24 +1010,19 @@ Seega antud skeemi saab kasutada ka juhul, kui \(m\) pole ette teada või \(n\) 
 Mõõtmis\-tulemuste seast tuleb valida kõige tõenõolisem tulemus.
 
 Faasi hindamise algoritm on osa Shori algoritmist algarvuliste tegurite leidmiseks, mis on oluline, sest Shori algoritmi keerukus on kõigest polünoomne, võrreldes sama eesmärgi jaoks parima klassikalise algoritmiga, mille keerukus on eksponentsiaalne~\cite{cao+etal, kaye+laflamme+mosca}.
-Niisiis faasi hindamise algoritm võimalab mõnesid ülesandeid klassikalisest efektiivsemalt lahendada.
+Järeldus on, et faasi hindamise algoritm võimalab mõnesid ülesandeid klassikalisest efektiivsemalt lahendada.
 
-Antud töös kastuame faasi hindamise algoritmi hamiltoniaani omaväärtuste leidmiseks, mis on elektronstruktuuri ülesande lahendamise kulukas osa ja mida käsitleb järmgine jaotis.
+Antud töös kasutme faasi hindamise algoritmi hamiltoniaani omaväärtuste leidmiseks, mis on elektronstruktuuri ülesande lahendamise kulukas.
+Järgmises jaotises käistleme seda ülesanne üldise juhul: hermiitilise operaatori omaväärtuste leidmist.
 
+\subsection{Hermiitilise operaatori omaväärtuste leidmine}\label{sec:hermit}
 
-\subsection{Hermiitilise operaatori omaväärtusülesanne}\label{sec:hermit}
-
-Elektronstruktuuri ülesande lahendamiseks tuleks leida hamiltoniaani omaväärutused.
-Eelmises jaotises~\ref{sec:unitary} selgus, et faasi hindamise algoritmi kasutades saab leida unitaarse operaatori omaväärtused, kuid hamiltoniaan pole enamasti unitaarne.
-Osutub, et faasi hindamise algoritmi abil on siiski võimalik leida ka hermiitilise operaatori omaväärtused.
-Näitame sedas keskendudes hamiltoniaanile.
-
-Ajalise arengu operaator on
+Hermiitilise operaatoriga saab vastavusse seade unitaarse operaatori
 \begin{align}
     U = e^{-iHt} \rlap{,}
 \end{align}
-kus \(H\) on algne hamiltoniaan ja \(t\) skaleerimiskonstant, mille valikus leppime kokku hiljem.
-Kuna hermiitilise operaatori eksponent on alati unitaarne, siis \(U\) on unitaarne.
+kus \(H\) on hermiitiline operaator ja \(t\) skaleerimiskonstant, mille valikus leppime kokku hiljem.
+(Kui \(H\) on hamiltoniaan, siis \(U\) on ajalise arengu operaator.)
 
 Operaatori spektraallahutuse põhjal defineeritakse operaatori funktsioon.
 Antud juhul on \(U=U(H)\).
@@ -1002,8 +1031,9 @@ Kui \(\ket{E_n}\) on \(H\) omavektor, siis kehtib
     U \ket{E_n} = e^{-iHt}\ket{E_n} = e^{-i E_n t} \ket{E_n} \rlap{,}
 \end{align}
 kus \(E_n\) on \(H\) omaväärtus.
+(Kui \(H\) on hamiltoniaan, siis \(E_n\) on energia.)
 
-Samas eelmise jaotise~\ref{sec:unitary} põhjal oskame leida \(\phi\) nii, et
+Samas eelmise jaotise~\ref{sec:unit} põhjal oskame leida \(\phi\) valemist
 \begin{align}\label{f:eigenunitary}
     U \ket{u} = e^{2\pi i\phi} \rlap{.}
 \end{align}
@@ -1018,7 +1048,7 @@ Et \(\phi \in [0, 1)\), siis peab lisaks kehtima
 \begin{align}
     -\frac{E_n t}{2\pi} \in [0, 1) \rlap{.}
 \end{align}
-mis seab piirangud \(t\) valmiseks~\cite{whitfield+etal}.
+mis seab piirangud \(t\) valikuks~\cite{whitfield+etal}.
 
 Skaleerimiskonstanti \(t\) valimiseks on mitu võimalust.
 
@@ -1026,7 +1056,7 @@ Selles töös on tehtud valik
 \begin{align}
     t = -\frac{2\pi}{2E_\mathrm{t}} \rlap{,}
 \end{align}
-kus \(E_t \ge \abs{E_n}\) on energia tõke, mida on vaja eelnevalt teada.
+kus \(E_t \ge \abs{E_n}\) on tõke, mida on vaja eelnevalt teada.
 Arvestades faasi perioodilisust kehtib siis
 \begin{align}
     E_n = \begin{cases}
@@ -1036,7 +1066,10 @@ Arvestades faasi perioodilisust kehtib siis
 \end{align}
 
 Oleme näidanud, et faasi hindamise algoritm sobib hamiltoniaani omaväärtuste leidmiseks.
-Eelduseks on Focki ruumi hamiltoniaani estiamine kvanatahelana.
+Nimelt võimaldab faasi hindamise algoritm välja lugeda perioodi \(E_n\), millega võngub oleku \(\ket{E_n}\) faas ajalise arengu operaatori \(U = e^{-iHT}\) mõjul~\cite{whitfield+etal}:
+\begin{align}
+    U \ket{E_n} = e^{-iHt} \ket{E_n} = e^{-iE_n t} \ket{E_n} \rlap{.}
+\end{align}
 
 Oluline on et, faasi hindamsie algoritm on klassikalistest algoritmidest efektiivsem, sest omaväärtuste leidmine ongi elektronstruktuuri ülesande lahendamise üks kulukaim etapp.
 Seega loodetakse faasi hindamise algoritmiga lahendada keerulisemaid ülesandeid, kui on võimalik klassikaliset~\cite{mcardle+etal, cao+etal}.
@@ -1050,57 +1083,88 @@ Kui kehtib
 \end{align}
 siis on tagatud, et suurima tõenäosusega mõõtmistulemus on põhineriga \(E_1\) hinnang~\cite{whitfield+etal}.
 
-\section{Hamiltoniaani simuleerimine}\label{sec:qcirc}
+\section{Hamiltoniaani simuleerimine}
 
-Selles peatkükis leiame kvantahela hamiltoniaani simuleerimiseks.
-
+Nägime, et faasi hindamise algoritmi rakendamiseks tuleb koostada Focki ruumi hamiltoniaani põhjal kvantbittide ruumi ajalise arengu operaator.
+Asumegi seda tegema.
 
 \subsection{Jordan-Wigneri teisendus}\label{sec:jw}
 
-Faasi hindamise tarvis on vajalik kvantahelana realiseerida unitaarset operaatorit
-\begin{equation}\label{eq:hamtime}
-  U = e^{-iHt}\rlap{,}
-\end{equation}
-kus \(H\) on hamiltoniaan.
-Eelmistes peatükis oli hamiltoniaan \(H\) Focki ruum objekt.
-Selle realiseerimiseks kvantahelana viime nüüd peatükis läbi Jordan-Wigneri teisenduse~\cite{jordan+wigner}, mis viib hamiltoniaani üle kvantbittide ruumi.
+Antud töös kasutame Focki ruumi ülesande kvantbittide ruumi kujatamiseks Jordan-Wigneri teisendust.
 
-Siin töös me Jordan-Wigneri teisenduse üksikasju ei käsitle, kuid toome ära mõned selle kasulikud omadused.
+Selle põhimõtte on järgmine.
 
-Esiteks, selle teisenduse tulemusena saame hamiltoniaani \(H\) Pauli sõnede summana~\cite{whitfield+etal}.
-Pauli sõnede all mõistame Pauli maatriksite tensorkorrutisi.
-Sümboolselt
-\begin{equation}\label{eq:paulisum} H = \sum_i h_i\rlap{,} \end{equation}
-kus $h_i$ on Pauli sõne.
+Seos täitearvude esituses lainefunktsiooni ja sellele vastava kvantregisrti oleku vahel on lihtsaim võimalik: täitmata orbitaalile vastab kvantbitt olekus \(\ket{0}\) ja täidetud orbitaalile kvantbitt olekus \(\ket{1}\)~\cite{mcardle+etal}.
+
+Tuleb arvestada, et elektronid molekulaarses süsteemis on eristamatud, kuid kvantbitid kvantregistris on eristatavad~\cite{mcardle+etal}.
+Seda tehakse järgmiselt.
+
+Hamiltoniaani kodeerimiseks seostatakse Focki ruumi tekke- ja kaoperaatorid \(\cparen{a_i, a_i^\dagger}\) kvantbittide ruumi Pauli operaatoritega \(\cparen{I, X, Y, Z}\) sedasi, et
+\begin{align}
+    a_j &\mapsto I^{\otimes j-1} \otimes \frac{X+iY}{2} \otimes Z^{N-j-1} \rlap{,} \\
+    a_j^\dagger &\mapsto I^{\otimes j-1} \otimes \frac{X-iY}{2} \otimes Z^{N-j-1} \rlap{,}
+\end{align}
+misjuhul vasakul olevate operaatorite vahel kehtivad needsamad kommutatsioonireeglid, mis paremal olevate vasakul olevate vahel, vt valem~\eqref{eq:comrules}~\cite{mcardle+etal}.
+
+Oluline on, et sellisel teisendusel on hamiltoniaani omaväärtused invariantsed.
+Sestap taandubki molekulaarsete energiate leidmise ülesanne hamiltoniaani omaväärtuste leidmisele.
+
+Jordan-Wigneri teisendus tulemusel on hamiltoniaan kujul
+\begin{align}\label{eq:paulisum}
+    H = \sum_i c_i h_i \rlap{,}
+\end{align}
+kus \(c_i\) on reaalsed konstandid ja \(h_i\) on Pauli sõned~\cite{whitfield+etal}.
+
+Pauli sõnede all mõistame Pauli operaatorite tensorkorrutisi.
 
 Edaspidi tähistame Pauli sõnesesid lühidalt
 \begin{equation} h_i=P_{j_1}P_{j_2}\cdots P_{j_k} \rlap{,}\end{equation}
 kus \(j_1\), \(j_2\), $\ldots$, \(j_k\) tähistavad kvantbitte, millele \(P_{j_1}\), \(P_{j_2}\), \(\ldots\), \(P_{j_k}\in\{X,Y,Z\}\) mõjuvad.
-Näiteks \(X_1Y_2Z_4=X\otimes Y\otimes 1\otimes Z.\)
-(Selles tähistuses peab Pauli sõne dimensioon olema selge kontekstist, sest viimase Pauli X-, Y- või Z-maatrikisi järel võib olla kuitahes palju ühikmaatrikseid.)
+Näiteks \(X_1Y_2Z_4=X\otimes Y\otimes I\otimes Z.\)
+(Selles tähistuses peab Pauli sõne dimensioon olema selge kontekstist, sest viimase Pauli \(X\), \(Y\) või \(Z\) operaatori järel võib olla kuitahes palju ühikmaatrikseid.)
 
-Teiseks, võimalikele puhastele olekutele vastavad vektorid kujul
-\begin{equation}
-  \ket{x_1x_2\cdots x_n}
-     = \ket{x_1}\otimes\ket{x_2}\otimes\cdots\otimes\ket{x_n}\rlap{,}
+\subsection{Trotteriseerimine ja treppalgoritm}
+
+Faasi hindamise algoritmi rakendamiseks on vaja hamiltoniaani põhjal konstrueerida ajalise arengu operaator.
+Arvetades valemit~\eqref{eq:paulisum} on see
+\begin{align}
+    U = e^{-iHt} = e^{-it\sum_i h_i} \rlap{.}
+\end{align}
+
+Kui operaatorid \(h_i\) on kommuteeruvad, siis kehtib
+\begin{align}
+    e^{-it\sum_i h_i} = \prod_i e^{-i h_i t} \rlap{.}
+\end{align}
+
+Üldisemat tingimust
+\begin{align}
+    e^{-it\sum_i h_i}
+    = \lim_{\Delta t \rightarrow 0} \paren{\prod_i e^{-i h_i \Delta t}}^{t / \Delta t} \rlap{,}
+\end{align}
+mis kehtib ka mittekommuteeruvate operaatorite \(h_i\) jaoks, nimetatakse Trotteri valemiks~\cite{whitfield+etal}.
+
+Trotteriseerimiseks nimetatakas lähendust
+\begin{align}\label{eq:trot}
+    e^{-it\sum_i h_i}
+    \approx \paren{\prod_i e^{-i h_i \Delta (t / n)}}^n \rlap{,}
+\end{align}
+kus \(n\) on piisavalt suur toretterisammude arv~\cite{whitfield+etal, nielsen+chuang}.
+
+Et operaatorite korrutamine tähendab väravate järjesikku rakendamist ja täisarvuga astendamine taandub korrutamisele, on operaatori \(e^{-i t \sum_i h_i}\) realiseerimiseks kvantahelane vaja realiseerida üksikud liikmed \(e^{-i h_i a}\), kus \(a = t /n \rightarrow 0\).
+
+Seda võimaldab nn treppalgoritm~\cite{mansky+etal}.
+Vaatame selle põhimõtet.
+
+Lihtsaim juht on
+\begin{equation}\label{eq:onlyz}
+  h_i = Z_{j_1}Z_{j_2}\cdots Z_{j_n} \rlap{.}
 \end{equation}
-kus $x_1$, $x_2$, $\ldots$ $x_n\in\{0,1\}$ näitab spinnorbitaalide $1$, $2$, $\ldots$, $n$ täidetust ja $n$ on spinnorbitaalide arv süsteemis~[viide?].
-Näiteks, kvantbittide ruumi seisund \(\ket{\Psi_0}=\ket{1100}\) vastab Focki ruumi seisundile, kus alumised kaks spinnorbitaali on täidetud ja ülemised kaks mitte~\cite{szabo+ostlund, mcardle+etal}.
-
-
-\subsection{Pauli $Z$ maatriksite tensorkorrutise eksponent}
-
-Soovime kvantahelana realiseerida operaatorit~\ref{eq:hamtime}.
-Vaatame kõigepealt lihtsat juhtu.
-Kui
-\begin{equation}
-  H=Z_{j_1}Z_{j_2}\cdots Z_{j_n}\rlap{,}
-\end{equation}
-siis operaatorit~\ref{eq:hamtime} realiseerib kvantahel joonisel~\ref{f:expz}.
+Operaator \(e^{-i h_i a}\) realiseerib siis kvantahel joonisel~\ref{f:expz}.
 
 \begin{figure}[h]
   \centering
-  \yquantjoonis{\begin{tikzpicture}
+  \ifdefined\yquanton
+  \begin{tikzpicture}
     \begin{yquant}
       qubit {$j_1\colon$} q[1];
       qubit {$j_2\colon$} q[+1];
@@ -1111,45 +1175,44 @@ siis operaatorit~\ref{eq:hamtime} realiseerib kvantahel joonisel~\ref{f:expz}.
       cnot q[4] | q[1];
       text {$\ \ldots\ $} q[0,1,3,4];
       cnot q[4] | q[3];
-      box {$R_z(2t)$} q[4];
+      box {$R_z(2a)$} q[4];
       cnot q[4] | q[3];
       text {$\ \ldots\ $} q[0,1,3,4];
       cnot q[4] | q[1];
       cnot q[4] | q[0];
     \end{yquant}
-  \end{tikzpicture}}
-  \caption{Operaatori \(e^{-iZ_{j_1}Z_{j_2}\cdots Z_{j_n}t}\) realiseerimine kvantahelana. Bitte, mis \(j_1\), \(j_2\), \(\cdots\), \(j_n\) hulgas ei esine, pole näidatud}
+  \end{tikzpicture}
+  \fi
+  \caption{Operaatori \(e^{-iZ_{j_1}Z_{j_2}\cdots Z_{j_n}a}\) realiseerimine kvantahelana~\cite{mansky+etal, nielsen+chuang}. Bitte, mis \(j_1\), \(j_2\), \(\cdots\), \(j_n\) hulgas ei esine, pole näidatud}
   \label{f:expz}
 \end{figure}
 
-Teisisõnu, bitile \(j_n\) tuleb järjest rakenda bittide \(j_1\), \(j_2\), \(\cdots\), \(j_{n-1}\) juhitud \(\CNOT\)-väravavaid.
-Siis tuleb bitti \(j_n\) pöörata väravaga \(R_z(2a)\).
-Viimaks tuleb bitile \(j_n\) järjest rakendada bittide \(j_{n-1}\), \(j_{n-2}\), \(\cdots\), \(j_1\) jihtud \(\CNOT\)-väravaid.
+Teisisõnu, bitile \(j_n\) tuleb järjest rakenda bittide \(j_1\), \(j_2\), \(\cdots\), \(j_{n-1}\) juhitud eitust.
+Siis tuleb bitti \(j_n\) pöörata z-telje sihis nurga \(2a\) võrra.
+Viimaks tuleb bitile \(j_n\) järjest rakendada bittide \(j_{n-1}\), \(j_{n-2}\), \(\cdots\), \(j_1\) juhitud eitusi.
 Bitte, mis \(j_1\), \(j_2\), \(\cdots\), \(j_n\) hulgas ei esine, ei mõjutata~\cite{mansky+etal}.
 
-Kesksele väravale \(R_z(2a)\) eelnev \(\CNOT\)-väravate osa arvutab bitide \(j_1\), \(j_2\), \(\cdots\), \(j_n\) paarsuse.
+Kesksele väravale \(R_z(2a)\) eelnev juhitud eituste osa arvutab bittide \(j_1\), \(j_2\), \(\cdots\), \(j_n\) paarsuse.
 Keskne värav \(R_z(2a)\) teeb sobiva pöörde.
-Järgnev \(\CNOT\)-väravate osa kustutab ära nüüdseks ebavajaliku informatsiooni paarsuse kohta~\cite{nielsen+chuang}.
+Järgnev juhtitud eituste osa kustutab ära nüüdseks ebavajaliku informatsiooni paarsuse kohta~\cite{nielsen+chuang}.
 
+Üldjuhul koosneb \(h_i\) nii Pauli \(I\) ja \(Z\) kui ka \(X\) ja \(Y\) operaatoritest, kuid \(h_i\) saab alati viia kujule~\eqref{eq:onlyz} rakendades sobivaid baasiteisendusi.
 
-\subsection{Pauli $X$, $Y$ ja $Z$ maatriksite tensorkorrutise eksponent}
+Vajalikud baasiteisendused on järgmised~\cite{mansky+etal, nielsen+chuang}:
+\begin{align}
+    Z = HXH \rlap{,}\qquad Z = S^\dagger HYHS \rlap{.}
+\end{align}
 
-Vaatame nüüd keerukamat juhtu, kus \(H\) on Pauli X-, Y- ja Z-maatriksite tensorkorrutis, mitte vaid Z-maatriksite tensorkorrutis.
-Näiteks, olgu
+Näiteks juhul, kui
 \begin{equation}
-  H=Z_1X_2Y_3\rlap{.}
+  h_i = Z_1X_2Y_3 \rlap{,}
 \end{equation}
-
-Ahela koostamiseks kasutame ära asjaolu, et
-\begin{equation} Z=HXH \end{equation}
-ja
-\begin{equation} Z=S^{\dagger}HYHS\rlap{.} \end{equation}
-Järeldame, et \(e^{-iZ_1X_2Y_3}\) ahel on võimalik saada \(e^{-iZ_1Z_2Z_3}\) ahelast sobivate baasiteisendustega.
-Sobiv ahel on joonisel~\ref{f:zxyex}~\cite{nielsen+chuang}.
+realiseerib operaatori \(e^{-i h_i t}\) ahel joonisel.
 
 \begin{figure}[h]
   \centering
-  \yquantjoonis{\begin{tikzpicture}
+  \ifdefined\yquanton
+  \begin{tikzpicture}
     \begin{yquant}
       qubit {$1\colon$} q[1];
       qubit {$2\colon$} q[+1];
@@ -1166,73 +1229,200 @@ Sobiv ahel on joonisel~\ref{f:zxyex}~\cite{nielsen+chuang}.
       box {$H$} q[2];
       box {$S$} q[2];
     \end{yquant}
-  \end{tikzpicture}}
+  \end{tikzpicture}
+  \fi
   \caption{\(e^{-iZ_1X_2Y_3}\) realiseerimine kvantahelana}
   \label{f:zxyex}
 \end{figure}
 
+Veel kord, operaatori \(e^{-i t \sum_i h_i}\) realiseerimiseks kvantahelana tuleb gruppide kaupa järjestiku rakendada operaatoreid \(e^{-i h_i t/n}\) realiseerivaid kvantahelaid, kus \(n\) on piisavalt suur.
 
-\subsection{Pauli sõnede summade eksponent}
+Näiteks, kui
+\begin{align}\label{eq:hex}
+    H=\frac{1}{3}X_1Y_1+\frac{2}{3}Z_1X_2 \rlap{,}
+\end{align}
+ja võtta trotterisammude arvuks \(n = 2\), siis realiseerib operaatori \(e^{-i HT}\) ahel~\eqref{fig:trot}.
+Lõpliku trotterisammude arvu puhul on tegemist ligikaudse hinnanguga.
 
-Üldjuhul on hamiltoniaan Pauli sõnede summa~\ref{eq:paulisum}.
-Kui summa liikmed kommuteeruvad, siis võime kirjutada
-\begin{equation}
-  e^{-i\sum_i h_it}=\prod_ie^{-ih_it}\rlap{,}
-\end{equation}
-enamasti see aga nii ei ole.
+\begin{figure}
+    \centering
+    \ifdefined\yquanton
+    \begin{tikzpicture}[scale=0.7]
+        \begin{yquant}
+            qubit {$1\colon$} q[1];
+            qubit {$2\colon$} q[+1];
+            box {$H$} q[0];
+            box {$S^\dagger$} q[1];
+            box {$H$} q[1];
+            cnot q[1] | q[0];
+            box {$R_z(t/3)$} q[1];
+            cnot q[1] | q[0];
+            box {$H$} q[0];
+            box {$H$} q[1];
+            box {$S$} q[1];
+            barrier q;
+            box {$H$} q[1];
+            cnot q[1] | q[0];
+            box {$R_z(t/3)$} q[1];
+            cnot q[1] | q[0];
+            box {$H$} q[1];
+            barrier q;
+            box {$H$} q[0];
+            box {$S^\dagger$} q[1];
+            box {$H$} q[1];
+            cnot q[1] | q[0];
+            box {$R_z(2t/3)$} q[1];
+            cnot q[1] | q[0];
+            box {$H$} q[0];
+            box {$H$} q[1];
+            box {$S$} q[1];
+            barrier q;
+            box {$H$} q[1];
+            cnot q[1] | q[0];
+            box {$R_z(4t/3)$} q[1];
+            cnot q[1] | q[0];
+            box {$H$} q[1];
+        \end{yquant}
+    \end{tikzpicture}
+    \fi
+    \caption{\(e^{-i\paren{\frac{1}{3}X_1Y_1+\frac{2}{3}Z_1X_2} t} \approx \paren{e^{-i\paren{\frac{1}{3}X_1Y_1+\frac{2}{3}Z_1X_2} t/2}}^2\) realiseerimine kvantahelana-
+    Joonisel on kaks operaatorite gruppi, mis vastab kahele trotterisammule.
+    Igas grupis on omakorda kaks operaatorit}
+    \label{fig:trotex}
+\end{figure}
 
-On näidatud, et
-\begin{equation}
-  e^{-i\sum_i h_it}=\lim_{\Delta t\rightarrow0}\paren{\prod e^{-ih_i t/\Delta t}}^{\Delta t}
-\end{equation}
-ka mittekommuteeruvate summa liikmete $h_i$ puhul.
-Seega lõpliku $\Delta t$ puhul
-\begin{equation}
-  e^{-i\sum_i h_it}\approx\paren{\prod e^{-ih_i t/\Delta t}}^{\Delta t}\rlap{,}
-\end{equation}
-kus paras $\Delta t$ väärtus tuleb enamasti leida eksperimentaalselt.
-Seda meetodit ahela koostamiseks nimetatakse Suzuki-Trotteri lahutuseks või lihtsalt trotteriseerimiseks~\cite{mansky+etal}
+\subsection{Juhitud ajalise arengu operaator}
 
-\chapter{Tulemused}\label{chap:results}
+Faasihindamise jaoks on oluline, et unitaarne operaator oleks juhitud.
+Juhitud unitaarse operaatori saab kui kvantahelas asendada kõik pöörded juhitud pööretega.
+
+Nõnda toiminud, sõltub iga Pauli sõne rakendamine sellest, mis on juhtkvantbiti olek.
+Kui juhtkvantbitt on olekus \(\ket0\), pööre ei rakendu.
+Et paarsuse arvutamine ja selle tagasi panemine on pöördoperatsioonid, siis kokkuvõttes antud Pauli sõne eksponent justkui ei rakendu.
+Kui juhtkvantvitt on olekus \(\ket1\) pööre rakendub ja rakendub ka Pauli sõne eksponent tervikuna.
+
+Joonisel~\ref{fig:trotexctrl} on näide juhitud ajalise arengu operaatorist, kui hamiltoniaan on antud valemiga~\eqref{j:hex}.
+
+\begin{figure}
+    \centering
+    \ifdefined\yquanton
+    \begin{tikzpicture}[scale=0.7]
+        \begin{yquant}
+            qubit {juhtbitt} ctrl;
+            qubit {$1\colon$} q[1];
+            qubit {$2\colon$} q[+1];
+            box {$H$} q[0];
+            box {$S^\dagger$} q[1];
+            box {$H$} q[1];
+            cnot q[1] | q[0];
+            box {$R_z(t/3)$} q[1] | ctrl[0];
+            cnot q[1] | q[0];
+            box {$H$} q[0];
+            box {$H$} q[1];
+            box {$S$} q[1];
+            barrier q;
+            box {$H$} q[1];
+            cnot q[1] | q[0];
+            box {$R_z(t/3)$} q[1] | ctrl[0];
+            cnot q[1] | q[0];
+            box {$H$} q[1];
+            barrier q;
+            box {$H$} q[0];
+            box {$S^\dagger$} q[1] ;
+            box {$H$} q[1];
+            cnot q[1] | q[0];
+            box {$R_z(2t/3)$} q[1] | ctrl[0];
+            cnot q[1] | q[0];
+            box {$H$} q[0];
+            box {$H$} q[1];
+            box {$S$} q[1];
+            barrier q;
+            box {$H$} q[1];
+            cnot q[1] | q[0];
+            box {$R_z(4t/3)$} q[1] | ctrl[0];
+            cnot q[1] | q[0];
+            box {$H$} q[1];
+        \end{yquant}
+    \end{tikzpicture}
+    \fi
+    \caption{\(e^{-i\paren{\frac{1}{3}X_1Y_1+\frac{2}{3}Z_1X_2} t} \approx \paren{e^{-i\paren{\frac{1}{3}X_1Y_1+\frac{2}{3}Z_1X_2} t/2}}^2\) realiseerimine kvantahelana-
+    Joonisel on kaks operaatorite gruppi, mis vastab kahele trotterisammule.
+    Igas grupis on omakorda kaks operaatorit}
+    \label{fig:trotexctrl}
+\end{figure}
+
+Kui hamiltoniaanis esineb liige, mis on vaid ühikmaatriksite tensorkorrutis, tuleb seda eraldi arvestada.
+Sellise liikme eksponent on globaalse faasi operaator, mille võib ajalise arengu operaatori, mis pole juhitud, juhul arvestamata jätta.
+Samas juhitud globaalse faasi operaator rakendamine muudab suhtelist faasi ja seda peab arvestama.
+
+Juhtitud globaalse faasi operaatori võib asendanda juhtkvantvitil rakendatud suhtelise faasi opetaatoriga, nagu näha joonisel~\ref{fig:globphase}, kus võrduse vasak ja parem pool on samaväärsed globaalse faasi täpsusega.
+
+\begin{figure}[h]
+    \centering
+    \ifdefined\yquanton
+    \begin{tikzpicture}
+        \begin{yquantgroup}
+            \registers{
+                qubit {} q[2];
+            }
+            \circuit{
+                box {\(GP(t)\)} q[1] | q[0];
+            }
+            \equals
+            \circuit{
+                box {\(P(-t)\)} q[0];
+                barrier q[1];
+            }
+        \end{yquantgroup}
+    \end{tikzpicture}
+    \fi
+    \caption{Juhitud globaalse faasi operaaotri saab asendada juhtkvantbitile rakendatud faasi operaatoriga, mille argument peab olema vastupidine~\cite{nielsen+chuang}}
+    \label{fig:globphase}
+\end{figure}
+
+\chapter{Metoodika ja tulemused}
 
 \section{Kasutatud vahendid}
 
 Töös kasutsime programmeerimiskeelt Python.
 
-Geomeetriast hamiltonaani saamist ja Jordan-Wigneri teisendust võimaldas teek OpenFermion~\cite{openfermion}.
+Molekulaarsete integraalide arvutamist ja Jordan-Wigneri teisendust võimaldas teek OpenFermion~\cite{openfermion}.
 
 Kvantahela koostamiseks ja selle klassikaliseks simuleerimiseks kasutasime teeki Qiskit~\cite{qiskit}.
 
-Trotterisammude arvu, faasi hindamise registri suuruse ja energia piirväärtuse valikut selgitab järgmine peatükk.
+Trotterisammude arvu, faasi hindamise registri suuruse ja energia piirväärtuse valikut selgitame järgmistes jaotistes.
 
-Keemiliseks baasiks võtsime STO-3G.
+Kasutasime keemilist baasi STO-3G.
 
-\section{Vesiniku molekuli energia}
+\section{Vesiniku molekuli eneriga}
 
-Selles töös võtsime mudelsüsteemiks \(\mathrm{H}_2\) molekuli.
-STO-3G baasis on selle molekuli hamiltoniaan neljakvantbitine.
+Meetodi demonsteerimiseks arvutasime vesiniku molekuli põhienergia.
+
+Antud keemilises baasis, Jordan-Wigneri teisenduste järel, on hamiltoniaan neljakvantbitine.
+
+Põhioleku hinnanguna kasutasime Hatree-Focki olekut
+\begin{align}
+    \ket{HF} = \ket{1100} \rlap{.}
+\end{align}
+
+Joonisel~\ref{fig:scan} on põhienergia sõltuvus sidemepikkusest.
+
+Joonise~\ref{fig:scan} jaoks leitud energiad on arvutatud 10-kvantbitise täpsusega, 3 trotterisammuga.
+Energia ülemiseks piiriks on võetud \(2E_h\).
+Nende parameetrite valikut põhjendavad järgnevad jaotised.
 
 \begin{figure}[h]
     \centering
     \includegraphics{scan.jpg}
     \caption{Vesiniku elektronkatte energia sõltuvus sideme pikkusest}
     \label{fig:scan}
-    \TODO{Joonisel on kaks anomaaliat. Ma ei tea, millest need tulenevad.}
 \end{figure}
 
-Joonisel~\ref{fig:scan} on faasi hindamise algoritmi abil saadud energia hinnangu sõltuvus sideme pikkusest.
-Iga sideme pikkuse jaoks on vaja koostada eraldi kvantahel ja seda käitada, sest sidemipikkus on hamiltoniaani parameetriks.
-
-Joonise~\ref{fig:scan} jaos leitud energiad on arvutatud 10-kvantbitise täpsusega, 3 trotterisammuga.
-Energia ülemiseks piiriks on võetud \(2\,\mathrm{Hartree'd}\).
-Nende parameetrite valikut põhjendavad järgnevad jaotised.
-
-
-\section{Trotterisammude arv ja kvantbittide arv}
+\section{Trotterisammude arv ja faasi hindamise registri suurus}
 
 Sobivate parameetrite leidmist alustasime trotterisammude arvu määramisest.
 
-Antud töös proovisime järjest suuremat trotterisammude arvu, kuni sammude arvu suurendamine hinnangut enam ei mõjutanud ja saavatatud oli keemiline täpsus.
+Antud töös proovisime järjest suuremat trotterisammude arvu, kuni sammude arvu suurendamine hinnangut enam ei mõjutanud ja saavatatud oli keemiline täpsus, mis on \(0.0016E_h\).
 Kvantbittide arvu piiras kvantahela käitamise aeg.
 
 \begin{figure}[h]
@@ -1243,12 +1433,10 @@ Kvantbittide arvu piiras kvantahela käitamise aeg.
 \end{figure}
 
 Nagu näha jooniselt~\ref{fig:trotsteps} langevad ühe-, kahe- ja kolme-trotterisammused energia hinnangud hästi kokku juhul, kui energiat hinnata kahekse- või vähemakvantbitise täpsuega.
-Erinevused ilmnevad alles kahekasst kvantbitist suurema täpsuse juures.
+Erinevused ilmnevad alles kahekast kvantbitist suurema täpsuse juures.
 Keemiline täpsuse saavutasime kolme trotterisammu ja kümne kvantbitiga.
 
 Parimal juhul on võimalik saavutada vaid nii suur täpsus, kui keemilise baasi valik lubab.
-
-Trotterisammude arvu suurendamisel kasvab ahela pikkus ja seega ka kätamisaeg eksonentsiaalselt.
 
 Kvantbittide arvust sõltub käitamisaeg kahte moodi.
 Esiteks, rohkem kvantbitte tähendab pikemat käitamisaega.
@@ -1261,9 +1449,8 @@ Teiseks, kui faasi hindamiseks kasutada rohkem kvantbitte, siis kasvab eksponent
     \label{fig:depths}
 \end{figure}
 
-Joonisel~\ref{fig:depths} on näidatud ahela sügavuse, st ahelas olevat kvantväravate arvu, sõltuvus kvantbittide arvust erinevat trotteri sammude arvu jaoks.
-Praktiliselt on teostatav kümne kvantbiti kasutamine.
-
+Joonisel~\ref{fig:depths} on näidatud ahela sügavuse, st ahela kvantväravate arvu, sõltuvus faasi hindamise registri suurusest erinevate trotterisammude arvu jaoks.
+Praktiliselt oli teostatav kümnekvantbitise faasi hindamise registri kasutamine.
 
 \section{Eneriga piirväärtus}
 
