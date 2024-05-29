@@ -41,6 +41,9 @@
 
 \def\QFT{\mathop{\rm QFT}\nolimits}
 
+\newcommand{\comment}[1]{}
+
+
 \begin{document}
 
 \tableofcontents
@@ -92,9 +95,7 @@ Sammud lahendamiseks on järgmsised~\cite{whitfield+etal2011}.
 \end{enumerate}
 Selguse huvides on sammud tekstis esitatud vastupidises järjekorras.
 
-Selles töös on arvutuste läbiviimiseks kasutatud simulaatorit.
-Metoodikat käsitleb peatükk~\ref{chap:methods}.
-Peatükk~\ref{chap:results} tutvustab tulemusi.
+Metoodikat ja tulemusi käsitleb peatükk~\ref{chap:results}.
 
 \chapter{Elektronstruktuuri ülesanne}\label{chap:qchem}
 
@@ -349,8 +350,10 @@ Antud töös ongi ülesande lahendamise eelarvutuseks integraalide \eqref{eq:mol
 
 Arvutamiseks tuleb valida keemiline baas \(\cparen{\chi_i \middle| i=1,\ldots, M}\), mis määrab lahendamise täpsuse.
 
-\chapter{Kvantarvutuslik lahendamine}
+\chapter{Kvantarvutuslik lahendamine}\label{chap:qcomp}
 
+\comment{
+%%%
 Digitaalseks simuleerimiseks tuleb Focki ruumi hamiltoniaan esitada kvantbittide ruumis.
 Edasi saab molekulaarsete energiate leidmiseks kasutada faasi hindamise algoritmi, mis on tegelikult lahendamisviis märksa üldisema ülesande joaks.
 
@@ -361,6 +364,16 @@ Järgmisena, alapeatükis~\ref{sec:pea}, tutvustame faasi hindamise algoritmi ü
 Alles hiljem, alepaetükis~\ref{sec:hamsim}, käsitleme molekulaarsete energiate leidmise ülesande viimist õigele kujule faasi hindamise algoritmiga lahendamiseks.
 Esimene samm selleks on Focki ruumi hamiltoniaani esitamine kvantbittide ruumis.
 Teine samm on hamiltoniaani simuleerimine kvantahelana, milleks tuleb hermiitilise operaatorit puudutav ülesanne kodeerida unitaarsete operaatorite kaudu.
+%%%
+}
+
+
+Digitaalseks simuleerimiseks tuleb teises kvantiseerimises esitatutd molekulaarne hamiltoniaan viia kvantbittide ruumi.
+See võimaldab molekuli põhienergia leidmiseks kasutada faasi hindamise algoritmi. 
+
+Alapeatükis~\ref{sec:qubits} tutvustame kvantarvuse põhimõisteid. Seejärel teeme alapeatükis~\ref{sec:pea} ülevaate faasi hindamise algoritmist. Alepaetükis~\ref{sec:hamsim} käsitleme molekulaarsete energiate leidmise ülesande viimist õigele kujule faasi hindamise algoritmiga lahendamiseks.
+Esimene samm selleks on teises kvantiseerimises esitatud hamiltoniaani esitamine kvantbittide ruumis. Seejärel tuleb  hamiltoniaan simuleerida kvantahelana.
+
 
 \section{Kvantarvutuse põhimõisted}\label{sec:qubits}
 
@@ -391,8 +404,8 @@ on ortonormaalsed vektorid, mis vastavad sõltumatutele olekutele.
 Baasi~\eqref{eq:compbasis}, mida siin töös läbivalt kasutame, nimetatakse arvutuslikuks baasiks~\cite{mcardle+etal, nielsen+chuang, kaye+laflamme+mosca}
 
 Kvantbittide kogumit nimetatakse kvantregistriks ja selle olekuruum on üksikuid kvantbitte iseloomustavate Hilberti ruumide tensorkorrutis. 
-Kvantregistri jaoks on võimalikud kahtemoodi olekud: produktolekud ja põimitud olekud.
-Produktolekud saab lahutada üksikute kvantbittide olekuteks:
+Kvantregistri jaoks on võimalikud kahtemoodi olekud: korrutisolekud ja põimitud olekud.
+Korriolekud saab lahutada üksikute kvantbittide olekuteks:
 \begin{align}
     \ket{\Phi}
     = \ket{\phi_1 \phi_2 \cdots}
@@ -655,7 +668,7 @@ Jaotises~\ref{sec:unit} esitame faasi hindamise algoritmi enese, keskendudes sel
 Jaotises~\ref{sec:hermit} näitame, kuidas faasi hindamise algoritmi õnnestub kasutada ka hermiitiliste operaatorite omaväärtuste leidmiseks.
 Viimane rakendus pakub meile huvi, sest hamiltoniaan on hermiitiline operaator.
 
-\subsection{Kvantarvutuslik Fourier' teisendus ja pöördteisendus}\label{sec:qft}
+\(\subsection{Kvantarvutuslik Fourier' teisendus ja pöördteisendus}\label{sec:qft}
 
 Kvantarvutusliku Fourier' teisenduse algoritm ja pöördteisenduse algoritm on faasi hindamise algoritmi tähtsad osad.
 Vaatame nende tööpõhimõtet.
@@ -699,19 +712,19 @@ baasivektorid. Et tegemist on lineaarse operatsiooniga, siis piisab käsitleda s
         \end{yquant}
     \end{tikzpicture}
     \fi
-    \caption{Kvantarvutusliku Fourier' teisenduse ahel~\cite{nielsen+chuang, kaye+laflamme+mosca}}
+    \caption{Kujutatud on kvantarvutusliku Fourier' teisenduse ahel~\cite{nielsen+chuang, kaye+laflamme+mosca}.}
     \label{fig:qft}
 \end{figure}
 
 Näitame, et kvantarvutusliku Fourier' teisenduse realiseerib ahel joonisel~\ref{fig:qft}.
 
-Kasutame tähistust, kus
+Edasipidi asutame tähistust, kus
 \begin{multline}
     j_1j_2\cdots j_n.j_{n+1}j_{n+2}\cdots j_m \\
     = j_1 2^{n-1} j_2 2^{n-2} + \cdots + j_n 2^0 + j_{n+1} 2^{-1} j_{n+2} 2^{-2} + \cdots j_m 2^{-m} \rlap{,}
     \qquad j_i \in \{0, 1\} \rlap{.}
 \end{multline}
-NB! Selles ja järgmises jaotises on kõik komaga arvud kahendmurrud (mitte kümnendmurrud).
+Selles ja järgmises jaotises on kõik komaga arvud kahendmurrud (mitte kümnendmurrud).
 
 On vaja teada, et Hadamardi operaatori mõju baasvektoritele on
 \begin{align}
@@ -822,7 +835,7 @@ Klassikalise Fourier' teisenduse valem on
 \begin{align}\label{f:cftdef}
     y_k = \frac{1}{\sqrt{N}} \sum_{j=0}^{N-1}e^{2\pi ijk/N} x_j \rlap{.}
 \end{align}
-Valemite \ref{f:qftdef} ja \ref{f:cftdef} võrdlusest selgub, et kvantarvutusliku Fourier' teisenduse käigus toimub klassikaline Fourier' teisendus, kui võtta \(N = 2^n\)~\cite{nielsen+chuang}.
+Valemite \eqref{f:qftdef} ja \ref{f:cftdef} võrdlusest selgub, et kvantarvutusliku Fourier' teisenduse käigus toimub klassikaline Fourier' teisendus, kui võtta \(N = 2^n\)~\cite{nielsen+chuang}.
 
 Klassikaliselt on Fourier' teisendusel \(N \log{N}=n 2^n \) sammu, kvantavutuslikult vaid \(\log^2{N} = n^2\) sammu.
 Pealt näha on sama ülesande lahendamine kvantarvutuslikult oluliselt efektiivsem kui klassikaliselt~\cite{nielsen+chuang}.
@@ -840,7 +853,7 @@ Unitaarse operaatori \(U\) jaoks kehtib omaväärtusvõrrand
     U\ket{\Psi} = e^{2\pi i\phi}\ket{\Psi} \rlap{,}
     \qquad \phi \in [0,1) \rlap{,}
 \end{align}
-kus \(\ket{\Psi}\) on huvi pakkuv olek ja \(e^{2\pi i\phi}\) omaväärtus, mida kutsutakse ka faasiks.
+kus \(\ket{\Psi}\) on meid huvitav olek ja \(e^{2\pi i\phi}\) omaväärtus, mida kutsutakse ka faasiks.
 Faasi hindamise algoritm võimaldab leida parameetri \(\phi\), millega on faas määratud.
 
 Näitame, et ülesande lahendamiseks sobib ahel joonisel~\ref{fig:pea}.
@@ -878,7 +891,7 @@ Näitame, et ülesande lahendamiseks sobib ahel joonisel~\ref{fig:pea}.
 \end{figure}
 
 Joonise~\ref{fig:pea} ahelas on kaks kvantregistrit.
-Faasi hindamise registrit kujutavad ülemised \(n\) traati.
+Tööregistrit kujutavad ülemised \(n\) traati.
 Kõige alumine traat on olekuregister.%
 \footnote{Kuigi olekuregistrit on kujutatud vaid ühe traadiga, võib selles olla kuitahas palju kvantbitte.}
 
@@ -889,7 +902,7 @@ Joonisel~\ref{fig:pea} on eeldatud, et olekuregister on juba \(U\) omaolekus
 
 Esimese sisulise sammuna tuleb faasi hindamise registrile mõjuda kvantarvutusliku Fourier' teisenduse väravaga.
 Selle värava realiseerib eelmises jaotises esitatud ahel.
-Kui faasi hindamise registri kvantbitid olid enne kõik olekus \(\ket{0}\), siis on kvantarvutusliku Fourier' teisenduse värava rakendamise järel on tulemuseks olek
+Kui faasi hindamise registri kvantbitid olid enne kvantarvutusliku Fourier' teisenduse värava rakendamise järel on tulemuseks olek
 \begin{align}\label{f:peainit}
     \underbrace{\frac{\ket{0}+\ket{1}}{\sqrt{2}}
     \otimes \cdots
@@ -1015,73 +1028,6 @@ Järeldus on, et faasi hindamise algoritm võimalab mõnesid ülesandeid klassik
 Antud töös kasutme faasi hindamise algoritmi hamiltoniaani omaväärtuste leidmiseks, mis on elektronstruktuuri ülesande lahendamise kulukas.
 Järgmises jaotises käistleme seda ülesanne üldise juhul: hermiitilise operaatori omaväärtuste leidmist.
 
-\subsection{Hermiitilise operaatori omaväärtuste leidmine}\label{sec:hermit}
-
-Hermiitilise operaatoriga saab vastavusse seade unitaarse operaatori
-\begin{align}
-    U = e^{-iHt} \rlap{,}
-\end{align}
-kus \(H\) on hermiitiline operaator ja \(t\) skaleerimiskonstant, mille valikus leppime kokku hiljem.
-(Kui \(H\) on hamiltoniaan, siis \(U\) on ajalise arengu operaator.)
-
-Operaatori spektraallahutuse põhjal defineeritakse operaatori funktsioon.
-Antud juhul on \(U=U(H)\).
-Kui \(\ket{E_n}\) on \(H\) omavektor, siis kehtib
-\begin{align}\label{f:eigenhermit}
-    U \ket{E_n} = e^{-iHt}\ket{E_n} = e^{-i E_n t} \ket{E_n} \rlap{,}
-\end{align}
-kus \(E_n\) on \(H\) omaväärtus.
-(Kui \(H\) on hamiltoniaan, siis \(E_n\) on energia.)
-
-Samas eelmise jaotise~\ref{sec:unit} põhjal oskame leida \(\phi\) valemist
-\begin{align}\label{f:eigenunitary}
-    U \ket{u} = e^{2\pi i\phi} \rlap{.}
-\end{align}
-
-Valemite~\ref{f:eigenhermit} ja~\ref{f:eigenunitary} võrdlusest selgub, et leidnud \(\phi\) on võimalik arvutada
-\begin{align}
-    E_n = -\frac{2\pi\phi}{t} \rlap{,}
-\end{align}
-mis oligi meie eesmärk.
-
-Et \(\phi \in [0, 1)\), siis peab lisaks kehtima
-\begin{align}
-    -\frac{E_n t}{2\pi} \in [0, 1) \rlap{.}
-\end{align}
-mis seab piirangud \(t\) valikuks~\cite{whitfield+etal}.
-
-Skaleerimiskonstanti \(t\) valimiseks on mitu võimalust.
-
-Selles töös on tehtud valik
-\begin{align}
-    t = -\frac{2\pi}{2E_\mathrm{t}} \rlap{,}
-\end{align}
-kus \(E_t \ge \abs{E_n}\) on tõke, mida on vaja eelnevalt teada.
-Arvestades faasi perioodilisust kehtib siis
-\begin{align}
-    E_n = \begin{cases}
-        -\frac{2\pi\phi}{2E_t}\rlap{,} & \text{kui } \phi < \frac{1}{2} \\
-        E_t - \frac{2\pi\phi}{2E_t}\rlap{,} & \text{kui } \phi \ge \frac{1}{2} \\
-    \end{cases}
-\end{align}
-
-Oleme näidanud, et faasi hindamise algoritm sobib hamiltoniaani omaväärtuste leidmiseks.
-Nimelt võimaldab faasi hindamise algoritm välja lugeda perioodi \(E_n\), millega võngub oleku \(\ket{E_n}\) faas ajalise arengu operaatori \(U = e^{-iHT}\) mõjul~\cite{whitfield+etal}:
-\begin{align}
-    U \ket{E_n} = e^{-iHt} \ket{E_n} = e^{-iE_n t} \ket{E_n} \rlap{.}
-\end{align}
-
-Oluline on et, faasi hindamsie algoritm on klassikalistest algoritmidest efektiivsem, sest omaväärtuste leidmine ongi elektronstruktuuri ülesande lahendamise üks kulukaim etapp.
-Seega loodetakse faasi hindamise algoritmiga lahendada keerulisemaid ülesandeid, kui on võimalik klassikaliset~\cite{mcardle+etal, cao+etal}.
-
-Siin esitatud skeemi täiendavaks eeliseks on, et näiteks põhienergia leidmiseks pole vaja teada põhioleku vektori täpset kuju.
-Hatree-Focki hinnang võib olla piisav.
-Kui kehtib
-\begin{align}
-    \ket{\text{HF}} = \sum_n \alpha_i \ket{E_i} \rlap{,}
-    \qquad \alpha_i > \alpha_2, \alpha_3, \ldots, \alpha_n
-\end{align}
-siis on tagatud, et suurima tõenäosusega mõõtmistulemus on põhineriga \(E_1\) hinnang~\cite{whitfield+etal}.
 
 \section{Hamiltoniaani simuleerimine}
 
@@ -1123,7 +1069,7 @@ kus \(j_1\), \(j_2\), $\ldots$, \(j_k\) tähistavad kvantbitte, millele \(P_{j_1
 Näiteks \(X_1Y_2Z_4=X\otimes Y\otimes I\otimes Z.\)
 (Selles tähistuses peab Pauli sõne dimensioon olema selge kontekstist, sest viimase Pauli \(X\), \(Y\) või \(Z\) operaatori järel võib olla kuitahes palju ühikmaatrikseid.)
 
-\subsection{Trotteriseerimine ja treppalgoritm}
+\subsection{Trotteriseerimine ja treppalgoritm}\label{sec:qcirc}
 
 Faasi hindamise algoritmi rakendamiseks on vaja hamiltoniaani põhjal konstrueerida ajalise arengu operaator.
 Arvetades valemit~\eqref{eq:paulisum} on see
@@ -1380,7 +1326,7 @@ Juhtitud globaalse faasi operaatori võib asendanda juhtkvantvitil rakendatud su
     \label{fig:globphase}
 \end{figure}
 
-\chapter{Metoodika ja tulemused}
+\chapter{Metoodika ja tulemused}\label{chap:results}
 
 \section{Kasutatud vahendid}
 
