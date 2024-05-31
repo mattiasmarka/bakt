@@ -47,6 +47,82 @@
 
 \begin{document}
 
+\begin{titlepage}
+    \begin{center}
+        \large
+        {\sc Tartu Ülikool} \\
+        Loodus- ja täppisteaduste valdkond \\
+        Füüsika instituut \\
+        Füüsika, keemia ja materjaliteaduse õppekava \\
+
+        \vspace{25mm}
+        \Large Mattias Märka
+
+        \vspace{4mm}
+        \Huge Molekulaarse hamiltoniaani põhioleku energia leidmine faasi hindamise algoritmi abil
+
+        \vspace{20mm}
+        \Large Bakalaureusetöö (6 EAP)
+
+        \vspace{20mm}
+        \begin{flushright}
+            \Large Juhendaja: Veiko Palge, PhD
+        \end{flushright}
+
+        \vfill
+        \large Tartu 2024
+    \end{center}
+\end{titlepage}
+
+\newpage
+
+\noindent\textbf{\large Molekulaarse hamiltoniaani põhioleku energia leidmine faasi hindamise algoritmi abil}
+
+\noindent\textbf{Lühikokkuvõte:}\\
+On teade, et klassikalised meetodit kvantsüsteemide teäpseks simuleerimiseks on oma olemuselt ebaefektiivsed, mis on takistanud nende kasutamist paljude ülesannete lahendamiseks.
+Töös tutvustatakse kvantarvutusliku meetodit moleukaarse hamiltoniaani põheneriga leidmiseks, mis põhineb faasi hindamise algoritmil ja mis on klassikalisest efektiivsem.
+Meetodit rakendadatakse vesiniku molelkuli põhieneriga leidmiseks.
+Esmalt tutvusatatakse elektronstruktuuri ülesande teoreetilist tausta.
+Järgmisena antakse ülevaade molekulaarse süsteemi hamiltoniaani põhienergia leidmiseks vajalikest vahenditst: Jordan-Wigneri teisendusest, trotteriseerimisest, treppalgoritmist ja faasi hindamise algoritmist.
+Arvutused viidakse läbi kasutades kvantarvuti klassikalist simulaatorit.
+Lõpuks käsitletakse vajalike parameetrite valikut ja ülesande lahendamise võimalikkust kvantarvutil.
+
+\vspace*{1ex}
+
+\noindent\textbf{Võtmesõnad:}\\
+kvantarvutus, kvantkeemia, kvantalgoritmid, faasi hindamise algoritm, elektronstruktuuri ülesanne
+
+\vspace*{1ex}
+
+\noindent\textbf{CERCS:}\\
+P190 Matemaatiline ja üldine teoreetiline füüsika, klassikaline mehaanika, kvantmehaanika, relatiivsus, gravitatsioon, statistiline füüsika, termodünaamika;
+P410 Teoreetiline ja kvantkeemia
+
+\vspace*{3ex}
+
+\noindent\textbf{\large Computation of the ground state energy of a molecular hamiltonian using the quantum phase estimation algorithm}
+
+\vspace*{1ex}
+
+\noindent\textbf{Abstract}:\\
+It is known that classical methods for simulation quantum systems are inherently inefficient.
+In this work an overview is given of a quantum computational method for finding the groundstate energy of a molecular hamiltonian using, which uses the quantum phase estimation algorithm and is more efficient than any classical method.
+The quantum compuptational method is used to calculate the ground state energy of the hydrogen molecule.
+First, a introduction is given of the electronc strutcutre problem.
+Then, an overview is given of the quantum compuational methods used to solve the problem: namely the Jordan-Wigner decomposition, trotterization, staircase algorithm and phase estimation algorithm.
+A classical simulator is used for the quantum computational calculations.
+Finally, the choice of simulation parameters and possibility of using a quantum computer for the calculations is discussed.
+
+\noindent\textbf{Keywords:}\\
+quantum computing, quantum chemistry, quantum algorithms, quantum phase estimation algorithm, electron structure problem
+
+\vspace*{1ex}
+
+\noindent\textbf{CERCS:}\\
+P190 Mathematical and general theoretical physics, classical mechanics, quantum
+mechanics, relativity, gravitation, statistical physics, thermodynamics; P410 Theoretical che-
+mistry, quantum chemistry
+
 \tableofcontents
 
 \chapter{Sissejuhatus}
@@ -54,6 +130,7 @@
 Kvantarvutuste valdkonna üks peamine arengumotivatsioon on alati olnud soov simuleerida keerulisi kvantsüteeme.
 Juba 1980ndatel, kui kvantarvutuste valdkond oli alles tekkimas, käisid Juri Manin ja Richard Feynman teineteiest eraldi välja idee, et kvantsüsteemide simulateerimise ülesannete lahendamiseks võiksid hästi sobida just kvantarvutid~\cite{manin, feynman}.
 
+Simuleerimine on füüsikalise süsteemi käitumise kindlaks tegemine arvutuslikult.
 Simulatsiooniülesande saab analüütiliselt lahendada vaid lihtsaimate kvantsüsteemide jaoks, mille tuntuimad näited on harmooniline ostsillaator ja vesiniku aatom.
 Keerukamate süsteemide klassikaliseks simuleerimiseks kasutatakse nubmrilisi meetodeid~\cite{whitfield+etal2011, szabo+ostlund}.
 
@@ -71,36 +148,37 @@ Et kvantarvuti on ju ka ise kvantsüsteem, siis on sellega võimalik soodsalt si
 Seda arvasid juba Manin ja Feynman~\cite{manin, feynman}.
 Eelis klassikalise simuleerimise ees on eksponentsiaalne~\cite{whitfield+etal2011, mcardle+etal, cao+etal}.
 
-Siiani on kvantarvututitega õnnestunud lahendada vaid mõni üksik selline probleem, mille lahendamine on klassikaliste arvutitega on praktiliselt võimatu.
+Siiani on kvantarvututitega õnnestunud lahendada vaid mõni üksik selline probleem, mille lahendamine on klassikaliste arvutitega on teoreetiliselt võimatu.
 Nimelt takistab kvantarvutite kasutamist nende ebatäiuslik riistvara: arvutuste käigus tekib müra~\cite{whitfield+etal2022}.
 
 Siiski on kvantalgoritme mõttekas uurida tuleviku tarvis, sest kvantarvutite riistvara areneb pidevalt.
 Pretsedendiks on klassikaliste arvutite kiire areng.
 Lähemas tulevikus võib õnnestuda kasutada hübriidalgoritme, mis põhinevad kvantarvutite ja klassikaliste arvutite koostööl~\cite{omalley+etal}.
 
-Käesoleva töö eesmärgiks on demonstreerida klassikalisest efektiivsemat kvantarvutusliku meetodid molekulaarse hamiltoniaani simuleerimiseks.
+Käesoleva töö eesmärgiks on demonstreerida klassikalisest efektiivsemat kvantarvutuslikku meetodit molekulaarse hamiltoniaani simuleerimiseks.
 See meetod põhineb faasi hindamise algoritmil.
 Süsteemiks on vesiniku molekul \(\rm H_2\), ülesandeks on põhienergia leidmin kui näide elektronstruktuuri ülesandest.
 
 Lahendamine algab klassikaliste eelarvutustega, mida tutvustab peatükk~\ref{chap:qchem}.
-Eelarvutuste tulemuseks on Focki ruumi hamiltoniaan teise kvantiseerimise kujul.
+Eelarvutuste tulemuseks on hamiltoniaan teise kvantiseerimise kujul.
 
 Peatkükk~\ref{chap:qcomp} käsitleb ülesande kvantarvutusliku lahendamist.
 Sammud lahendamiseks on järgmised~\cite{whitfield+etal2011}.
 
 \begin{enumerate}
-    \item Focki ruumi molekulaarne hamiltoniaan tuleb esitada kvantbittide ruumis.
-    Seda käsitleb alapeatükk~\ref{sec:jw}.
+    \item Teise kvantiseerimise kujul molekulaarne hamiltoniaan tuleb esitada kvantbittide ruumis.
+    Seda käsitleb jaotis~\ref{sec:jw}.
     \item Kvantbittide ruumis esitatud molekulaarse hamiltoniaani põhjal tuleb koostada ajalise arengu operaator ja realiseerida see kvantväravana.
-    Seda käsitleb alepeatükk~\ref{sec:qcirc}.
+    Seda käsitleb jaotis~\ref{sec:qcirc}.
     \item Ajalise arengu operaatori omaväärtused saab leida kasutades faasi hindamise algoritmi.
     Seda käsitleb alepeatükk~\ref{sec:pea}.
 \end{enumerate}
 Selguse huvides on sammud tekstis esitatud vastupidises järjekorras.
 
 Metoodikat ja tulemusi käsitleb peatükk~\ref{chap:results}.
+Peatükk~\ref{chap:discussion} räägib kvantarvuti kasutamisest töös esitatud arvutuste läbiviimiseks.
 
-\chapter{Elektronstruktuuri ülesanne}\label{chap:elstruct}
+\chapter{Elektronstruktuuri ülesanne}\label{chap:qchem}
 
 Käesoleva töö eesmärgiks on lahendada Schrödingeri võrrand
 \begin{align}\label{eq:schro}
@@ -315,7 +393,7 @@ on molekulaarsed integraalid, mis seovad hamiltoniaani esimese ja teise kvantise
 Need integraalid saab arvutada klassikaliselt.
 Antud töös ongi ülesande lahendamise eelarvutuseks integraalide \eqref{eq:molint1} ja \eqref{eq:molint2} leidmine.
 
-\chapter{Kvantarvutuslik lahendamine}
+\chapter{Kvantarvutuslik lahendamine}\label{chap:qcomp}
 
 \section{Põhimõisted}
 
@@ -984,6 +1062,11 @@ siis on tagatud, et suurima tõenäosusega mõõtmistulemus on põhienergia \(E_
 
 \section{Hamiltoniaani simuleermine}
 
+See alapeatükk hamiltoniaani simuleerimist kvantaheal.
+Esiteks tuleb selleks esitada teise kvantiseerimise kujul hamiltoniaan kvantbittide ruumis, mis on võimalik Jordan-Wigneri teisdusega ja mida käsitleb jaotis~\ref{sec:jw}.
+Järgmiseks on vaja kvantbittide ruumis esitatud hamiltoniaani põhjal koostada ajalise arengu operaator, milleks saab kasutada trotteriseerimist ja treppalgoritm, nagu näitame jaotises~\ref{sec:qcirc}.
+Viimaks on vaja ajalise arengu operaatori põhjal koostada kontrollitud ajalise arengu operaator, mida käsitleb jatois~\ref{sec:cu}.
+
 \subsection{Jordan-Wigneri teisendus}\label{sec:jw}
 
 Antud töös kasutame teise kvantiseerimise formalismis antud ülesande kvantbittide ruumi kujatamiseks Jordan-Wigneri teisendust.
@@ -1009,7 +1092,7 @@ Jordan-Wigneri teisendus tulemusel on hamiltoniaan kujul
 \begin{align}\label{eq:paulisum}
     H = \sum_i c_i h_i \rlap{,}
 \end{align}
-kus \(c_i\) on reaalsed konstandid ja \(h_i\) on Pauli sõned~\cite{whitfield+etal}.
+kus \(c_i\) on reaalsed konstandid ja \(h_i\) on Pauli sõned~\cite{whitfield+etal2011}.
 
 Pauli sõnede all mõistame Pauli operaatorite tensorkorrutisi.
 
@@ -1037,14 +1120,14 @@ Kui operaatorid \(h_i\) on kommuteeruvad, siis kehtib
     e^{-it\sum_i h_i}
     = \lim_{\Delta t \rightarrow 0} \paren{\prod_i e^{-i h_i \Delta t}}^{t / \Delta t} \rlap{,}
 \end{align}
-mis kehtib ka mittekommuteeruvate operaatorite \(h_i\) jaoks, nimetatakse Trotteri valemiks~\cite{whitfield+etal}.
+mis kehtib ka mittekommuteeruvate operaatorite \(h_i\) jaoks, nimetatakse Trotteri valemiks~\cite{whitfield+etal2011}.
 
 Trotteriseerimiseks nimetatakas lähendust
 \begin{align}\label{eq:trot}
     e^{-it\sum_i h_i}
     \approx \paren{\prod_i e^{-i h_i \Delta (t / n)}}^n \rlap{,}
 \end{align}
-kus \(n\) on piisavalt suur toretterisammude arv~\cite{whitfield+etal, nielsen+chuang}.
+kus \(n\) on piisavalt suur toretterisammude arv~\cite{whitfield+etal2011, nielsen+chuang}.
 
 Et operaatorite korrutamine tähendab väravate järjesikku rakendamist ja täisarvuga astendamine taandub korrutamisele, on operaatori \(e^{-i t \sum_i h_i}\) realiseerimiseks kvantahelana vaja realiseerida üksikud liikmed \(e^{-i h_i a}\), kus \(a = t /n \rightarrow 0\).
 
@@ -1187,7 +1270,7 @@ Lõpliku trotterisammude arvu puhul on tegemist ligikaudse hinnanguga.
     \label{fig:trot}
 \end{figure}
 
-\subsection{Juhitud ajalise arengu operaator}
+\subsection{Juhitud ajalise arengu operaator}\label{sec:cu}
 
 Faasihindamise jaoks on oluline, et unitaarne operaator oleks juhitud.
 Juhitud unitaarse operaatori saab kui kvantahelas asendada kõik pöörded juhitud pööretega.
@@ -1351,7 +1434,7 @@ Tegemist on olukordadega, kus kolm trotterisammu on hamiltoniaani simuleerimisek
   \label{fig:scan}
 \end{figure}
 
-\chapter{Arutelu}
+\chapter{Arutelu}\label{chap:discussion}
 
 Selle töö kirjutamise ajal ei olnud võimalik arvutusi, mis on vajalikud vesiniku molekuli keemiliselt täpse põhienergia leidmiseks, läbi viia kvantarvutil.
 Seda piiras kvantarvutite ebatäiuslik riistvara.
