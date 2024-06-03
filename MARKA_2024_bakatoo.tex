@@ -22,8 +22,6 @@
 
 \usepackage{graphicx}
 
-\usepackage{listings} \lstset{numbers=left}
-
 \usepackage{yquant} \useyquantlanguage{groups} \newcommand*{\yquanton}{}
 
 \usepackage[sorting=none, style=numeric, maxbibnames=99]{biblatex}
@@ -1328,7 +1326,7 @@ See põhiprogramm liideti suuremasse programmi, mille sisendiks on molekulaarse 
 Valmislahendusi kasutati vaid eelarvutusteks ning Jordan-Wigneri teisenduseks.
 Loodud programmi kasutati vesiniku molekuli põhienergia leidmiseks.
 Et siin töös ei võeta arvesse müra, siis viidi arvutused läbi kasutades kvantarvuti klassikalist simulaatorit.
-Leiti sobivad parameetrid keemilise täpsuse saavutamiseks. 
+Leiti sobivad parameetrid keemilise täpsuse saavutamiseks.
 % ??? \(1{,}6\cdot10^{-3}\,{\rm Ha}\).
 
 \section{Kasutatud vahendid}
@@ -1424,17 +1422,5 @@ Teine on  iteratiivne faasi hindamise algoritm, mis põhineb klassikalise ja kva
 Et iteratiivne faasi hindamise algoritm on saadud siin töös esitatud tavalise faasi hindamise algoritmi kohandamisel, siis on faasi hindamise algoritm relevantne ka praegusel NISQ-perioodil.
 
 \printbibliography[heading=bibintoc, title=Kirjandus]
-
-\begin{appendix}
-
-\chapter{Koostatud programm}
-
-\lstinputlisting[caption=\texttt{cmpham.py}]{code/cmpham.py}
-\lstinputlisting[caption=\texttt{cu.py}]{code/cu.py}
-\lstinputlisting[caption=\texttt{pea.py}]{code/pea.py}
-\lstinputlisting[caption=\texttt{sim.py}]{code/sim.py}
-\lstinputlisting[caption=\texttt{h2exp.py}]{code/h2exp.py}
-
-\end{appendix}
 
 \end{document}
