@@ -174,12 +174,12 @@ Metoodikat, tulemusi ja edasiarendusi käsitleb peatükk~\ref{chap:results}.
 
 \chapter{Elektronstruktuuri ülesanne}\label{chap:qchem}
 
-Käesoleva töö eesmärgiks on leida Schödingeri võrrandist
-\begin{align}\label{eq:schro}
-    H \Psi = E \Psi
-\end{align}
+Käesoleva töö eesmärgiks on leida % Schödingeri võrrandist
+% \begin{align}\label{eq:schro}
+%     H \Psi = E \Psi
+% \end{align}
 molekulaarse süsteemi põhienergia.
-Kahtlemata on selleks tarvis teada, milline on elektronkatet iseloomustav hamiltoniaan \(H\).
+Selleks on tarvis teada, milline on elektronkatet iseloomustav hamiltoniaan \(H\).
 Hiljem näeme, et samuti on vajalik põhioleku lainefunktsiooni $\Psi_0$ lähendus, kuid see ei pea olema täpne.
 Selle peatüki teemaks on arvutused hamiltoniaani ja põhioleku lainefunktsiooni lähenduse leidmiseks.
 Need arvutused on ülesande lahendamiseks vajalikud, kuid mitte töö põhiosa, sestap nimetame neid eelarvutusteks.
@@ -233,13 +233,14 @@ Täpsemalt öeldes kehtib seos
 \end{align}
 kus \(E_\text{mol}\) ja \(E_\text{elek}\) on vastavalt molekulaarse hamiltoniaani~\eqref{eq:molham} ja elektroonilise hamiltoniaani~\eqref{eq:elham} omaväärtused mingi ühise omafunktsiooni ning \(E_\text{tuum}\) on konstant, mis on kõikide omafunktsioonide jaoks sama.
 Füüsikaliselt tähendab viimane võrdus seda, et Born-Oppenheimeri lähendsuses erineb elektronkatte energia molekuli energiast konstantse tuumade energia võrra.
-Edaspidi jätame ära alaindeksi "elek", kuivõrd meid huvitabki vaid elektronkate.
+Edaspidi jätame ära alaindeksi ``elek'', kuivõrd meid huvitabki vaid elektronkate.
 
 \section{Hartree korrutis ja Slateri determinant}\label{sec:hpsd}
 
-Hamiltoniaan~\eqref{eq:elham} ei võta arvesse spinni, seega peab spinni arvestama lainefunktsioon.
+Hamiltoniaan~\eqref{eq:elham} ei võta arvesse spinni.
+Kuid, kuna me soovime spinni arvestada, siis peame selle lainefunktsioonile lisama.
 Lainefunktsioonile \(\Psi\) ongi kaks tingimust.
-Ühest küljest peab see rahuldama Schrödingeri võrrandit~\eqref{eq:schro}.
+Ühest küljest peab see rahuldama Schrödingeri võrrandit.
 Teisalt peab see rahuldama antisümmeetria printsiipi
 \begin{align}\label{eq:antisim}
     \Psi(\vec{x}_1, \ldots, \vec{x}_i, \ldots, \vec{x}_j, \ldots, \vec{x}_N) =
@@ -962,11 +963,12 @@ Mõõtmis\-tulemuste seast tuleb valida kõige tõenäolisem tulemus.
 
 \subsection{Hamiltoniaani omaväärtuste leidmine}\label{sec:ham}
 
-Hamiltoniaani genereerib unitaarse operaatori, mis kirjeldab kvantsüsteemi ajalist arengut
+Hamiltoniaan genereerib unitaarse operaatori, mis kirjeldab kvantsüsteemi ajalist arengut
 \begin{align}
     U = e^{-iHt} \rlap{,}
 \end{align}
-kus \(t\) skaleerimiskonstant, mille valikus lepime kokku hiljem.
+kus \(t\) aeg.
+Antud algoritmi kontekstis on \(t\) skaleerimiskonstandi rolllis. % skaleerimiskonstant, mille valikus lepime kokku hiljem.
 Kui \(\ket{E_n}\) on \(H\) omavektor, siis kehtib
 \begin{align}\label{eq:eigenhermit}
     U \ket{E_n} = e^{-iHt}\ket{E_n} = e^{-i E_n t} \ket{E_n} \rlap{,}
@@ -1001,12 +1003,12 @@ Nimelt võimaldab faasi hindamise algoritm välja lugeda perioodi \(E_n\), mille
 \begin{align}
     U \ket{E_n} = e^{-iHt} \ket{E_n} = e^{-iE_n t} \ket{E_n} \rlap{.}
 \end{align}
-.
-Et omaväärtuste leidmine ongi elektronstruktuuri ülesande lahendamise kulikaim etapp, siis on oluline, et faasi hindamise algoritm on sama eesmärgiga klassikalstest algoritmidest efektiivsem.
+
+Et omaväärtuste leidmine ongi elektronstruktuuri ülesande lahendamise kulukaim etapp, siis on oluline, et faasi hindamise algoritm on sama eesmärgiga klassikalstest algoritmidest efektiivsem.
 Faasi hindamise algoritmiga loodetakse tulevikus lahendada keerulisemaid ülesandeid, kui on võimalik klassikaliselt.
 
-Siin esitatud skeemi täiendavaks eeliseks on, et näiteks põhienergia leidmiseks pole vaja teada põhioleku vektori täpset kuju.
-Hatree-Focki hinnang võib olla piisav.
+Faasi hindamise algoritmi täiendavaks eeliseks on, et näiteks põhienergia leidmiseks pole vaja teada põhioleku vektori täpset kuju.
+Hartree-Focki hinnang võib olla piisav.
 Kui kehtib
 \begin{align}
     \ket{\text{HF}} = \sum_n \alpha_i \ket{E_i} \rlap{,}
@@ -1014,7 +1016,7 @@ Kui kehtib
 \end{align}
 siis on tagatud, et suurima tõenäosusega mõõtmistulemus on põhienergia \(E_1\) hinnang.
 
-\section{Hamiltoniaani simuleermine}
+\section{Hamiltoniaani simuleerimine}
 
 See alapeatükk räägib hamiltoniaani simuleerimist kvantahelana.
 Esiteks tuleb selleks esitada teise kvantiseerimise kujul hamiltoniaan kvantbittide ruumis, mis on võimalik Jordan-Wigneri teisendusega ja mida käsitleb jaotis~\ref{sec:jw}.
@@ -1026,7 +1028,7 @@ Viimaks on vaja ajalise arengu operaatori põhjal koostada kontrollitud ajalise 
 Antud töös kasutame teise kvantiseerimise formalismis antud ülesande kvantbittide ruumi kujatamiseks Jordan-Wigneri teisendust.
 Selle põhimõte on järgmine.
 Seos täitearvude esituses lainefunktsiooni ja sellele vastava kvantregistri oleku vahel on lihtsaim võimalik: täitmata orbitaalile vastab kvantbitt olekus \(\ket{0}\) ja täidetud orbitaalile kvantbitt olekus \(\ket{1}\).
-Tuleb arvestada, et elektronid molekulaarses süsteemis on eristamatud, kuid kvantbitid kvantregistris on eristatavad.
+% Tuleb arvestada, et elektronid molekulaarses süsteemis on eristamatud, kuid kvantbitid kvantregistris on eristatavad.
 Hamiltoniaani kodeerimiseks seostatakse Focki ruumi tekke- ja kaoperaatorid \(\cparen{a_i, a_i^\dagger}\) kvantbittide ruumi Pauli operaatoritega \(\cparen{I, X, Y, Z}\) sedasi, et
 \begin{align}
     a_j &\mapsto I^{\otimes j-1} \otimes \frac{X+iY}{2} \otimes Z^{N-j-1} \rlap{,} \\
@@ -1041,7 +1043,7 @@ Jordan-Wigneri teisendus tulemusel on hamiltoniaan kujul
 \end{align}
 kus \(c_i\) on reaalsed konstandid ja \(h_i\) on Pauli sõned~\cite{whitfield+etal2011, mcardle+etal}.
 Pauli sõnede all mõistame Pauli operaatorite tensorkorrutisi.
-Edaspidi tähistame Pauli sõnesesid lühidalt
+Edaspidi tähistame Pauli sõnesid lühidalt
 \begin{equation} h_i=P_{j_1}P_{j_2}\cdots P_{j_k} \rlap{,}\end{equation}
 kus \(j_1\), \(j_2\), $\ldots$, \(j_k\) tähistavad kvantbitte, millele \(P_{j_1}\), \(P_{j_2}\), \(\ldots\), \(P_{j_k}\in\{X,Y,Z\}\) mõjuvad.
 Näiteks \(X_1Y_2Z_4=X\otimes Y\otimes I\otimes Z.\)
@@ -1071,17 +1073,16 @@ Trotteriseerimiseks nimetatakas lähendust
 \end{align}
 kus \(n\) on piisavalt suur toretterisammude arv~\cite{whitfield+etal2011, nielsen+chuang}.
 
-Et operaatorite korrutamine tähendab väravate järjesikku rakendamist ja täisarvuga astendamine taandub korrutamisele, on operaatori \(e^{-i t \sum_i h_i}\) realiseerimiseks kvantahelana vaja realiseerida üksikud liikmed \(e^{-i h_i a}\), kus \(a = t /n \rightarrow 0\).
+Et operaatorite korrutamine tähendab väravate järjestikku rakendamist ja täisarvuga astendamine taandub korrutamisele, on operaatori \(e^{-i t \sum_i h_i}\) realiseerimiseks kvantahelana vaja realiseerida üksikud liikmed \(e^{-i h_i a}\), kus \(a = t / n\).
 
 Seda võimaldab nn treppalgoritm~\cite{nielsen+chuang, mansky+etal}.
 Vaatame selle põhimõtet.
 
-Lihtsaim juht on
+Lihtsaim juht on on kommuteeruvate Pauli \(Z\) operaatorite korrutis
 \begin{equation}\label{eq:onlyz}
   h_i = Z_{j_1}Z_{j_2}\cdots Z_{j_n} \rlap{.}
 \end{equation}
-Operaator \(e^{-i h_i a}\) realiseerib siis kvantahel joonisel~\ref{f:expz}.
-
+Operaatori \(e^{-i h_i a}\) realiseerib siis kvantahel joonisel~\ref{f:expz}.
 \begin{figure}[h]
   \centering
   \ifdefined\yquanton
@@ -1120,7 +1121,6 @@ Vajalikud baasiteisendused on järgmised:
 \begin{align}
     Z = HXH \rlap{,}\qquad Z = S^\dagger HYHS \rlap{.}
 \end{align}
-
 Näiteks juhul, kui
 \begin{equation}
   h_i = Z_1X_2Y_3 \rlap{,}
@@ -1214,8 +1214,8 @@ Faasihindamise jaoks on oluline, et unitaarne operaator oleks juhitud.
 Juhitud ajalise arengu operaatori saab, kui seda realiseerivas kvantahelas asendada kõik pöörded juhitud pööretega.
 Nõnda toiminud, sõltub iga Pauli sõne rakendamine sellest, mis on juhtkvantbiti olek.
 Kui juhtkvantbitt on olekus \(\ket{0}\), pööre ei rakendu.
-Et paarsuse arvutamine ja selle tagasi panemine on pöördoperatsioonid, siis kokkuvõttes antud Pauli sõne eksponent justkui ei rakendu.
-Kui juhtkvantvitt on olekus \(\ket{1}\) pööre rakendub ja rakendub ka Pauli sõne eksponent tervikuna.
+Et paarsuse arvutamine ja selle tagasi panemine on pöördoperatsioonid, siis kokkuvõttes antud Pauli sõne eksponent ei rakendu.
+Kui juhtkvantbitt on olekus \(\ket{1}\) pööre rakendub ja rakendub ka Pauli sõne eksponent tervikuna.
 Joonisel~\ref{fig:trotexctrl} on näide juhitud ajalise arengu operaatorist, kui hamiltoniaan on antud valemiga~\eqref{eq:hex}.
 
 \begin{figure}
@@ -1265,7 +1265,7 @@ Joonisel~\ref{fig:trotexctrl} on näide juhitud ajalise arengu operaatorist, kui
 \end{figure}
 
 Kui hamiltoniaanis esineb liige, mis on vaid ühikmaatriksite tensorkorrutis, tuleb seda eraldi arvestada.
-Sellise liikme eksponent on globaalse faasi operaator, mille võib ajalise arengu operaatori, mis pole juhitud, juhul arvestamata jätta.
+Sellise liikme eksponent on globaalse faasi operaator, mille võib mittejuhitud ajalise arengu operaatori juhul arvestamata jätta.
 Samas juhitud globaalse faasi operaator rakendamine muudab suhtelist faasi ja seda peab arvestama.
 Juhitud globaalse faasi operaatori võib asendanda juhtkvantbitil rakendatud suhtelise faasi operaatoriga, nagu näha joonisel~\ref{fig:globphase}, kus võrduse vasak ja parem pool on samaväärsed globaalse faasi täpsusega.
 
@@ -1298,7 +1298,7 @@ Töö raames loodi programm, mille sisendiks on Jordan-Wigneri teisendustest saa
 See põhiprogramm liideti suuremasse programmi, mille sisendiks on molekulaarse süsteemi geomeetria ja väljunduks põhienergia hinnang.
 Valmislahendusi kasutati vaid eelarvutusteks ning Jordan-Wigneri teisenduseks.
 Loodud programmi kasutati vesiniku molekuli põhienergia leidmiseks.
-Et siin töös ei võetud arvesse müra, siis viidi arvutused läbi kasutades kvantarvuti klassikalist simulaatorit.
+Et siin töös ei võetud arvesse müra, siis viidi arvutused läbi kasutades kvantarvuti simulaatorit.
 Leiti sobivad parameetrid keemilise täpsuse saavutamiseks.
 % ??? \(1{,}6\cdot10^{-3}\,{\rm Ha}\).
 
@@ -1308,7 +1308,7 @@ Töös kasutati läbivalt programmeerimisekeelt Python (versioon 3.10.12).
 Kvantahela koostamiseks ja selle klassikaliseks simuleerimiseks kasutati teeki Qiskit (versioon 1.0.0)~\cite{qiskit}.
 Eelarvutusteks (molekulaarsete integraalide arvutamiseks) ja Jordan-Wigneri teisenduseks kasutati teeki OpenFermion (versioon 1.6.1)~\cite{openfermion}, mis omakorda kasutas kvantkeemiaprogrammi Psi4 (versioon 1.6.1)~\cite{psi4}.
 Kasutatud arvuti protsessor oli 32 tuumaga AMD Ryzen Threadripper 3970X ja arvutil oli \(256\,{\rm GB}\) mälu.
-Koostatud programm on kättesaadav veebis aadressil \url{https://github.com/mattiasmarka/peahamsim}.
+Koostatud programm on kättesaadav veebis aadressil {\url{https://github.com/mattiasmarka/peahamsim}}.
 
 \section{Keemiline baas}
 
