@@ -120,6 +120,8 @@ def main():
                  args.lower,
                  args.higher,
                  nt,
+                 E,
+                 fci_E,
                  depth,
                  make_time,
                  transp_time,
