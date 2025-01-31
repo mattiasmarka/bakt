@@ -92,7 +92,7 @@ def main():
             lllogger = llogger.getChild("length = %.10f" % length)
             lllogger.info("getting hamiltoninan...")
             ham, fci_E = get_ham(
-                basis, name, ddata["geom"], length, ddata["mult"], ddata["charge"])
+                basis, args.mol, ddata["geom", length, ddata["mult"], ddata["charge"])
             lllogger.info("...done")
             lllogger.info("making circuit...")
             make_start = time.time_ns()
