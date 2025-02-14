@@ -30,7 +30,7 @@ ax = pyplot.subplot(N, 1, 1)
 ntrots = list(set(andmed[::, 3]))
 for nt in sorted(ntrots):
     xandmed = andmed[numpy.where(andmed[::, 3] == nt)]
-    ax.plot(xandmed[::, 0], xandmed[::, 4], ".", label = "ntrots = %d" % nt)
+    ax.plot(xandmed[::, 0], xandmed[::, 4], "-", label = "ntrots = %d" % nt)
 ax.legend()
 ax.set_xlabel("Sidemepikkus (A)")
 ax.set_ylabel("Energia (Ha)")
@@ -38,14 +38,14 @@ ax.set_ylabel("Energia (Ha)")
 ax = pyplot.subplot(N, 1, 2)
 ntrots = list(set(andmed[::, 3]))
 axins = ax.inset_axes(
-       [0.22, 0.3, 0.68, 0.48],
+       [0.38, 0.3, 0.58, 0.48],
        ylim=(0, 1.59e-3 * 3))
 for nt in sorted(ntrots):
     xandmed = andmed[numpy.where(andmed[::, 3] == nt)]
-    ax.plot(xandmed[::, 0], abs(xandmed[::, 4] - xandmed[::, 5]), ".", label = "ntrots = %d" % nt)
-    axins.plot(xandmed[::, 0], abs(xandmed[::, 4] - xandmed[::, 5]), ".")
-ax.axhline(1.59e-3, label="Keemiline täpsus")
-axins.axhline(1.59e-3)
+    ax.plot(xandmed[::, 0], abs(xandmed[::, 4] - xandmed[::, 5]), "-", label = "ntrots = %d" % nt)
+    axins.plot(xandmed[::, 0], abs(xandmed[::, 4] - xandmed[::, 5]), "-")
+ax.axhline(1.59e-3, linestyle="--", label="Keemiline täpsus")
+axins.axhline(1.59e-3, linestyle="--")
 ax.legend()
 ax.set_xlabel("Sidemepikkus (A)")
 ax.set_ylabel("Energia viga (Ha)")
@@ -53,7 +53,7 @@ ax.set_ylabel("Energia viga (Ha)")
 ax = pyplot.subplot(N, 1, 3)
 twinx = ax.twinx()
 ntrots = list(sorted(ntrots))
-ax.set_xticks([1, 2, 3])
+ax.set_xticks([1, 2, 3, 4, 8, 10])
 gates = [numpy.average(andmed[numpy.where(andmed[::, 3] == nt)][::, 6]) for nt in ntrots]
 make_time = [numpy.average(andmed[numpy.where(andmed[::, 3] == nt)][::, 7]) / 60e9 for nt in ntrots]
 transp_time = [numpy.average(andmed[numpy.where(andmed[::, 3] == nt)][::, 8]) / 60e9 for nt in ntrots]
@@ -68,4 +68,4 @@ twinx.set_ylabel("Aeg (min)")
 ax.legend()
 twinx.legend(loc="lower right")
 
-pyplot.savefig("trotslengths_h2.svg")
+pyplot.savefig("trotslengths_h2.jpg")

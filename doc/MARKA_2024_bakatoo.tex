@@ -1430,6 +1430,25 @@ Kvantarvutusressursside säästmiseks tasub ka uurida, kas hamiltoniaani on enne
 Samuti on võimalik arvutusressursse kokku hoida kasutades energia skaleerimiseks siin töös esitatust keerulisemat meetodit~\cite{whitfield+etal2011, omalley+etal}.
 Kui eesmärgiks võtta suuremate süsteemide uurimine ja suuremate keemiliste baaside kasutamine, siis on töö edasi arendamises vähemalt kolm suunda: üks on kasutada iteratiivset faasi hindamise algoritmi, teine on lihtsustada hamiltoninaani kvantarvutusressurside säästmiseks, kolmas on energia keerulisem skaleerimine.
 
+\section{Teksti integreerimata joonised}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=.65\hsize]{faasenergiast.jpg}
+  \caption{Energiast faasi saamise sammud.}
+  \label{fig:energytophase}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=.65\hsize]{trotslengths_h2.jpg}
+  \caption{Üleval: Energia sõltuvus sidemepikkusest. Keskel: Energiavea sõltuvus sidemepikkusest. All: Väravate arvu ja erinvate programmi osade käitamisaegade sõltuvus trotterisammude arvust.
+  Energiat on otsitud vahemikust \(-2\ldots 1\,{\rm Ha}\), misjuhul keemilise täpsuse saavutamiseks vajalik täpsusbittide arv on 11 (kokku vaja 15 bitti).}
+  \label{fig:tlh2}
+\end{figure}
+
+Vt joonised~\ref{fig:energytophase}, \ref{fig:tlh2}.
+
 \chapter{Kokkuvõte}
 
 Töös koostati programm molekulaarse süsteemi põhienergia leidmise läbiviimiseks kvantarvutil.
