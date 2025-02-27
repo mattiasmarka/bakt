@@ -36,7 +36,7 @@ def get_args():
         help="molecular system: H2, LiH or BeH2")
     parser.add_argument(
         "--nbits",
-        type=float,
+        type=int,
         default=None,
         help="number of measurment bits: positive int or None (automatic)")
     parser.add_argument(
@@ -92,7 +92,7 @@ def main():
             lllogger = llogger.getChild("length = %.10f" % length)
             lllogger.info("getting hamiltoninan...")
             ham, fci_E = get_ham(
-                basis, args.mol, ddata["geom", length, ddata["mult"], ddata["charge"])
+                basis, args.mol, ddata["geom"], length, ddata["mult"], ddata["charge"])
             lllogger.info("...done")
             lllogger.info("making circuit...")
             make_start = time.time_ns()
@@ -114,7 +114,7 @@ def main():
             E = results_to_energy(results)
             lllogger.info("E = %.10f (fci_E = %.10f)", E, fci_E)
             print(
-                "%s %f %f %f %d %d %f %f %f" %
+                "%s %f %f %f %d %f %f %d %f %f %f" %
                 (args.mol,
                  length,
                  args.lower,

@@ -28,7 +28,7 @@ fci_E = lambda data: data[::, 6]
 if __name__ == "__main__":
    with open("h2demo.dat", "r") as f:
         data = load_data(f)
-   fig, ax = pyplot.subplots(figsize=(1.5*6.4, 4.8))
+   fig, ax = pyplot.subplots(figsize=(1.5*6.4, 4.8), dpi=600)
    axins = ax.inset_axes(
        [0.12, 0.5, 0.68, 0.48],
        ylim=(0, chemical_accuracy * 2))

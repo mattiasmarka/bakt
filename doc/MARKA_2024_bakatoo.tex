@@ -1298,156 +1298,101 @@ Juhitud globaalse faasi operaatori võib asendanda juhtkvantbitil rakendatud suh
     \label{fig:globphase}
 \end{figure}
 
-\chapter{Metoodika, tulemused ja arutelu}\label{chap:results}
+\chapter{Metoodika ja tulemused}
 
-Töö raames loodi programm, mille sisendiks on molekulaarse süsteemi geomeetria ja väljundiks põhienergia hinnang.
-Selle programmi tähtsaim alamprogramm, mille sisendiks on Jordan-Wigneri teisendustest saadud hamiltoniaan ja väljundiks kvantahel selle hamiltoniaani simuleerimiseks ja faasi hindamiseks, loodi täies ulatuses, kasutades vaid kvantarvutuse standardvahendeid.
-Valmislahendusi kasutati vaid eelarvutusteks ning Jordan-Wigneri teisenduseks.
-Loodud programmi kasutati vesiniku molekuli põhienergia leidmiseks.
-Et siin töös ei võetud arvesse müra, siis viidi arvutused läbi kasutades kvantarvuti simulaatorit.
-Leiti sobivad parameetrid keemilise täpsuse saavutamiseks.
-% ??? \(1{,}6\cdot10^{-3}\,{\rm Ha}\).
+Töö praktilises osas valmis programm molekulaarse süsteemi põhienergia leidmiseks.
+Kõik kvantalgoritmid~--- faasi hindamise algoritm, selle osad (kvantarvutuslik Fourier' teisendus ja pöördteisendus) ja hamiltoniaani simuleerimise algoritm~--- implementeeriti ise, lähtudes vaid primtiivsetest väravatest.
+Omal käel implementeeriti ka klassikaline arvutus, mille abil loetakse faasi hindamise kvantalgoritmi tulemustest välja energia.
+Valmislahendusi kasutati vaid kvantkeemiliste eelarvutuste jaoks: molekulaarsete integraalide arvutamiseks ja Jordan-Wigneri teisenduseks.
+Valminud programm on modulaarne ja universaalne: programmi tähtsamad osad on kapseldatud ja seda saab kasutada mistahes molekulaarse süsteemi põhienergia leidmiseks.
+Lahenduse demonstreerimiseks leiti \(\rm H_2\), lihtsaima võimaliku kaheaatomilise molekuli, põhienergia erinevate sidemepikkuste jaoks.
+Et antud töö käsitle müra, siis viidi kõik arvutused läbi kasutades kvantarvuti klassikalist simulaatorit.
 
-\section{Kasutatud vahendid}
+\section{Kasutatud vahendid ja lähtekood}
 
-Töös kasutati läbivalt programmeerimisekeelt Python (versioon 3.10.12).
-Kvantahela koostamiseks ja selle klassikaliseks simuleerimiseks kasutati teeki Qiskit (versioon 1.0.0)~\cite{qiskit}.
-Eelarvutusteks (molekulaarsete integraalide arvutamiseks) ja Jordan-Wigneri teisenduseks kasutati teeki OpenFermion (versioon 1.6.1)~\cite{openfermion}, mis omakorda kasutas kvantkeemiaprogrammi Psi4 (versioon 1.6.1)~\cite{psi4}.
-Kasutatud arvuti protsessor oli 32 tuumaga AMD Ryzen Threadripper 3970X ja arvutil oli \(256\,{\rm GB}\) mälu.
-Koostatud programm on kättesaadav veebis järgmisel aadressil:
-\begin{center}
-  {\url{https://github.com/mattiasmarka/peahamsim}}
-\end{center}
+Töös kasutati läbivalt programmeerimiskeelt Python (versioon 30.10.12)~\cite{python}.
+Kasutatud teegid on järgmised.
+\begin{itemize}
+  \item Klassikalisteks eelavutusteks (molekulaarsete integraalide arvutamiseks ja Jordan-Wigneri teisenduseks) kasutati teeki OpenFermion (versioon 1.6.1)~\cite{openfermion}, mis omakorda kasutas kvantkeemiaprogrammi Psi4~\cite{psi4}.
+  \item Ahela koostamiseks kasutati teeki Qiskit (versioon 1.6.1)~\cite{qiskit}.
+  \item Ahela simuleerimiseks kasutati olekuvektori simulaatorit teegist Qiskit Aer (vt eelmine punkt).
+\end{itemize}
+Kõik arvutused viidi läbi järgmiste näitajatega arvutil.
+\begin{itemize}
+  \item Protessor oli 32 tuumaga AMD Ryzen Threadripper 3970X.
+  \item Arvutil oli \(256\,{\rm GB}\) mälu (lisaks swap-mälu \(135\,{\rm GB}\)).
+  \item Arvutused toimusid operatsioonisüsteemil Ubuntu (versioon Ubuntu 22.04.4 LTS).
+  \item (Programmil oli lubatud kasutada ka graafikaarti NVIDIA A1000 Tensor Core, ent teegi Qiskit Aer sisemise heuristika tõttu see kasutust ei leidnud.)
+\end{itemize}
+Arvutused viidi läbi protsessoril.
+Koostatud programmi lähtekood on saadaval töö repositooriumis~\cite{repo}, kus on ka infot selle kohta, kuidas programmi kasutada teegina või käsuribalt.
 
-\section{Keemiline baas}
+\section{Metoodika}
 
-Töös kasutati minimaalset keemilist baasi STO-3G, mis põhineb kolmel reaalsel Gaussi funktsioonil.
-Baasis STO-3G on vesiniku molekuli jaoks neli spinnorbitaali, seega on faasi hindamise algoritmis seisundiregister nelja kvantbiti suurune.
-Hartree-Focki seisund on kvantbittide ruumis
-\begin{align}
-  \ket{\text{HF}} = \ket{1100} \rlap{.}
-\end{align}
-
-\section{Parameetrite valik}
-
-Töö eesmärgiks oli, et faasi hindamise algorimti tulemus langeks keemilise täptuse piires kokku täieliku konfiguratsiooni vastasmõju (ingl FCI) meetodil arvutatud energiatega.
-Tingimus selleks on
-\begin{align}
-  \abs{E_\text{PEA} - E_\text{FCI}} \le 0{,}0016\,{\rm Ha} \rlap{,}
-\end{align}
-kus \(E_\text{PEA}\) on faasi hindamise algoritmi tulemusel saadud energia, \(E_\text{FCI}\) on täieliku konfiguratsiooni vastasmõju meetodil arvutatud energia.
-
-Keemilise täpsuse saavutamiseks vajalik trotterisammude arv ja faasi hindamise algoritmi tööregistri suurus määrati eksperimentaalselt.
-Joonisel~\ref{fig:bitstrots} on näha energia vea sõltuvus tööregistri suurusest erinevate trotterisammude arvude jaoks.
-Sidemepikkusel \(0{,}75\,{\rm Å}\), mis vastab tasakaalugeomeetriale (vt järgmine jaotis), on keemilise täpsuse saavutamiseks vajalik minimaalselt kolm trotterisammu ja kümme tööbitti.
-Energia tõkkena kasutati väärtust \(2\,{\rm Ha}\).
-Edaspidi on kõik arvutused läbi viidud just nende parameetritega.
-
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=.65\hsize]{bitstrots.jpg}
-  \caption{Energia vea sõltuvus faasi hindamise tööbittide arvust erinevate trotterisammude arvude jaoks}
-  \label{fig:bitstrots}
-\end{figure}
-
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=.65\hsize]{bounds.jpg}
-  \caption{Energia vea sõltuvus energia tõkke valikust.}
-  \label{fig:bounds}
-\end{figure}
-
-Energia hinnangu täpsust mõjutab ka energia tõkke valik, mida kujutab joonis~\ref{fig:bounds}.
-Üldine seaduspära on, et mida suurem on tõke võrreldes energiaga, mida hinnatakse, seda ebatäpsem on hinnang.
-Seega tuleks energia tõke valida võimalikult väike.
+Arvutati \(\rm H_2\) põhienergia erinevatel sidemepikkustel.
+Lainefunktsiooni esititati keemilises baasis STO-3G, mis põhineb küll vaid kolmel reaalsel Gaussi funktsioonil, ent on siiski tihti praktikas piisavalt täpne~\cite{whitfield+etal2011, omalley+etal}}.
+Selleks, et mõõtmistulemuste seast tõenäoliseim vastaks põhienergiale, tuleb enne faasi hindamist seisundiregistris tekida olek, mis on parasjagu lähedane põhiolekule.
+Selleks sobis Hartree-Focki olek
+\begin{equation}
+  \ket{\rm HF}=\ket{1100}\rlap.
+\end{equation}
+Arvutustes taodeldi keemilist täpsust, nimelt seda, et arvutatud energia ei erineks tõelisest väärtusest rohkem kui \(\Delta E_{\rm chem}=1{,}6\,{\rm mHa}\).
+Tõeliseks väärtuseks loeti täieliku konfiguratsiooni vastasmõju meetodil arvutatut (selle võimaldas leida teek OpenFermion), kuivõrd see on tuntud klassikaline meetod põhienergia arvutamiseks~\cite{mcardle+etal}.
+Energiaid otsiti ülemise piiri \(E_h=1\,{\rm Ha}\) ja alumise piiri \(E_l=-2\,{\rm Ha}\) vahelt~--- skaleerimiskonstant oli \(t={1\over E_h-E_l}\).
+Faasi hindamise parameeter $N$, mis on täpsusbittide arv, leiti kriteeriumi
+\begin{equation}
+  \Delta E_{\rm chem}t\ge 2^{-N-1}
+\end{equation}
+põhjal (nõuti, et faasi hindamise viga poleks suurem keemilisest täpsusest).
+Antud juhul $N=11$.
+Trotterisammude arv leiti eksperimentaalselt.
+Arvutati energiad sidemepikkustel \(0{,}2\ldots 3\,{\rm Å}\).
 
 \section{Tulemused}
 
-Töö põhitulemuseks on vesiniku molekuli põhienergia sõltuvus sidemepikkusest, mis on kujutatud joonisel~\ref{fig:scan}.
-Võrdluseks on toodud täieliku konfiguratsiooni vastasmõju  meetodil arvutatud energiad.
-Energiad on arvutatud sidemepikkustel \(0{,}25 \ldots 2{,}85\,{\rm Å}\).
-Hamiltoniaani simuleerimiseks on kasutatud kolme trotterisammu ja faasi hindamiseks kümmet tööbitti.
+Töö tulemused võtab kokku joonis~\ref{fig:h2plots}, mille kohta käivad järgmised tähelepanekud.
 
-Jooniselt~\ref{fig:scan} on näha, et minimaalne energia on põhiolekul siis, kui sidemepikkus on \(0{,}75\,{\rm Å}\).
-Sellel pikkusel on faasi hindamise algoritmi põhjal energia \(-0{,}1367\,{\rm Ha}\), täieliku konfiguratsiooni vastasmõju meetodil \(-0{,}1371\,{\rm Ha}\),
-seega kahel meetodil arvutatud energiate erinevus on väiksem kui keemiline täpsus.
-
-Samas on joonisel~\ref{fig:scan} veel näha, et sidemepikkustel \(2{,}55\,{\rm Å}\) ja \(2{,}60\,{\rm Å}\) ei langes faasi hindamise algoritmi tulemused kokku täieliku konfiguratsiooni vastasmõju meetodil arvutatud energiatega.
-Tegemist on olukordadega, kus kolm trotterisammu on hamiltoniaani simuleerimiseks liiga vähe.
-
-\begin{figure}[h]
+\begin{figure}
   \centering
-  \includegraphics[width=.65\hsize]{scan.jpg}
-  \caption{Põhienergia sõltuvus sidemepikkusest. Pidev joon on täieliku konfiguratsiooni vastasmõju meetodil arvutatud energia. Punktid on faasi hindamise meetodil arvutatud energiad.}
-  \label{fig:scan}
+  \includegraphics[height=.75\vsize]{h2plots.jpg}
+  \caption{Üleval: energia sõltuvus sidemepikkust erinevate trotterisammude arvude jaoks.
+    Keskel: energia vea (erinevuse täieliku konfiguratsiooni vastasmõju meetodil arvutatust) sõltuvus sidemepikkusest erinevate trotterisammude arvude jaoks
+    All: ahela väravate arvu ja koostamiseks, transpileerimiseks ja käitamiseks kulunud aja sõltuvus trotterisammude arvust}
+  \label{fig:h2plots}
 \end{figure}
 
-Joonisel~\ref{fig:depths} on ahelasügavuse sõltuvus tööbittide arvust ja joonisel~\ref{fig:times} käitamisaja sõltuvus tööbittide arvust erinevate trotterisammude arvude jaoks.
-Mõlemead suurused sõltuvuad tööbittide arvust ligikaudu eksponentsiaalselt (kuigi pigem supereksponentsiaalselt), mistõttu muutub simulaatori kasutamine arvutuste läbiviimiseks kiiresti ebapraktiliseks.
+Ülemisel paneelil on näha energia sõltuvus sidemepikkusest.
+Juhul, kui trotterisammude arv on piisav (vt järgmine lõik), siis on sõltuvus selline, nagu võiks oodata.
+Tasakaalugeomeetriale vastab miinimum sidemepikkuse \(\apporx0{,}75\,{\rm Å}\)~--- ka see tulemus on ootuspärane.
 
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=.65\hsize]{depths.jpg}
-  \caption{Ahelasügavuse sõltuvus töötbittide arvust.}
-  \label{fig:depths}
-\end{figure}
+Keskmiselt paneelit on paremini näha, kuidas sõltub energia viga (erinevus täieliku konfiguratsiooni vastasmõju meetodil arvutatust) trotterisammude arvust ja sidemepikkusest.
+Trotteriviga (viga mis tuleneb lõplikust trotterisammude arvust) on kõikide sidemepikkust jaoks väiksem keemilisest täpsusest juhul, kui trotterisammude arv \(\ge 8\).
+Üldine tendents on, et trotterviga on seda suurem, mida lühem on sidemepikkus, mis tuleneb sellest, et lühem sidemepikkus tähendab suuremat interaktsiooni ja interaktsiooniga on seotud just hamiltoniaani vähekommuteeruvad liikmed (need millest tuleneb trotteriviga).
 
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=.65\hsize]{times.jpg}
-  \caption{Käitamisaja sõltuvus tööbittide arvust.}
-  \label{fig:times}
-\end{figure}
+Alumine paneel annab infot ahela arvutusliku kulukuse kohta.
+Kvantarvutil käitamisel on oluline vaid ahela väravate arv: see sõltub trotterisammude arvust lineaarselt.
+Samas ahela klassikalise simuleerimise käiguaeg sõltub trotterisammude arvust eksponentsiaalselt, jõudes \(10\) trotterisammu juures \(20\,{\rm min}\).
+Võib tõdeda, et kvantahelat klassikaliselt simuleerides ei ole võimalik saavutada seda ajavõitu, mida kvantalgortm muidu klassikalise ees võimaldab.
+Lisaks on alumiselt paneelilt näha, et ka ahela koostamise ja transpileerimise ajad pole tühised.
 
-\section{Arutelu}\label{chap:discussion}
+\section{Kvantarvutuse hetkeseis ja võimalikke edasiarendusi}
 
-Selle töö kirjutamise ajal ei olnud võimalik arvutusi, mis on vajalikud vesiniku molekuli keemiliselt täpse põhienergia leidmiseks, läbi viia kvantarvutil.
-Seda piiras kvantarvutite ebatäiuslik riistvara.
-
-Kvantarvutite rääkides tehakse vahet füüsilistel ja loogilistel kvantbittidel.
-Füüsiline kvantbitt on füüsikaline süsteem, mille mudeliks on loogiline kvantbitt.
-Kõrvalistest mõjudest häirituna ei käitu füüsiline kvantbitt kunagi nagu loogiline kvantbitt.
-Samas arvestatakse kvantalgoritme luues just loogiliste kvantbittidega.
-Seega on oluline, et füüsilised kvantbitid oleksid piisavalt täiuslikud, et neid võiks vaadata loogiliste kvantbittidena.
-
-Praeguse perioodi kohta kvantarvutite arengus kasutatakse lühendit NISQ (noisy inter\-me\-diate-scale quantum)~\cite{preskill}.
-Olemas on küll juba mõnesaja füüsilise kvantbitiga kvantarvutid, kuid need on mürarikkad.
-See asjaolu piirab kvantarvutite kasutamise paljude ülesannete lahendamiseks.
-
-Kvantarvutite arengu järgmise perioodi kohta, millal neid saaks kasutada ka suurt hulka loogilisi kvantbitte nõudvate ülesannete lahendamiseks, kasutatakse lühendit FTQC (fault-tolerant quantum computing).
-Kvantarvutite riistvara arendamisega tegelevad ettevõtted ja uurimisasutused on võtnud eesmärgiks 2020ndate aastate lõpuks jõuda selle perioodi lävele~\cite{ibmq+roadmap, quera+roadmap}.
+Faasi hindamise näol on tegemist nn müravaba algoritmiga, mis tähendab, et see eeldab loogiliste kvantbittide kasutamisvõimalust.
+Loogilised kvantbitid on sellised, milles ei esine müra~--- praktikas on võimalik need saavutada kombineerides füüsilisi kvantbitte (neid mis riistvaras olemas on).
+Praeguse perioodi, kus kvantarvutitel võib olla küll mõnisada füüsilist kvanbtti, ent mitte eneamike arvutuste jaoks piisavalt loogilis kvantbitte, kasutatkse lühendit NISQ (noisy intermediate-scale quantum)~\cite{preskill}.
+Soovitakse jõua järgmisesse perioodi, kus neid puuduseid pole, mille kohta kasutatakse lühendit FTQC (fault-tolerant quantum computing).
+Kvantarvutite riistvara arendamisega tegelevad ettevõtted ja uurimisasutused on võtnud eesmärgiks jõuda 2020ndate aastate lõpuks selle perioodi lävele~\cite{ibmq+roadmap, quera+roadmap}.
 Esimesed sammud selle eesmärgi suunas on juba tehtud: Quera töörühmal õnnestus realiseerida 48 loogilist kvantbitti~\cite{quera}.
+Siin töös esitatud viisil vesiniku molekuli põhienergia arvutamiseks keemilise täpsusega oleks vaja kvantarvutit, millel on \(11 + 4\) loogilist kvantbitti.
+Töö tegijale selliste kvantarvutit kasutada polnud, mis motiveerib võimalike edasiarendusi selle probleemiga toime tulemiseks.
 
-Siin töös esitatud viisil vesiniku molekuli põhienergia arvutamiseks keemilise täpsusega oleks vaja kvantarvutit, millel on \(10 + 4\) loogilist kvantbitti.
-Töö tegijatele selliste kvantarvutit kasutada polnud.
-
-Kummatigi ei saa öelda, et kvantarvuti kasutamine väikeste molekulide põhinergiate arvutamiseks keemilise täpsusega oleks töö kirjutamise hetkel olnud võimatu.
-Nimelt on teada mitu lahendamis\-algoritmi, mis sobivad ka NISQ-perioodil kasutamiseks.
-Üks näide on variatsioonilise lahendamise algoritm~\cite{omalley+etal, raidlo}.
-Teine on  iteratiivne faasi hindamise algoritm, mis põhineb klassikalise ja kvantarvuti koostööl~\cite{omalley+etal}.
-Et iteratiivne faasi hindamise algoritm on saadud siin töös esitatud tavalise faasi hindamise algoritmi kohandamisel, siis on faasi hindamise algoritm relevantne ka praegusel NISQ-perioodil.
-Kvantarvutusressursside säästmiseks tasub ka uurida, kas hamiltoniaani on enne simuleerimist võimalik lihtsustada, nagu on näiteks teinud O'Malley jt~\cite{omalley+etal}.
-Samuti on võimalik arvutusressursse kokku hoida kasutades energia skaleerimiseks siin töös esitatust keerulisemat meetodit~\cite{whitfield+etal2011, omalley+etal}.
-Kui eesmärgiks võtta suuremate süsteemide uurimine ja suuremate keemiliste baaside kasutamine, siis on töö edasi arendamises vähemalt kolm suunda: üks on kasutada iteratiivset faasi hindamise algoritmi, teine on lihtsustada hamiltoninaani kvantarvutusressurside säästmiseks, kolmas on energia keerulisem skaleerimine.
-
-\section{Teksti integreerimata joonised}
-
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=.65\hsize]{faasenergiast.jpg}
-  \caption{Energiast faasi saamise sammud.}
-  \label{fig:energytophase}
-\end{figure}
-
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=.65\hsize]{trotslengths_h2.jpg}
-  \caption{Üleval: Energia sõltuvus sidemepikkusest. Keskel: Energiavea sõltuvus sidemepikkusest. All: Väravate arvu ja erinvate programmi osade käitamisaegade sõltuvus trotterisammude arvust.
-  Energiat on otsitud vahemikust \(-2\ldots 1\,{\rm Ha}\), misjuhul keemilise täpsuse saavutamiseks vajalik täpsusbittide arv on 11 (kokku vaja 15 bitti).}
-  \label{fig:tlh2}
-\end{figure}
-
-Vt joonised~\ref{fig:energytophase}, \ref{fig:tlh2}.
+Mõned variandid selleks on järgmised.
+\begin{itemize}
+  \item Faasihindamise asemel saab kasutada algoritmi, mis pole müra suhtes niivõrd tundlik: selline on näiteks variatsioonilise lahendamise kvantalgoritm~\cite{omalley+etal, raidlo}.
+  \item Saab kasutada iteratiivset faasi hindamise algoritmi, mis on faasihindamise algoritmi edasiarendus, mis lubab faasi hindamise algoritmi ahela asemel käitada rida väiksemaid (lühemaid ja vähemate kvantbittide arvuga) ahelaid, mida tuleb kordineerida klassikaliste arvutuste abil~\cite{whitfield+etal2011, omalley+etal}.
+  \item Abi võib olla ka hamiltoniaani lihtsustamisest, nagu on seda teinud näiteks O'Malley jt~\cite{omalley+etal}.
+\end{itemize}
+Siin esitatud lahendamisskeem on siiski võimalikest edasiarendustest üldisem.
 
 \chapter{Kokkuvõte}
 

@@ -24,7 +24,7 @@ def loe_andmed(f):
 with open("trotslenghtsdemo_h2.dat2", "r") as f:
      andmed = loe_andmed(f)
 
-pyplot.figure(figsize=(6.4, 9.6))
+pyplot.figure(figsize=(6.4, 9.6), dpi=600)
 N = 3
 ax = pyplot.subplot(N, 1, 1)
 ntrots = list(set(andmed[::, 3]))
