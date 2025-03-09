@@ -1300,52 +1300,55 @@ Juhitud globaalse faasi operaatori võib asendanda juhtkvantbitil rakendatud suh
 
 \chapter{Metoodika ja tulemused}
 
-Töö praktilises osas valmis programm molekulaarse süsteemi põhienergia leidmiseks.
-Kõik kvantalgoritmid~--- faasi hindamise algoritm, selle osad (kvantarvutuslik Fourier' teisendus ja pöördteisendus) ja hamiltoniaani simuleerimise algoritm~--- implementeeriti ise, lähtudes vaid primtiivsetest väravatest.
-Omal käel implementeeriti ka klassikaline arvutus, mille abil loetakse faasi hindamise kvantalgoritmi tulemustest välja energia.
+Töö praktilises osas valmis programm molekulaarse süsteemi põhieneriga leidmiseks.
+Kõik selleks vajalikud kvantalgoritmid~--- kvantarvutuslik Fourier' teisendus ja pöördteisendus, faasi hindamine, treppalgoritm ja trotteriseerimine~--- implementeeriti iseseisvalt, lähtudes vaid primitiivsetest kvantväravatest.
+Samuti implementeeriti iseseisvalt klassikaline algoritm faasi hindamise tulemuse väljalugemiseks.
 Valmislahendusi kasutati vaid kvantkeemiliste eelarvutuste jaoks: molekulaarsete integraalide arvutamiseks ja Jordan-Wigneri teisenduseks.
-Valminud programm on modulaarne ja universaalne: programmi tähtsamad osad on kapseldatud ja seda saab kasutada mistahes molekulaarse süsteemi põhienergia leidmiseks.
-Lahenduse demonstreerimiseks leiti \(\rm H_2\), lihtsaima võimaliku kaheaatomilise molekuli, põhienergia erinevate sidemepikkuste jaoks.
-Et antud töö käsitle müra, siis viidi kõik arvutused läbi kasutades kvantarvuti klassikalist simulaatorit.
+Töö teoreetilises osas nägime, et faasi hindamine on universaalne meetod, kuivõrd seda saab kasutada mistahes molekuli mistahes taseme energia leidmiseks.
+Sestap taodeldi ka töö praktilises osas universaalsust, milleks oli vajalik ka programmi modulaarsus.
+Praktilise osa tulemuseks on programm, mille osad on kapseldatud ja parametriseeritud: andes ette sobiva hamiltoniaani ja olekuvektori saab programmi kasutada soovitud molekuli soovitud energiataseme leidmiseks, kui muidugi arvutusvõimekus lubab.
+Programmi testimiseks kasutati siiski konkreetset ülesannet.
+Nimelt leiti \(\rm H_2\), lihtsaima võimaliku kaheaatomilise molekuli, põhienergia erinevatel sidemepikkustel.
+Arvutused viidi läbi kasutades kvantarvuti klassikalist simulaatorit~--- seega  ei tekkinud vajadust töös käsitleda müra.
 
 \section{Kasutatud vahendid ja lähtekood}
 
 Töös kasutati läbivalt programmeerimiskeelt Python (versioon 30.10.12)~\cite{python}.
 Kasutatud teegid on järgmised.
 \begin{itemize}
-  \item Klassikalisteks eelavutusteks (molekulaarsete integraalide arvutamiseks ja Jordan-Wigneri teisenduseks) kasutati teeki OpenFermion (versioon 1.6.1)~\cite{openfermion}, mis omakorda kasutas kvantkeemiaprogrammi Psi4~\cite{psi4}.
+  \item Molekulaarsete integraalide arvutamiseks ja Jordan-Wigneri teisenduseks~--- klassikalisteks eelarvutusteks kasutati teeki OpenFermion (versioon 1.6.1)~\cite{openfermion}, mis omakorda kasutas kvantkeemiaprogrammi Psi4~\cite{psi4}.
   \item Ahela koostamiseks kasutati teeki Qiskit (versioon 1.6.1)~\cite{qiskit}.
   \item Ahela simuleerimiseks kasutati olekuvektori simulaatorit teegist Qiskit Aer (vt eelmine punkt).
 \end{itemize}
-Kõik arvutused viidi läbi järgmiste näitajatega arvutil.
+Kõikideks arvutusteks kasutatud arvuti kohta on oluline märkida järgnevat.
 \begin{itemize}
   \item Protessor oli 32 tuumaga AMD Ryzen Threadripper 3970X.
   \item Arvutil oli \(256\,{\rm GB}\) mälu (lisaks swap-mälu \(135\,{\rm GB}\)).
-  \item Arvutused toimusid operatsioonisüsteemil Ubuntu (versioon Ubuntu 22.04.4 LTS).
-  \item (Programmil oli lubatud kasutada ka graafikaarti NVIDIA A1000 Tensor Core, ent teegi Qiskit Aer sisemise heuristika tõttu see kasutust ei leidnud.)
+  \item Arvutused toimusid operatsioonisüsteemil Ubuntu (versioon 22.04.4 LTS).
 \end{itemize}
-Arvutused viidi läbi protsessoril.
-Koostatud programmi lähtekood on saadaval töö repositooriumis~\cite{repo}, kus on ka infot selle kohta, kuidas programmi kasutada teegina või käsuribalt.
+Kuigi programmil oli lubatud kasutada ka graafikaarti NVIDIA A100, siis teegi Qiskit Aer sisemise heuristika tõttu see kasutust ei leidnud ja kõik arvutused viidi läbi protsessoril.
+Koostatud programmi lähtekood on saadaval töö repositooriumis~\cite{repo}, kus on ka dokumenteeritud, kuidas programmi kasutada teegina või käsurealt.
 
 \section{Metoodika}
 
 Arvutati \(\rm H_2\) põhienergia erinevatel sidemepikkustel.
 Lainefunktsiooni esititati keemilises baasis STO-3G, mis põhineb küll vaid kolmel reaalsel Gaussi funktsioonil, ent on siiski tihti praktikas piisavalt täpne~\cite{whitfield+etal2011, omalley+etal}}.
-Selleks, et mõõtmistulemuste seast tõenäoliseim vastaks põhienergiale, tuleb enne faasi hindamist seisundiregistris tekida olek, mis on parasjagu lähedane põhiolekule.
-Selleks sobis Hartree-Focki olek
+Selleks, et mõõtmistulemuste seast tõenäoliseim vastaks põhienergiale, tuleb enne faasi hindamist seisundiregistrisse tekitada olek, millel on suur kattuvus põhiolekuga.
+Antud juhul kasutati põhiolekulähedast Hartree-Focki olekut
 \begin{equation}
   \ket{\rm HF}=\ket{1100}\rlap.
 \end{equation}
-Arvutustes taodeldi keemilist täpsust, nimelt seda, et arvutatud energia ei erineks tõelisest väärtusest rohkem kui \(\Delta E_{\rm chem}=1{,}6\,{\rm mHa}\).
-Tõeliseks väärtuseks loeti täieliku konfiguratsiooni vastasmõju meetodil arvutatut (selle võimaldas leida teek OpenFermion), kuivõrd see on tuntud klassikaline meetod põhienergia arvutamiseks~\cite{mcardle+etal}.
+Arvutustes taotleti keemilist täpsust, nimelt seda, et arvutatud energia ei erineks võrdlusväärtusest rohkem kui \(\Delta E_{\rm chem}=1{,}6\,{\rm mHa}\).
+Võrdlusäärtuseks loeti täieliku konfiguratsiooni vastasmõju meetodil arvutatu\footnote{Selle võimaldas arvutada teek OpenFermion.}, kuivõrd see on tuntud klassikaline meetod põhienergia arvutamiseks~\cite{mcardle+etal}.
 Energiaid otsiti ülemise piiri \(E_h=1\,{\rm Ha}\) ja alumise piiri \(E_l=-2\,{\rm Ha}\) vahelt~--- skaleerimiskonstant oli \(t={1\over E_h-E_l}\).
 Faasi hindamise parameeter $N$, mis on täpsusbittide arv, leiti kriteeriumi
 \begin{equation}
   \Delta E_{\rm chem}t\ge 2^{-N-1}
 \end{equation}
-põhjal (nõuti, et faasi hindamise viga poleks suurem keemilisest täpsusest).
-Antud juhul $N=11$.
-Trotterisammude arv leiti eksperimentaalselt.
+põhjal.
+Teisisõnu, nõuti, et faasi hindamise viga poleks suurem keemilisest täpsusest.
+Antud juhul oli $N=11$.
+Trotterisammude arv leiti eksperimentaalselt, proovides järjest suuremat sammude arvu, kuni viga muutus keemilisest täpsusest väiksemaks.
 Arvutati energiad sidemepikkustel \(0{,}2\ldots 3\,{\rm Å}\).
 
 \section{Tulemused}
@@ -1356,43 +1359,54 @@ Töö tulemused võtab kokku joonis~\ref{fig:h2plots}, mille kohta käivad järg
   \centering
   \includegraphics[height=.75\vsize]{h2plots.jpg}
   \caption{Üleval: energia sõltuvus sidemepikkust erinevate trotterisammude arvude jaoks.
-    Keskel: energia vea (erinevuse täieliku konfiguratsiooni vastasmõju meetodil arvutatust) sõltuvus sidemepikkusest erinevate trotterisammude arvude jaoks
-    All: ahela väravate arvu ja koostamiseks, transpileerimiseks ja käitamiseks kulunud aja sõltuvus trotterisammude arvust}
+    Keskel: energia vea sõltuvus sidemepikkusest erinevate trotterisammude arvude jaoks
+    All: ahela väravate arvu ja koostamiseks, kompileerimiseks ja käitamiseks kulunud aegade sõltuvus trotterisammude arvust}
   \label{fig:h2plots}
 \end{figure}
 
-Ülemisel paneelil on näha energia sõltuvus sidemepikkusest.
-Juhul, kui trotterisammude arv on piisav (vt järgmine lõik), siis on sõltuvus selline, nagu võiks oodata.
-Tasakaalugeomeetriale vastab miinimum sidemepikkuse \(\apporx0{,}75\,{\rm Å}\)~--- ka see tulemus on ootuspärane.
+Ülemisel paneelil on a energia sõltuvus sidemepikkusest.
+Juhul, kui trotterisammude arv on piisav, on sõltuvus selline, nagu võiks füüsikalistel kaalutlustel oodata: energial on üksainus negatiivse väärtusega miinimum.
+Miinimum vastab tasakaalugomeetriale, mille puhul on sidemepikkus \(\apporx0{,}75\,{\rm Å}\).
 
-Keskmiselt paneelit on paremini näha, kuidas sõltub energia viga (erinevus täieliku konfiguratsiooni vastasmõju meetodil arvutatust) trotterisammude arvust ja sidemepikkusest.
-Trotteriviga (viga mis tuleneb lõplikust trotterisammude arvust) on kõikide sidemepikkust jaoks väiksem keemilisest täpsusest juhul, kui trotterisammude arv \(\ge 8\).
-Üldine tendents on, et trotterviga on seda suurem, mida lühem on sidemepikkus, mis tuleneb sellest, et lühem sidemepikkus tähendab suuremat interaktsiooni ja interaktsiooniga on seotud just hamiltoniaani vähekommuteeruvad liikmed (need millest tuleneb trotteriviga).
+Keskmiselt paneelil on kujutatud, kuidas sõltub energiaviga trotterisammude arvust ja sidemepikkusest.
+Energiavea all on siin silmas peetud leitud energia erinevsut võrdlusväärtusest.
+Energiavea alaliik on tortteriviga: s.o viga, mis tuleneb lõplikust tortterisammude arvust.
+Keskmiselt paneelilt võib välja lugeda, et trotteriviga on kõikide sidemepikkust jaoks väiksem keemilisest täpsusest alles siis, kui trotterisammude arv on vähemalt \(8\).
+Üldine tendents on, et trotterviga on seda suurem, mida lühem on sidemepikkus.
+Selline käitumine on põhjendatav: lühem sidemepikkus tähendab suuremat interaktsiooni ja interaktsiooniga on seotud just need liikmed, mis panustavad trotterivikka.
+Teisisõnu, kui hamiltoniaan koosneks vaid kommuteeruvatest liikmetest, mis oleks tõsi lõpmatu sidemepiikkuse juures, siis trotteriviga ei esineks.
 
-Alumine paneel annab infot ahela arvutusliku kulukuse kohta.
-Kvantarvutil käitamisel on oluline vaid ahela väravate arv: see sõltub trotterisammude arvust lineaarselt.
+Alumine paneel on ahela arvutusliku kulukuse kohta.
+Selgub, et väravate arv sõltub trotterisammude arvust lineaarselt.
 Samas ahela klassikalise simuleerimise käiguaeg sõltub trotterisammude arvust eksponentsiaalselt, jõudes \(10\) trotterisammu juures \(20\,{\rm min}\).
-Võib tõdeda, et kvantahelat klassikaliselt simuleerides ei ole võimalik saavutada seda ajavõitu, mida kvantalgortm muidu klassikalise ees võimaldab.
+Viimasest kahest väitest nähtub, et kvantahelat klassikaliselt simuleerides ei ole võimalik saavutada seda ajavõitu, mida kvantalgortm muidu klassikalise ees võimaldab.
 Lisaks on alumiselt paneelilt näha, et ka ahela koostamise ja transpileerimise ajad pole tühised.
+
+Tööd võib lugeda kordaläinuks, kuivõrd töös kirjeldatud meetodil on tõepoolest võimalik arvutad \(\rm H_2\) põhioleku energia.
+Nagu varem mainitud, saaks sama meetodit kasutad ka teiste molekulide või kõrgemate tasemeta energiate arvutamiseks, ent antud juhul takistas seda tegemast vajadus kvantavutit klassikaliselt simuleerida.
+Viise, kuidas siiski keerulisemaid süsteeme uurida, käsitleb järgmine alapeatükk.
 
 \section{Kvantarvutuse hetkeseis ja võimalikke edasiarendusi}
 
-Faasi hindamise näol on tegemist nn müravaba algoritmiga, mis tähendab, et see eeldab loogiliste kvantbittide kasutamisvõimalust.
-Loogilised kvantbitid on sellised, milles ei esine müra~--- praktikas on võimalik need saavutada kombineerides füüsilisi kvantbitte (neid mis riistvaras olemas on).
-Praeguse perioodi, kus kvantarvutitel võib olla küll mõnisada füüsilist kvanbtti, ent mitte eneamike arvutuste jaoks piisavalt loogilis kvantbitte, kasutatkse lühendit NISQ (noisy intermediate-scale quantum)~\cite{preskill}.
-Soovitakse jõua järgmisesse perioodi, kus neid puuduseid pole, mille kohta kasutatakse lühendit FTQC (fault-tolerant quantum computing).
+Faasi hindamise näol on tegemist algoritmiga, mis eeldab loogiliste kvantbittide kasutamise võimalust~--- öeldakse, et tegemist on veatolerantse algoritmiga.
+Loogilised kvantbitid on sellised, milles on müra piisavalt alla surutud, et oleks võimalik läbi viia pikki arvutusi, mis praktikas ette tulevad.
+Et füüsikalised kvantbitid, need, mis on riistvars päriselt olemas, on alati mürarikkad, tuleb loogilised kvantbitid realiseerida suure arvu füüsikaliste kvantbittide kaudu.
+Töö kirjutamise ajal on seda suudetud teha vaid üksikutel juhtudel.
+Seega on kvantarvutite kasutamine päris arvutusteks olnud piiratud vaid nendele ülesannetele, mida on võimalik lahendada ka müraste arvutustega.
+Praeguse periood kohta kasutatkse lühendit NISQ (noisy intermediate-scale quantum)~\cite{preskill}.
+Mõistagi soovitakse jõua järgmisesse perioodi, kus neid puuduseid pole, mille kohta kasutatakse lühendit FTQC (fault-tolerant quantum computing).
 Kvantarvutite riistvara arendamisega tegelevad ettevõtted ja uurimisasutused on võtnud eesmärgiks jõuda 2020ndate aastate lõpuks selle perioodi lävele~\cite{ibmq+roadmap, quera+roadmap}.
 Esimesed sammud selle eesmärgi suunas on juba tehtud: Quera töörühmal õnnestus realiseerida 48 loogilist kvantbitti~\cite{quera}.
 Siin töös esitatud viisil vesiniku molekuli põhienergia arvutamiseks keemilise täpsusega oleks vaja kvantarvutit, millel on \(11 + 4\) loogilist kvantbitti.
-Töö tegijale selliste kvantarvutit kasutada polnud, mis motiveerib võimalike edasiarendusi selle probleemiga toime tulemiseks.
+Töö tegijale selliste kvantarvutit kasutada polnud, mis motiveerib uurima võimalikke edasiarendusi selle probleemiga tegelemiseks.
 
-Mõned variandid selleks on järgmised.
+Põhisuunad selleks on järgmised.
 \begin{itemize}
   \item Faasihindamise asemel saab kasutada algoritmi, mis pole müra suhtes niivõrd tundlik: selline on näiteks variatsioonilise lahendamise kvantalgoritm~\cite{omalley+etal, raidlo}.
-  \item Saab kasutada iteratiivset faasi hindamise algoritmi, mis on faasihindamise algoritmi edasiarendus, mis lubab faasi hindamise algoritmi ahela asemel käitada rida väiksemaid (lühemaid ja vähemate kvantbittide arvuga) ahelaid, mida tuleb kordineerida klassikaliste arvutuste abil~\cite{whitfield+etal2011, omalley+etal}.
-  \item Abi võib olla ka hamiltoniaani lihtsustamisest, nagu on seda teinud näiteks O'Malley jt~\cite{omalley+etal}.
+  \item Faasihindamise algoritmi saab teha iteratiivseks, mis lubab faasi hindamise algoritmi ahela asemel käitada rida lühemaid ja vähemat kvantbittidega ahelaid, mida tuleb kordineerida klassikaliste arvutuste abil~\cite{whitfield+etal2011, omalley+etal}.
+  \item Hamiltoniaani saab ressursside kokkuhoidmiseks lihtsustada, nagu on seda teinud näiteks O'Malley jt~\cite{omalley+etal}.
 \end{itemize}
-Siin esitatud lahendamisskeem on siiski võimalikest edasiarendustest üldisem.
+Siin esitatud lahendamisskeem on siiski võimalikest edasiarendustest üldisem, mis õigustab antud töös sellele pööratud tähelepanu.
 
 \chapter{Kokkuvõte}
 

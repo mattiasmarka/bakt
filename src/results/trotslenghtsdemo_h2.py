@@ -41,11 +41,12 @@ axins = ax.inset_axes(
        [0.38, 0.3, 0.58, 0.48],
        ylim=(0, 1.59e-3 * 3))
 for nt in sorted(ntrots):
+    fmt = ":" if nt == max(ntrots) else "-"
     xandmed = andmed[numpy.where(andmed[::, 3] == nt)]
-    ax.plot(xandmed[::, 0], abs(xandmed[::, 4] - xandmed[::, 5]), "-", label = "ntrots = %d" % nt)
-    axins.plot(xandmed[::, 0], abs(xandmed[::, 4] - xandmed[::, 5]), "-")
-ax.axhline(1.59e-3, linestyle="--", label="Keemiline täpsus")
-axins.axhline(1.59e-3, linestyle="--")
+    ax.plot(xandmed[::, 0], abs(xandmed[::, 4] - xandmed[::, 5]), fmt, label = "ntrots = %d" % nt)
+    axins.plot(xandmed[::, 0], abs(xandmed[::, 4] - xandmed[::, 5]), fmt)
+ax.axhline(1.59e-3, linestyle="--", color="k", label="Keemiline täpsus")
+axins.axhline(1.59e-3, linestyle="--", color="k")
 ax.legend()
 ax.set_xlabel("Sidemepikkus (A)")
 ax.set_ylabel("Energia viga (Ha)")
@@ -54,13 +55,13 @@ ax = pyplot.subplot(N, 1, 3)
 twinx = ax.twinx()
 ntrots = list(sorted(ntrots))
 ax.set_xticks([1, 2, 3, 4, 8, 10])
-gates = [numpy.average(andmed[numpy.where(andmed[::, 3] == nt)][::, 6]) for nt in ntrots]
+gates = [numpy.average(andmed[numpy.where(andmed[::, 3] == nt)][::, 6]) / 1e6 for nt in ntrots]
 make_time = [numpy.average(andmed[numpy.where(andmed[::, 3] == nt)][::, 7]) / 60e9 for nt in ntrots]
 transp_time = [numpy.average(andmed[numpy.where(andmed[::, 3] == nt)][::, 8]) / 60e9 for nt in ntrots]
 run_time = [numpy.average(andmed[numpy.where(andmed[::, 3] == nt)][::, 9]) / 60e9 for nt in ntrots]
 ax.plot(ntrots, gates, label="Väravate arv")
 ax.set_xlabel("Trotterisammude arv")
-ax.set_ylabel("Väravae arv")
+ax.set_ylabel("Väravae arv (mln)")
 twinx.plot(ntrots, make_time, "--", label="Koostamise aeg")
 twinx.plot(ntrots, transp_time, "--", label="Transpileerimise aeg")
 twinx.plot(ntrots, run_time, "--", label="Käiguaeg")
@@ -68,4 +69,5 @@ twinx.set_ylabel("Aeg (min)")
 ax.legend()
 twinx.legend(loc="lower right")
 
+pyplot.tight_layout()
 pyplot.savefig("trotslengths_h2.jpg")
