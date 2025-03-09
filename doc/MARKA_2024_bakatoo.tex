@@ -84,8 +84,8 @@
 Klassikaliste arvutitega saab täpselt simuleerida vaid lihtsamaid kvantsüsteeme, sest probleemi lahendamiseks tuleb paratamatult kasutada eksponentsiaalse keerukusega algoritmi.
 Kvantarvutitega saab kvantsüsteemi simuleerimiseks kasutada faasi hindamise algoritmi, mille keerukus on aga kõigest polünoomne.
 Sestap loodetaks kvantarvutitega tulevikus lahendada klassikaliste arvutitega täpselt lahendamiseks liialt keerulisi kvantsimulatsiooniülesandeid, milleks on ka kvantkeemias keskne elektronstruktuuri ülesanne.
-Selles töös tutvustatagi faasi hindamise algoritmil põhinevat meetodit elektronsturktuuri ülesande lahendamiseks, täpsemalt molekulaarse süsteemi põhieneriga leidmiseks.
-Meetodit rakendatakse lihtsa moleki~--- \(\rm H_2\)~--- põhienergia leidmiseks.
+Selles töös tutvustatagi faasi hindamise algoritmil põhinevat meetodit elektronstruktuuri ülesande lahendamiseks, täpsemalt molekulaarse süsteemi põhienergia leidmiseks.
+Meetodit rakendatakse lihtsa molekuli~--- \(\rm H_2\)~--- põhienergia leidmiseks.
 Esmalt tutvustatakse elektronstruktuuri ülesande teoreetilist tausta.
 Järgmisena antakse ülevaade molekulaarse süsteemi hamiltoniaani põhienergia leidmiseks vajalikest vahenditest: Jordan-Wigneri teisendusest, trotteriseerimisest, treppalgoritmist ja faasi hindamise algoritmist.
 Arvutused viiakse läbi kasutades kvantarvuti klassikalist simulaatorit.
@@ -206,7 +206,7 @@ kus \(M_A\) on tuuma \(A\) ja elektroni massi suhe, \(Z_A\) on tuuma \(A\) aatom
 Kutsume hamiltoniaani~\eqref{eq:molham} edaspidi molekulaarseks hamiltoniaaniks.
 Selles esinevad järgmised liikmed: (a) on elektronide kineetilise energia liige, (b) on tuumade kineetilise energia liige, (c) on elektronide ja tuumade tõmbumise liige, (d) on elektronide omavahelise tõukumise liige ja (e) on tuumade omavahelise tõukumise liige.
 
-Üldine hamiltoniaan~\eqref{eq:molham} kirjeldab nii elektronide kui ka tuumade dünaamikat, kuid elektronsturkutuuri ülesande seisukohalt on oluline vaid elektronide dünaamika.
+Üldine hamiltoniaan~\eqref{eq:molham} kirjeldab nii elektronide kui ka tuumade dünaamikat, kuid elektronstruktuuri ülesande seisukohalt on oluline vaid elektronide dünaamika.
 Eeldusel, et tuumade dünaamika pole oluline, on võimalik hamiltoniaani~\eqref{eq:molham} oluliselt lihtsustada, mida käsitlebki järgmine alapeatükk~\ref{sec:bornopen}.
 
 \section{Born-Oppenheimeri lähendus}\label{sec:bornopen}
@@ -387,12 +387,12 @@ Antud töös ongi ülesande lahendamise eelarvutuseks integraalide \eqref{eq:mol
 
 \chapter{Kvantarvutuslik lahendamine}\label{chap:qcomp}
 
-See peatükk annab ülevaate molekualaarse süsteemi põhienergia kvantarvutuslikust leidmisest.
+See peatükk annab ülevaate molekulaarse süsteemi põhienergia kvantarvutuslikust leidmisest.
 Esimene lapeatükk~\ref{sec:terms} käsitleb kvantarvutuse põhitõdesid.
 Teine alapeatükk~\ref{sec:pea} faasi hindamise algoritmist endast.
-Kolmas alapeatükk~\ref{sec:hamsim} räägib hamiltoniaani simuleerimiest kvantahelana.
+Kolmas alapeatükk~\ref{sec:hamsim} räägib hamiltoniaani simuleerimisest kvantahelana.
 Alapeatükid~\ref{sec:terms} ja~\ref{sec:pea} toetuvad Nielseni ja Chuangi~\cite{nielsen+chuang}; Kaye, Laflamme'i ja Mosca~\cite{kaye+laflamme+mosca} ning Whitfield jt~\cite{whitfield+etal2011} käsitlusele.
-Aleapeatüki~\ref{sec:hamsim} viited on teksti sees.
+Alpeatüki~\ref{sec:hamsim} viited on teksti sees.
 
 \section{Põhimõisted}\label{sec:terms}
 
@@ -449,7 +449,7 @@ Võimalikke kvantväravaid on lõpmata palju, kuid riistvaras on vaja realiseeri
 Kõik teised väravad saab esitada universaalse komplekti kaudu.
 Universaalseid komplekte on lõpmata palju, kusjuures komplektis peab alati olema põimiv värav.
 Antud töös kasutatakse põimimiseks juhitud eituse väravat.
-Juhitud väravad on sellised, mis rakenduvad sihtbitile vaid siis, kui juhtbitt on olekus \(\ket1\), juhtibitti muutmata.
+Juhitud väravad on sellised, mis rakenduvad sihtbitile vaid siis, kui juhtbitt on olekus \(\ket1\), juhtbitti muutmata.
 Näide juhitud eituse rakendamisest on järgmine,
 \begin{align}
     \CNOT \paren{\alpha \ket{0} \otimes \ket{1} + \beta \ket{1} \otimes \ket{1}}
@@ -1300,12 +1300,12 @@ Juhitud globaalse faasi operaatori võib asendanda juhtkvantbitil rakendatud suh
 
 \chapter{Metoodika ja tulemused}
 
-Töö praktilises osas valmis programm molekulaarse süsteemi põhieneriga leidmiseks.
+Töö praktilises osas valmis programm molekulaarse süsteemi põhienergia leidmiseks.
 Kõik selleks vajalikud kvantalgoritmid~--- kvantarvutuslik Fourier' teisendus ja pöördteisendus, faasi hindamine, treppalgoritm ja trotteriseerimine~--- implementeeriti iseseisvalt, lähtudes vaid primitiivsetest kvantväravatest.
 Samuti implementeeriti iseseisvalt klassikaline algoritm faasi hindamise tulemuse väljalugemiseks.
 Valmislahendusi kasutati vaid kvantkeemiliste eelarvutuste jaoks: molekulaarsete integraalide arvutamiseks ja Jordan-Wigneri teisenduseks.
 Töö teoreetilises osas nägime, et faasi hindamine on universaalne meetod, kuivõrd seda saab kasutada mistahes molekuli mistahes taseme energia leidmiseks.
-Sestap taodeldi ka töö praktilises osas universaalsust, milleks oli vajalik ka programmi modulaarsus.
+Sestap taotleti ka töö praktilises osas universaalsust, milleks oli vajalik ka programmi modulaarsus.
 Praktilise osa tulemuseks on programm, mille osad on kapseldatud ja parametriseeritud: andes ette sobiva hamiltoniaani ja olekuvektori saab programmi kasutada soovitud molekuli soovitud energiataseme leidmiseks, kui muidugi arvutusvõimekus lubab.
 Programmi testimiseks kasutati siiski konkreetset ülesannet.
 Nimelt leiti \(\rm H_2\), lihtsaima võimaliku kaheaatomilise molekuli, põhienergia erinevatel sidemepikkustel.
@@ -1360,19 +1360,19 @@ Töö tulemused võtab kokku joonis~\ref{fig:h2plots}, mille kohta käivad järg
   \includegraphics[height=.75\vsize]{h2plots.jpg}
   \caption{Üleval: energia sõltuvus sidemepikkust erinevate trotterisammude arvude jaoks.
     Keskel: energia vea sõltuvus sidemepikkusest erinevate trotterisammude arvude jaoks
-    All: ahela väravate arvu ja koostamiseks, kompileerimiseks ja käitamiseks kulunud aegade sõltuvus trotterisammude arvust}
+    All: ahela väravate arvu sõltuvus trotterisammude arvust (vasakpoone vertikaaltelg); koostamiseks, kompileerimiseks ja käitamiseks kulunud aegade sõltuvus trotterisammude arvust (parempoolne vertikaaltelg).}
   \label{fig:h2plots}
 \end{figure}
 
 Ülemisel paneelil on a energia sõltuvus sidemepikkusest.
 Juhul, kui trotterisammude arv on piisav, on sõltuvus selline, nagu võiks füüsikalistel kaalutlustel oodata: energial on üksainus negatiivse väärtusega miinimum.
-Miinimum vastab tasakaalugomeetriale, mille puhul on sidemepikkus \(\apporx0{,}75\,{\rm Å}\).
+Miinimum vastab tasakaalugeomeetriale, mille puhul on sidemepikkus \(\apporx0{,}75\,{\rm Å}\).
 
 Keskmiselt paneelil on kujutatud, kuidas sõltub energiaviga trotterisammude arvust ja sidemepikkusest.
-Energiavea all on siin silmas peetud leitud energia erinevsut võrdlusväärtusest.
+Energiavea all on siin silmas peetud leitud energia erinevust võrdlusväärtusest.
 Energiavea alaliik on tortteriviga: s.o viga, mis tuleneb lõplikust tortterisammude arvust.
 Keskmiselt paneelilt võib välja lugeda, et trotteriviga on kõikide sidemepikkust jaoks väiksem keemilisest täpsusest alles siis, kui trotterisammude arv on vähemalt \(8\).
-Üldine tendents on, et trotterviga on seda suurem, mida lühem on sidemepikkus.
+Üldine tendents on, et trotteriviga on seda suurem, mida lühem on sidemepikkus.
 Selline käitumine on põhjendatav: lühem sidemepikkus tähendab suuremat interaktsiooni ja interaktsiooniga on seotud just need liikmed, mis panustavad trotterivikka.
 Teisisõnu, kui hamiltoniaan koosneks vaid kommuteeruvatest liikmetest, mis oleks tõsi lõpmatu sidemepiikkuse juures, siis trotteriviga ei esineks.
 
@@ -1380,20 +1380,20 @@ Alumine paneel on ahela arvutusliku kulukuse kohta.
 Selgub, et väravate arv sõltub trotterisammude arvust lineaarselt.
 Samas ahela klassikalise simuleerimise käiguaeg sõltub trotterisammude arvust eksponentsiaalselt, jõudes \(10\) trotterisammu juures \(20\,{\rm min}\).
 Viimasest kahest väitest nähtub, et kvantahelat klassikaliselt simuleerides ei ole võimalik saavutada seda ajavõitu, mida kvantalgortm muidu klassikalise ees võimaldab.
-Lisaks on alumiselt paneelilt näha, et ka ahela koostamise ja transpileerimise ajad pole tühised.
+Lisaks on alumiselt paneelilt näha, et ka ahela koostamise ja kompileerimise ajad pole tühised.
 
 Tööd võib lugeda kordaläinuks, kuivõrd töös kirjeldatud meetodil on tõepoolest võimalik arvutad \(\rm H_2\) põhioleku energia.
-Nagu varem mainitud, saaks sama meetodit kasutad ka teiste molekulide või kõrgemate tasemeta energiate arvutamiseks, ent antud juhul takistas seda tegemast vajadus kvantavutit klassikaliselt simuleerida.
+Nagu varem mainitud, saaks sama meetodit kasutad ka teiste molekulide või kõrgemate tasemeta energiate arvutamiseks, ent antud juhul takistas seda tegemast vajadus kvantarvutit klassikaliselt simuleerida.
 Viise, kuidas siiski keerulisemaid süsteeme uurida, käsitleb järgmine alapeatükk.
 
 \section{Kvantarvutuse hetkeseis ja võimalikke edasiarendusi}
 
 Faasi hindamise näol on tegemist algoritmiga, mis eeldab loogiliste kvantbittide kasutamise võimalust~--- öeldakse, et tegemist on veatolerantse algoritmiga.
 Loogilised kvantbitid on sellised, milles on müra piisavalt alla surutud, et oleks võimalik läbi viia pikki arvutusi, mis praktikas ette tulevad.
-Et füüsikalised kvantbitid, need, mis on riistvars päriselt olemas, on alati mürarikkad, tuleb loogilised kvantbitid realiseerida suure arvu füüsikaliste kvantbittide kaudu.
+Et füüsikalised kvantbitid~--- need, mis on riistvaras päriselt olemas~--- on alati mürarikkad, tuleb loogilised kvantbitid realiseerida suure arvu füüsikaliste kvantbittide kaudu.
 Töö kirjutamise ajal on seda suudetud teha vaid üksikutel juhtudel.
 Seega on kvantarvutite kasutamine päris arvutusteks olnud piiratud vaid nendele ülesannetele, mida on võimalik lahendada ka müraste arvutustega.
-Praeguse periood kohta kasutatkse lühendit NISQ (noisy intermediate-scale quantum)~\cite{preskill}.
+Praeguse periood kohta kasutatakse lühendit NISQ (noisy intermediate-scale quantum)~\cite{preskill}.
 Mõistagi soovitakse jõua järgmisesse perioodi, kus neid puuduseid pole, mille kohta kasutatakse lühendit FTQC (fault-tolerant quantum computing).
 Kvantarvutite riistvara arendamisega tegelevad ettevõtted ja uurimisasutused on võtnud eesmärgiks jõuda 2020ndate aastate lõpuks selle perioodi lävele~\cite{ibmq+roadmap, quera+roadmap}.
 Esimesed sammud selle eesmärgi suunas on juba tehtud: Quera töörühmal õnnestus realiseerida 48 loogilist kvantbitti~\cite{quera}.
@@ -1403,23 +1403,34 @@ Töö tegijale selliste kvantarvutit kasutada polnud, mis motiveerib uurima või
 Põhisuunad selleks on järgmised.
 \begin{itemize}
   \item Faasihindamise asemel saab kasutada algoritmi, mis pole müra suhtes niivõrd tundlik: selline on näiteks variatsioonilise lahendamise kvantalgoritm~\cite{omalley+etal, raidlo}.
-  \item Faasihindamise algoritmi saab teha iteratiivseks, mis lubab faasi hindamise algoritmi ahela asemel käitada rida lühemaid ja vähemat kvantbittidega ahelaid, mida tuleb kordineerida klassikaliste arvutuste abil~\cite{whitfield+etal2011, omalley+etal}.
+  \item Faasihindamise algoritmi saab teha iteratiivseks, mis lubab faasi hindamise algoritmi ahela asemel käitada rida lühemaid ja vähemate kvantbittidega ahelaid, mida tuleb kordineerida klassikaliste arvutuste abil~\cite{whitfield+etal2011, omalley+etal}.
   \item Hamiltoniaani saab ressursside kokkuhoidmiseks lihtsustada, nagu on seda teinud näiteks O'Malley jt~\cite{omalley+etal}.
 \end{itemize}
 Siin esitatud lahendamisskeem on siiski võimalikest edasiarendustest üldisem, mis õigustab antud töös sellele pööratud tähelepanu.
 
 \chapter{Kokkuvõte}
 
-Töös koostati programm molekulaarse süsteemi põhienergia leidmise läbiviimiseks kvantarvutil.
-Keskne oli faasi hindamise algoritm, hamiltoniaani simuleerimiseks kasutati Jordan-Wigneri teisendust, trotteriseerimist ja treppalgoritmi.
+Töös tutvustati kvantarvutusliku meetodit molekulaarse süsteemi omaolekute energiate leidmiseks, st elektronstruktuuri ülesande lahendamiseks.
 
-Programmi kasutati \(\rm H_2\) põhienergia leidmiseks.
-Arvutused viidi läbi kvantarvuti klassikalise simulaatoriga.
-Leiti vesiniku molekuli põhienergia sõltuvus sidemepikkusest.
-Samuti tehti kindlaks tasakaalugeomeetria: sidemepikkus on sellise juhul \(0{,}75\,{\rm Å}\) ja energia \(-0{,}1367\,{\rm Ha}\), mis langeb keemilise täpsuse ulatuses kokku täieliku interaktsiooni vastasmõju meetodil arvutatuga.
+Esmalt käsitletigi elektronstruktuuri ülesande teoreetilist tausta.
+Alustati molekulaarse süsteemi üldisest hamiltoniaanist.
+Käsitlust lihtsustati kõigpealt Born-Oppenheimeri lähendust ja hiljem Hartree-Focki lähendust kasutades.
+Olekud esitati Slateri determinandina.
+Viidi läbi teine kvantiseerimine, mis oli vajalik töö järgmises osas, st ülesande kodeerimisel kvantarvutil lahendamiseks.
 
-Jõuti järelduseni, et töös esitatud skeemi ei saa hetkesiesuga kasutada arvutuste läbiviimiseks kvantarvutil, milleks motiveerib simulaatori kasutamise suur ressursikulu.
-Pakuti välja, kuidas skeemi modifitseerida, et seda oleks võimalik käitada kvantarvutil: kasutada iteratiivset faasi hindamise algoritmi, hamiltoniaani eelnevalt lihtsustada ja energia keerulisemat skaleerimist.
+Hamiltoniaan ja olekud esitati kvantbittide ruumis kasutades Jordan-Wigneri teisendust.
+Saadud Pauli sõnedest hamiltoniaani põhjal koostati kvantahel kasutades trotteriseerimist ja treppalgoritmi.
+
+Järgmiseks tutvustati faasi hindamise algoritmi kui meetodit kvantbittide ruumis esitatud hamiltonaani omaolekute energiate leidmiseks.
+Näidati, et faasi hindamine taandub kvantarvutusliku Fourier' teisenduse ja pöördteisenduse tegemisele.
+Samuti näidati, kuidas hamiltoniaani omaväärtust sobivalt skaleerida, et see oleks võimalik välja lugeda faasist, mis on perioodiline.
+
+Töö praktilises osas koostati teoreetilise osa tulemuste põhjal programm, millega arvutati \(\rm H_2\) põhienergia.
+Arvutused viidi läbi kvantarvuti klassikalisel simulaatoril.
+Tulemusi võrreldi täieliku konfiguratsiooni vastasmõju meetodil arvutatutega.
+Leiti, et töös esitatud meetod on tõepoolest elektronstruktuuri lahendamiseks sobiv.
+
+Lõpuks käsitleti töö võimalik edasiarendusi, st seda, kuidas oleks võimalik antud ülesannet lahendada juba praegu, NISQ perioodil.
 
 \printbibliography[heading=bibintoc, title=Kirjandus]
 
