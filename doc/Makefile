@@ -1,4 +1,4 @@
-F=MARKA_2024_bakatoo
+F=MARKA_2025_bakatoo
 
 $F.pdf: $F.tex srcs.bib *.jpg
 	-lualatex --interaction=nonstopmode $F.tex

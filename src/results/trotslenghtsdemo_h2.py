@@ -29,8 +29,9 @@ N = 3
 ax = pyplot.subplot(N, 1, 1)
 ntrots = list(set(andmed[::, 3]))
 for nt in sorted(ntrots):
+    fmt = ".-" if nt == 8 else "-"
     xandmed = andmed[numpy.where(andmed[::, 3] == nt)]
-    ax.plot(xandmed[::, 0], xandmed[::, 4], "-", label = "ntrots = %d" % nt)
+    ax.plot(xandmed[::, 0], xandmed[::, 4], fmt, label = "ntrots = %d" % nt)
 ax.legend()
 ax.set_xlabel("Sidemepikkus (A)")
 ax.set_ylabel("Energia (Ha)")
@@ -41,7 +42,7 @@ axins = ax.inset_axes(
        [0.38, 0.3, 0.58, 0.48],
        ylim=(0, 1.59e-3 * 3))
 for nt in sorted(ntrots):
-    fmt = ":" if nt == max(ntrots) else "-"
+    fmt = ".-" if nt == 8 else "-"
     xandmed = andmed[numpy.where(andmed[::, 3] == nt)]
     ax.plot(xandmed[::, 0], abs(xandmed[::, 4] - xandmed[::, 5]), fmt, label = "ntrots = %d" % nt)
     axins.plot(xandmed[::, 0], abs(xandmed[::, 4] - xandmed[::, 5]), fmt)
