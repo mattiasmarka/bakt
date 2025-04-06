@@ -34,17 +34,20 @@ def calc_scaling_factor(E_l, E_h):
     t = 1 / (E_h - E_l)
 
     def phase_to_energy(phase):
-        phase_l, phase_h = E_l * t, E_h * t
-        x = -phase
-        y = x - (x - phase_h + 1) // 1
-        E = y / t
-        return E
+        return (1 - phase) / t + E_l
 
     nbits = -int(lower_pow2(CHEMICAL_ACC * t))
     return t, nbits, phase_to_energy
 
+def ham_with_shift(ham, E_l, E_h):
+    if tuple() not in ham:
+        ham[tuple()] = 0.0
+    ham[tuple()] -= E_l
+    return ham
+
 
 def make_qc(ham, nelecs, nbits, ntrots, E_l, E_h):
+    ham = ham_with_shift(ham, E_l, E_h)
     state_size = max(map(len, ham.keys()))
     state_prep_qc = qiskit.QuantumCircuit(state_size, name="state_prep")
     state_prep_qc.x(list(range(nelecs)))
