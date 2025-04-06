@@ -81,9 +81,10 @@
 \vspace*{1ex}
 
 \noindent\textbf{Lühikokkuvõte:}
-Klassikaliste arvutitega saab täpselt simuleerida vaid lihtsamaid kvantsüsteeme, sest probleemi lahendamiseks tuleb paratamatult kasutada eksponentsiaalse keerukusega algoritmi.
+Klassikaliste arvutitega saab täpselt simuleerida vaid lihtsamaid kvantsüsteeme, kuivõrd parim täpne klassikaline algoritm kuulub eksponentsiaalse keerukuse klassi.
 Kvantarvutitega saab kvantsüsteemi simuleerimiseks kasutada faasi hindamise algoritmi, mille keerukus on aga kõigest polünoomne.
-Sestap loodetakse kvantarvutitega tulevikus lahendada klassikaliste arvutitega täpselt lahendamiseks liialt keerulisi kvantsimulatsiooniülesandeid, milleks on ka kvantkeemias keskne elektronstruktuuri ülesanne.
+Sestap loodetakse kvantarvutitega tulevikus simuleerida klassikaliste arvutitega täpselt simuleerimiseks liialt keerulisi kvantsüsteeme.
+Üks selliseid süsteeme, mille täpne simuleerimine võib käia klassikalistele arvutitele üle jõu, on molekuli elektronstruktuur.
 Selles töös tutvustataksegi faasi hindamise algoritmil põhinevat meetodit elektronstruktuuri ülesande lahendamiseks, täpsemalt molekulaarse süsteemi põhienergia leidmiseks.
 Meetodit rakendatakse lihtsa molekuli~--- \(\rm H_2\)~--- põhienergia leidmiseks.
 Esmalt tutvustatakse elektronstruktuuri ülesande teoreetilist tausta.
@@ -148,7 +149,7 @@ Mitmed klassikaliselt lahendamatud ülesanded on kvantarvutuslikult lahendatavad
 Arvatakse, et kvantalgoritmidega saab tulevikus lahendada ülesandeid, mille klassikalist lahendamist peetakse jäädavalt liiga kulukaks.
 Klassikalisest efektiivsemad kvantalgoritmid on võimalikud tänu kvantarvutuse ainulaadsetele vahenditele.
 
-Siiani on kvantarvututitega õnnestunud lahendada vaid mõni üksik selline probleem, mille lahendamine on klassikaliste arvutitega on teoreetiliselt võimatu.
+Siiani pole kvantarvututitega õnnestunud lahendada veel ühtegi sellist praktilise väärtusega probleemi, mida ei saa lahendada on klassikilaliselt.
 Nimelt takistab kvantarvutite kasutamist nende ebatäiuslik riistvara: arvutusi segab kõrge müratase~\cite{whitfield+etal2022}.
 
 Ent kvantalgoritme on mõttekas uurida tuleviku tarvis, sest kvantarvutite riistvara areneb pidevalt.
@@ -269,12 +270,12 @@ Spinnorbitaalide korrutist
     \chi_i(\vec{x}_1) \chi_j(\vec{x}_2) \cdots \chi_k(\vec{x}_N)
 \end{align}
 nimetatakse Hartree korrutiseks.
-Kui antisümmeetria printsiipi poleks vaja arvestada, siis oleks Hartree korrutis \(N\)-i teineteisega mitteinterakteeruva elektroni süsteemi lainefunktsiooniks.
-Sellisel lihtsustatud juhul oleksid elektronid sõltumatud: süsteemi hamiltoniaani saaks kirja panna kujul
+Hartree korrutis on \(N\)-i teineteisega mitteinterakteeruva elektroni süsteemi lainefunktsioon, mis antisümmeetria printsiipi ei arvesta.
+Selle järgi on elektronid sõltumatud: süsteemi hamiltoniaani saab kirja panna kujul
 \begin{align}
     H = \sum_i^N h(i) \rlap{,}
 \end{align}
-kus \(h(i)\) oleks üksiku elektroni hamiltoniaan.
+kus \(h(i)\) on üksiku elektroni hamiltoniaan.
 Et kehtib
 \begin{align}
     E = \sum_j^N \epsilon_j \rlap{,}
@@ -283,7 +284,7 @@ Et kehtib
     \quad \text{ja} \quad
     h(i) \chi_j(\vec{x_i}) = \epsilon_j \chi_j(\vec{x_i}) \rlap{,}
 \end{align}
-siis sellise süsteemi koguenergia on üksikute elektronide energiate summa, mis näitab Hartree korrutise sobivust lainefunktsiooniks mitme elektroniga süsteemi lihtsustatud juhul.
+siis sellise süsteemi koguenergia on üksikute elektronide energiate summa, mis näitabki Hartree korrutise sobivust lainefunktsiooniks mitme elektroniga süsteemi lihtsustatud juhul.
 
 Antisümmeetria printsiipi ja elektronide vastasmõju arvestab Slateri determinant
 \begin{align}\label{eq:slater}
@@ -295,7 +296,7 @@ Antisümmeetria printsiipi ja elektronide vastasmõju arvestab Slateri determina
         \chi_i(\vec{x_N}) & \chi_j(\vec{x_N}) & \cdots & \chi_k(\vec{x_N}) \\
     \end{vmatrix} \rlap{.}
 \end{align}
-Slateri determinant on füüsikaliselt sobiv elektrooniline lainefunktsioon: saab näidata, et see võtab arvesse antisümmeetria printsiipi ja elektronide vastamõju.
+Slateri determinant on füüsikaliselt sobiv elektrooniline lainefunktsioon: saab näidata, et see võtab arvesse antisümmeetria printsiipi, seetõttu ka elektronide vastamõju.
 
 \section{Hartree-Focki lähendus}\label{sec:hartfock}
 
@@ -307,11 +308,11 @@ Hamiltoniaan~\ref{eq:molham} puhul on tegu mitme keha probleemiga.
 Matemaatiliselt tähendab see järgmist.
 
 Elektroonilise lainefunktsiooni üldkuju on~\eqref{eq:slater}.
-Variatsiooniprintsiibist tulenevalt on põhioleku lainefunktsioon \(\Psi_0\) selline, mille energia
+Põhioleku lainefunktsioon on \(\Psi_0\) selline, mille energia
 \begin{align}
     E_0 = \bra{\Psi_0} H \ket{\Psi_0}
 \end{align}
-on minimaalne.
+on minimaalne~--- seega on tegemist variatsioonülesandega.
 Energia väärtus sõltub spinnorbitaalide valikust.
 Minimeerimine viib Hartree-Focki võrrandini
 \begin{align}
@@ -335,7 +336,7 @@ Piirangud valikus seab ülesande keerukus: suuremad baasid annavad täpsemad tul
 
 \section{Teine kvantiseerimine}\label{sec:secquant}
 
-Kui võimalik, kasutatakse kvantkeemias arvutamiseks teise kvantiseerimise kuju, milles lainefunktsiooni esitus on kompaktsem.
+Kvantkeemias kasutatakse arvutamiseks tihti teise kvantiseerimise kuju, milles lainefunktsiooni esitus on kompaktsem.
 Selles töös on oluline, et teise kvantiseerimise kuju on vajalik lainefunktsiooni kujutamiseks kvantbittide ruumi, mis on teemaks alapeatükis~\ref{sec:jw}.
 
 Teise kvantiseerimise formalismis esitatakse lainefunktsioon täitearvude esituses
@@ -373,19 +374,20 @@ kus
     h_{pq} = \int\d{\vec{x}_i} \chi_p^*(\vec{x}_i)
     \paren{-\frac{1}{2} \nabla^2 - \sum_A \frac{Z_a}{r_{iA}}} \chi_q(\vec{x}_i)
 \end{align}
-ja
+on ühe keha operaatori maatrikselement ja
 \begin{align}\label{eq:molint2}
     h_{pqrs} = \int \d{\vec{x}_1} \d{\vec{x}_2}
     \frac{\chi_p^*(\vec{x}_1) \chi_q^*(\vec{x}_2) \chi_r(\vec{x}_2) \chi_s(\vec{x}_1)}{r_{12}}
 \end{align}
-on molekulaarsed integraalid, mis seovad hamiltoniaani esimese ja teise kvantiseerimise kuju.
+on kahe keha operaatori maatrikselement.
+Nimetame suurusi \eqref{eq:milint1} ja \eqref{eq:molint2} molekulaarseteks integraalideks, sest need seovad hamiltoniaani esimese ja teise kvantiseerimise kuju.
 Need integraalid saab arvutada klassikaliselt ja need on põhienergia leidmise ülesande esimeseks eelarvutuseks. Teine eelarvutus on Jordan-Wigneri teisendus, mis on teemaks järgmises peatükis.
 
 \chapter{Kvantarvutuslik lahendamine}\label{chap:qcomp}
 
 See peatükk annab ülevaate molekulaarse süsteemi põhienergia kvantarvutuslikust leidmisest.
 Esimene alapeatükk~\ref{sec:terms} käsitleb kvantarvutuse põhitõdesid.
-Teine alapeatüki~\ref{sec:pea} teemaks faasi hindamise algoritm ise.
+Teise alapeatüki~\ref{sec:pea} teemaks on faasi hindamise algoritm ise.
 Kolmas alapeatükk~\ref{sec:hamsim} räägib hamiltoniaani simuleerimisest kvantahelana.
 Alapeatükid~\ref{sec:terms} ja~\ref{sec:pea} toetuvad Nielseni ja Chuangi~\cite{nielsen+chuang}; Kaye, Laflamme'i ja Mosca~\cite{kaye+laflamme+mosca} ning Whitfield jt~\cite{whitfield+etal2011} käsitlusele.
 Alpeatüki~\ref{sec:hamsim} viited on teksti sees.
@@ -638,7 +640,7 @@ Igat üksikut kvantbitti või -registrit tervikuna tähistab horisontaalne traat
 Traadist vasakul on sisend- ja paremal väljundolekud, kui need on olulised.
 Operaatoreid tähitavad kastid.
 Operaator rakendub igale kavantbitile, mille traat kasti läbib.
-Katsutid~--- otspunktiga lõppevad vertikaalsed jooned~---- ühendavad operaatoreid juhtkvantbitile või juhtkvantregistritega, kui neid on.
+Katsutid~--- otspunktiga lõppevad vertikaalsed jooned~--- ühendavad operaatoreid juhtkvantbitile või juhtkvantregistritega, kui neid on.
 
 \begin{figure}
     \centering
@@ -870,7 +872,7 @@ Esiteks tuleb tööregistrile rakendada kvantarvutusliku Fourier' teisenduse vä
     \otimes \frac{\ket{0}+\ket{1}}{\sqrt{2}}}_n
     \otimes \ket{u} \rlap{.}
 \end{align}
-Järgmiseks tuleb seisundiregistrile mõjuda operaatoriga \(U^{2^0}\) juhinduval tööregistri viimasest bitist.
+Järgmiseks tuleb seisundiregistrile mõjuda operaatoriga \(U^{2^0}\) juhinduvalt tööregistri viimasest bitist.
 Selle tulemuseks on olek
 \begin{align}\label{f:peau0}
     \underbrace{\frac{\ket{0}+\ket{1}}{\sqrt{2}}
@@ -1039,8 +1041,8 @@ Hamiltoniaani kodeerimiseks seostatakse Focki ruumi tekke- ja kaoperaatorid \(\c
 \end{align}
 misjuhul vasakul olevate operaatorite vahel kehtivad samad kommutatsioonireeglid, mis paremal olevate vahel, vt valem~\eqref{eq:comrules}.
 Oluline on, et sellisel teisendusel on hamiltoniaani omaväärtused invariantsed.
-Sestap taandubki molekulaarsete energiate leidmise ülesanne hamiltoniaani omaväärtuste leidmisele.
-Jordan-Wigneri teisendus tulemusel on hamiltoniaan kujul
+Sestap taandubki molekulaarsete energiate leidmise ülesanne kvantbittide ruumis esitatud hamiltoniaani omaväärtuste leidmisele.
+Jordan-Wigneri teisenduse tulemusel on hamiltoniaan kujul
 \begin{align}\label{eq:paulisum}
     H = \sum_i c_i h_i \rlap{,}
 \end{align}
@@ -1126,7 +1128,7 @@ Näiteks juhul, kui
 \begin{equation}
   h_i = Z_1X_2Y_3 \rlap{,}
 \end{equation}
-realiseerib operaatori \(e^{-i h_i t}\) ahel joonisel.
+realiseerib operaatori \(e^{-i h_i t}\) ahel joonisel~\cite{f:xyzex}.
 
 \begin{figure}[h]
   \centering
@@ -1150,7 +1152,7 @@ realiseerib operaatori \(e^{-i h_i t}\) ahel joonisel.
     \end{yquant}
   \end{tikzpicture}
   \fi
-  \caption{Operaatori \(e^{-iZ_1X_2Y_3}\) realiseerimine kvantahelana.}
+  \caption{Juhitud operaatori \(e^{-iZ_1X_2Y_3}\) realiseerimine kvantahelana.}
   \label{f:zxyex}
 \end{figure}
 
@@ -1219,7 +1221,7 @@ Et paarsuse arvutamine ja selle tagasi panemine on pöördoperatsioonid, siis ko
 Kui juhtkvantbitt on olekus \(\ket{1}\) pööre rakendub ja rakendub ka Pauli sõne eksponent tervikuna.
 Joonisel~\ref{fig:trotexctrl} on näide juhitud ajalise arengu operaatorist, kui hamiltoniaan on antud valemiga~\eqref{eq:hex}.
 
-\begin{figure}
+\begin{figure}[h]
     \centering
     \ifdefined\yquanton
     \begin{tikzpicture}[scale=0.7]
@@ -1261,7 +1263,7 @@ Joonisel~\ref{fig:trotexctrl} on näide juhitud ajalise arengu operaatorist, kui
         \end{yquant}
     \end{tikzpicture}
     \fi
-    \caption{Operaatori \(e^{-i\paren{\frac{1}{3}X_1Y_1+\frac{2}{3}Z_1X_2} t}\) realiseerimine kvantahelana.}
+    \caption{Juhitud operaatori \(e^{-i\paren{\frac{1}{3}X_1Y_1+\frac{2}{3}Z_1X_2} t}\) realiseerimine kvantahelana.}
     \label{fig:trotexctrl}
 \end{figure}
 
@@ -1363,7 +1365,7 @@ Töö tulemused võtab kokku joonis~\ref{fig:h2plots}, mille kohta käivad järg
   \includegraphics[height=.75\vsize]{h2plots.jpg}
   \caption{Üleval: energia sõltuvus sidemepikkusest erinevate trotterisammude arvude jaoks.
     Keskel: energia vea sõltuvus sidemepikkusest erinevate trotterisammude arvude jaos.
-    Nii üleval kui ka keskel on kahekasale trotterisammule, mis on antud ülesandes keemilise täpsuse jaoks piisav, vastav sõltuvus esitatud rõhutatult punktidega joonega.
+    Nii üleval kui ka keskel on kahsale trotterisammule, mis on antud ülesandes keemilise täpsuse jaoks piisav, vastav sõltuvus esitatud rõhutatult punktidega joonega.
     All: ahela väravate arvu sõltuvus trotterisammude arvust (vasakpoolne vertikaaltelg, pidevjoon); koostamiseks, kompileerimiseks ja käitamiseks kulunud aegade sõltuvus trotterisammude arvust (parempoolne vertikaaltelg, katkendjoon).}
   \label{fig:h2plots}
 \end{figure}
@@ -1407,7 +1409,7 @@ Töö tegijale selliste kvantarvutit kasutada polnud, mis motiveerib uurima tö�
 Põhisuunad selleks on järgmised.
 \begin{itemize}
   \item Faasihindamise asemel saab kasutada algoritmi, mis pole müra suhtes niivõrd tundlik: selline on näiteks variatsioonilise lahendamise kvantalgoritm~\cite{omalley+etal, raidlo}.
-  \item Faasihindamise algoritmi saab teha iteratiivseks, mis lubab faasi hindamise algoritmi ahela asemel käitada rida lühemaid ja vähemate kvantbittidega ahelaid, mida tuleb kordineerida klassikaliste arvutuste abil~\cite{whitfield+etal2011, omalley+etal}.
+  \item Faasihindamise algoritmi saab teha iteratiivseks, mis lubab faasi hindamise algoritmi ahela asemel käitada rida lühemaid ja vähemate kvantbittidega ahelaid, mida tuleb koordineerida klassikaliste arvutuste abil~\cite{whitfield+etal2011, omalley+etal}.
   \item Hamiltoniaani saab ressursside kokkuhoidmiseks lihtsustada, nagu on seda teinud näiteks O'Malley jt~\cite{omalley+etal}.
 \end{itemize}
 Siin esitatud lahendamisskeem on siiski võimalikest edasiarendustest üldisem, mis õigustab antud töös sellele pööratud tähelepanu.
