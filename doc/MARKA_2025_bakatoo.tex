@@ -86,7 +86,7 @@ Kvantarvutitega saab kvantsüsteemi simuleerimiseks kasutada faasi hindamise alg
 Sestap loodetakse kvantarvutitega tulevikus simuleerida klassikaliste arvutitega täpselt simuleerimiseks liialt keerulisi kvantsüsteeme.
 Üks selliseid süsteeme, mille täpne simuleerimine võib käia klassikalistele arvutitele üle jõu, on molekuli elektronstruktuur.
 Selles töös tutvustataksegi faasi hindamise algoritmil põhinevat meetodit elektronstruktuuri ülesande lahendamiseks, täpsemalt molekulaarse süsteemi põhienergia leidmiseks.
-Meetodit rakendatakse lihtsa molekuli~--- \(\rm H_2\)~--- põhienergia leidmiseks.
+Meetodit rakendatakse lihtsa molekuli \(\rm H_2\) põhienergia leidmiseks.
 Esmalt tutvustatakse elektronstruktuuri ülesande teoreetilist tausta.
 Järgmisena antakse ülevaade molekulaarse süsteemi hamiltoniaani põhienergia leidmiseks vajalikest vahenditest: Jordan-Wigneri teisendusest, trotteriseerimisest, treppalgoritmist ja faasi hindamise algoritmist.
 Arvutused viiakse läbi kasutades kvantarvuti klassikalist simulaatorit.
@@ -118,7 +118,7 @@ This thesis gives an overview of a method based on the quantum phase estimation 
 The method is used to calculate the ground state energy of the simple molecule \(\rm H_2\).
 First, an introduction is given to the electronic structure problem.
 Then, an overview is given of the quantum computational methods used to solve the problem: the Jordan-Wigner decomposition, trotterization, staircase algorithm, and phase estimation algorithm.
-A classical simulator is used for all the quantum computational calculations.
+The quantum circuit is run on a classical computer by way of a statevector simulator.
 Finally, the choice of simulation parameters and the possibility of using a quantum computer for the calculations is discussed.
 
 \noindent\textbf{Keywords:}
@@ -296,11 +296,11 @@ Antisümmeetria printsiipi ja elektronide vastasmõju arvestab Slateri determina
         \chi_i(\vec{x_N}) & \chi_j(\vec{x_N}) & \cdots & \chi_k(\vec{x_N}) \\
     \end{vmatrix} \rlap{.}
 \end{align}
-Slateri determinant on füüsikaliselt sobiv elektrooniline lainefunktsioon: saab näidata, et see võtab arvesse antisümmeetria printsiipi, seetõttu ka elektronide vastamõju.
+Slateri determinant on füüsikaliselt sobiv elektrooniline lainefunktsioon: saab näidata, et see võtab arvesse antisümmeetria printsiipi.
 
 \section{Hartree-Focki lähendus}\label{sec:hartfock}
 
-Kui hamiltoniaan~\eqref{eq:molham} on arvutamiseks liiga keeruline, siis kastutakse klassikalises kvantkeemias arvutusressursside kokku hoidmiseks Hartree-Focki lähendust.
+Kui hamiltoniaan~\eqref{eq:molham} on arvutamiseks liiga keeruline, siis kasutatakse klassikalises kvantkeemias arvutusressursside kokku hoidmiseks Hartree-Focki lähendust.
 Selles töös on Hartree-Focki lähendus vajalik vaid eelarvutuste läbiviimiseks: see lähendus lubab leida spinnorbitaalid \(\cparen{\chi_j | j=1, 2, \ldots, 2K}\), mis on vajalikud teise kvantiseerimise kuju leidmiseks, nagu selgub järgmises alapeatükis~\ref{sec:secquant}.
 
 Hamiltoniaan~\ref{eq:molham} puhul on tegu mitme keha probleemiga.
@@ -312,7 +312,7 @@ Põhioleku lainefunktsioon on \(\Psi_0\) selline, mille energia
 \begin{align}
     E_0 = \bra{\Psi_0} H \ket{\Psi_0}
 \end{align}
-on minimaalne~--- seega on tegemist variatsioonülesandega.
+on minimaalne.
 Energia väärtus sõltub spinnorbitaalide valikust.
 Minimeerimine viib Hartree-Focki võrrandini
 \begin{align}
@@ -380,7 +380,7 @@ on ühe keha operaatori maatrikselement ja
     \frac{\chi_p^*(\vec{x}_1) \chi_q^*(\vec{x}_2) \chi_r(\vec{x}_2) \chi_s(\vec{x}_1)}{r_{12}}
 \end{align}
 on kahe keha operaatori maatrikselement.
-Nimetame suurusi \eqref{eq:milint1} ja \eqref{eq:molint2} molekulaarseteks integraalideks, sest need seovad hamiltoniaani esimese ja teise kvantiseerimise kuju.
+Nimetame suurusi \eqref{eq:molint1} ja \eqref{eq:molint2} molekulaarseteks integraalideks, sest need seovad hamiltoniaani esimese ja teise kvantiseerimise kuju.
 Need integraalid saab arvutada klassikaliselt ja need on põhienergia leidmise ülesande esimeseks eelarvutuseks. Teine eelarvutus on Jordan-Wigneri teisendus, mis on teemaks järgmises peatükis.
 
 \chapter{Kvantarvutuslik lahendamine}\label{chap:qcomp}
@@ -968,11 +968,11 @@ Mõõtmis\-tulemuste seast tuleb lihtsalt 	valida kõige tõenäolisem tulemus.
 
 \subsection{Hamiltoniaani omaväärtuste leidmine}\label{sec:ham}
 
-Hamiltoniaan genereerib unitaarse operaatori, mis kirjeldab kvantsüsteemi ajalist arengut
+Hamiltoniaan genereerib kvantsüsteemi ajalist arengut kirjeldava unitaarse operaatori
 \begin{align}
     U = e^{-iHt} \rlap{,}
 \end{align}
-kus \(t\) aeg.
+kus \(t\) on aeg.
 Antud algoritmi on aeg \(t\) skaleerimiskonstandi rollis.
 Kui \(\ket{E_n}\) on \(H\) omavektor, siis kehtib
 \begin{align}\label{eq:eigenhermit}
@@ -1117,7 +1117,7 @@ Teisisõnu, bitile \(j_n\) tuleb järjest rakenda bittide \(j_1\), \(j_2\), \(\c
 Siis tuleb bitti \(j_n\) pöörata \(z\)-telje sihis nurga \(2a\) võrra.
 Viimaks tuleb bitile \(j_n\) järjest rakendada bittide \(j_{n-1}\), \(j_{n-2}\), \(\cdots\), \(j_1\) juhitud eitusi.
 Bitte, mis \(j_1\), \(j_2\), \(\cdots\), \(j_n\) hulgas ei esine, ei mõjutata.
-Ahelat tuleks mõista nii, et kesksele väravale \(R_z(2a)\) eelnev juhitud eituste osa arvutab bittide \(j_1\), \(j_2\), \(\cdots\), \(j_n\) paarsuse, keskne värav \(R_z(2a)\) teeb sobiva pöörde ja järgnev juhitud eituste osa kustutab ära nüüdseks ebavajaliku informatsiooni paarsuse kohta~\cite{nielsen+chuang}.
+Ahelat tuleks mõista nii, et kesksele väravale \(R_z(2a)\) eelnev juhitud eituste osa arvutab bittide \(j_1\), \(j_2\), \(\cdots\), \(j_n\) paarsuse, keskne värav \(R_z(2a)\) teeb sobiva pöörde ja järgnev juhitud eituste osa on paarsuse arvutamise pöördoperaatsioon.
 
 Üldjuhul koosneb \(h_i\) nii Pauli \(I\) ja \(Z\) kui ka \(X\) ja \(Y\) operaatoritest, kuid \(h_i\) saab alati viia kujule~\eqref{eq:onlyz} rakendades sobivaid baasiteisendusi.
 Vajalikud baasiteisendused on järgmised:
@@ -1128,7 +1128,7 @@ Näiteks juhul, kui
 \begin{equation}
   h_i = Z_1X_2Y_3 \rlap{,}
 \end{equation}
-realiseerib operaatori \(e^{-i h_i t}\) ahel joonisel~\cite{f:xyzex}.
+realiseerib operaatori \(e^{-i h_i t}\) ahel joonisel~\ref{f:xyzex}.
 
 \begin{figure}[h]
   \centering
@@ -1153,7 +1153,7 @@ realiseerib operaatori \(e^{-i h_i t}\) ahel joonisel~\cite{f:xyzex}.
   \end{tikzpicture}
   \fi
   \caption{Juhitud operaatori \(e^{-iZ_1X_2Y_3}\) realiseerimine kvantahelana.}
-  \label{f:zxyex}
+  \label{f:xyzex}
 \end{figure}
 
 Kokkuvõttes tuleb operaatori \(e^{-i t \sum_i h_i}\) realiseerimiseks kvantahelana gruppide kaupa järjestikku rakendada operaatoreid \(e^{-i h_i t/n}\) realiseerivaid kvantahelaid, kus \(n\) on piisavalt suur.
@@ -1365,7 +1365,7 @@ Töö tulemused võtab kokku joonis~\ref{fig:h2plots}, mille kohta käivad järg
   \includegraphics[height=.75\vsize]{h2plots.jpg}
   \caption{Üleval: energia sõltuvus sidemepikkusest erinevate trotterisammude arvude jaoks.
     Keskel: energia vea sõltuvus sidemepikkusest erinevate trotterisammude arvude jaos.
-    Nii üleval kui ka keskel on kahsale trotterisammule, mis on antud ülesandes keemilise täpsuse jaoks piisav, vastav sõltuvus esitatud rõhutatult punktidega joonega.
+    Nii üleval kui ka keskel on kaheksale trotterisammule, mis on antud ülesandes keemilise täpsuse jaoks piisav, vastav sõltuvus esitatud rõhutatult punktidega joonega.
     All: ahela väravate arvu sõltuvus trotterisammude arvust (vasakpoolne vertikaaltelg, pidevjoon); koostamiseks, kompileerimiseks ja käitamiseks kulunud aegade sõltuvus trotterisammude arvust (parempoolne vertikaaltelg, katkendjoon).}
   \label{fig:h2plots}
 \end{figure}
@@ -1416,7 +1416,8 @@ Siin esitatud lahendamisskeem on siiski võimalikest edasiarendustest üldisem, 
 
 \chapter{Kokkuvõte}
 
-Töös tutvustati kvantarvutusliku meetodit molekulaarse süsteemi omaolekute energiate leidmiseks, mis on elektronstruktuuri ülesande üks oluline eesmärk.
+Töös leiti molekulaare süsteemi põhienergia kasutades kvantarvutusliku meetodit.
+Selleks vajalik teooria esitati lähtudes alustõdedest, kusjuures erilist tähelepanu pöörati kvantarvutuslikule osale.
 
 Esmalt käsitletigi elektronstruktuuri ülesande teoreetilist tausta.
 Alustati molekulaarse süsteemi üldisest hamiltoniaanist.
