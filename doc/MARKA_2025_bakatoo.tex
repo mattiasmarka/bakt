@@ -973,7 +973,7 @@ Hamiltoniaan genereerib kvantsüsteemi ajalist arengut kirjeldava unitaarse oper
     U = e^{-iHt} \rlap{,}
 \end{align}
 kus \(t\) on aeg.
-Antud algoritmi on aeg \(t\) skaleerimiskonstandi rollis.
+Antud algoritmis on aeg \(t\) skaleerimiskonstandi rollis.
 Kui \(\ket{E_n}\) on \(H\) omavektor, siis kehtib
 \begin{align}\label{eq:eigenhermit}
     U \ket{E_n} = e^{-iHt}\ket{E_n} = e^{-i E_n t} \ket{E_n} \rlap{,}
@@ -987,27 +987,38 @@ Valemite~\eqref{eq:uniteigen} ja~\eqref{eq:eigenhermit} võrdlusest selgub, et l
 mis oligi meie eesmärk.
 Kuna \(\phi \in [0, 1)\), siis peab lisaks kehtima
 \begin{align}
-    -\frac{E_n t}{2\pi} \in [0, 1) \rlap{,}
+    -\frac{E_n t}{2\pi} \in [0, 1) \rlap{.}
 \end{align}
-mis seab piirangud \(t\) valikuks.
-Skaleerimiskonstandi \(t\) valimiseks on mitu võimalust.
-Selles töös on tehtud valik
+Selleks, et $E_n$ välja lugeda $\phi$ põhjal, on toimitud järgmiselt.
+Olgu hamiltoniaan diagonaalkujul
+\begin{equation}
+H_D=\begin{bmatrix}
+    E_{min}& \dots & \dots \\
+    \hdotsfor{3} \\
+    \dots & \dots & E_{max} \\
+  \end{bmatrix}
+\end{equation}
+kus \(E_{min}\) ja \(E_{max}\) on vastavalt selle väikseim ja suurim omaväärtus.
+Tagamaks, et kõik omaväärtused oleks välja loetavad faasist $\phi\in[0,1)$, asendame hamiltoniaani
+\begin{equation}
+  H_D'=\underbrace{\frac{1}{E_h-E_l}}_{=t}(H_D-E_{l}I_n)\rlap,
+\end{equation}
+kus $E_l \le E_{min}$ ja $E_h>E_{max}$ on vastavalt alumine ja ülemine piir, mille vahelt energiat otsida.
+Skeemist nähtub, et primmiga hamiltoniaani jaoks $E_n'=\phi$.
+Algse hamiltoniaani omaväärtuse saab arvutada
+\begin{equation}
+  E_n=\frac{\phi}{t}+E_l\rlap.
+\end{equation}
+Niisiis diagonaalkujul esitatud hamiltoniaani omaväärtuse leidmise saab alati taandada faasi hindamisele.
+Ent viimane omadus jääb kehtima ka siis, kui hamiltoniaan pole esitatud diagonaalkujul, sest
 \begin{align}
-    t = \frac{1}{E_{max}-E_{min}} \rlap{,}
+H&=P^{-1}H_D'P^{-1}\cr
+  &=P^{-1}\frac{1}{t}(H_D-E_{l}I_n)P\cr
+  &=P^{-1}\frac{1}{t}H_DP-E_{l}I_n\cr
+  &=tH-E_{l}I_n\rlap,\cr
 \end{align}
-kus \(E_{min}\) ja \(E_{\max\) on vastavalt alumine ja ülemine piir, mille vahelt energiat otsida.
-Arvestades faasi perioodilisust kehtib
-\begin{align}
-    E_n = \begin{cases}
-        -\frac{\phi + E_{max}}{t} & \text{kui } \phi + E_{max} < E_{\min} \rlap{,} \\
-        -\frac{\phi + E_{max} -1}{t} & \text{kui } \phi + E_{\max} \ge E_{\min} \rlap{.} \\
-    \end{cases}
-\end{align}
-Sellega oleme veendunud, et faasi hindamise algoritm sobib kvantbittide ruumis esitatud hamiltoniaani omaväärtuste leidmiseks.
-Nimelt võimaldab faasi hindamise algoritm välja lugeda perioodi \(E_n\), millega ostsilleerub oleku \(\ket{E_n}\) faas ajalise arengu operaatori \(U = e^{-iHt}\) mõjul:
-\begin{align}
-    U \ket{E_n} = e^{-iHt} \ket{E_n} = e^{-iE_n t} \ket{E_n} \rlap{.}
-\end{align}
+kus $P$ viib suvalisse esitusse, mis ei pruugi olla diagonaalne.
+Sellega oleme näidanud, et hamiltoniaani omaväärtuste spektrit saab nihutada ja skaleerida nii, et see on pärast väljaloetav perioodilisest faasist.
 
 Et omaväärtuste leidmine ongi elektronstruktuuri ülesande lahendamise kulukaimaid osi, siis on oluline, et faasi hindamise algoritm on sama eesmärgiga klassikalistest algoritmidest efektiivsem.
 Faasi hindamise algoritmiga loodetakse tulevikus lahendada keerulisemaid ülesandeid, kui on võimalik klassikaliselt.
