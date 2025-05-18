@@ -118,7 +118,7 @@ This thesis gives an overview of a method based on the quantum phase estimation 
 The method is used to calculate the ground state energy of the simple molecule \(\rm H_2\).
 First, an introduction is given to the electronic structure problem.
 Then, an overview is given of the quantum computational methods used to solve the problem: the Jordan-Wigner decomposition, trotterization, staircase algorithm, and phase estimation algorithm.
-The quantum circuit is run on a classical computer by way of a statevector simulator.
+The quantum circuit is run on a classical computer using the statevector simulator.
 Finally, the choice of simulation parameters and the possibility of using a quantum computer for the calculations is discussed.
 
 \noindent\textbf{Keywords:}
@@ -993,9 +993,9 @@ Selleks, et $E_n$ välja lugeda $\phi$ põhjal, on toimitud järgmiselt.
 Olgu hamiltoniaan diagonaalkujul
 \begin{equation}
 H_D=\begin{bmatrix}
-    E_{min}& \dots & \dots \\
-    \hdotsfor{3} \\
-    \dots & \dots & E_{max} \\
+    E_{min} & & \\
+    & \ddots & \\
+    & & E_{max} \\
   \end{bmatrix}
 \end{equation}
 kus \(E_{min}\) ja \(E_{max}\) on vastavalt selle väikseim ja suurim omaväärtus.
@@ -1012,7 +1012,7 @@ Algse hamiltoniaani omaväärtuse saab arvutada
 Niisiis diagonaalkujul esitatud hamiltoniaani omaväärtuse leidmise saab alati taandada faasi hindamisele.
 Ent viimane omadus jääb kehtima ka siis, kui hamiltoniaan pole esitatud diagonaalkujul, sest
 \begin{align}
-H&=P^{-1}H_D'P^{-1}\cr
+H&=P^{-1}H_D'P\cr
   &=P^{-1}\frac{1}{t}(H_D-E_{l}I_n)P\cr
   &=P^{-1}\frac{1}{t}H_DP-E_{l}I_n\cr
   &=tH-E_{l}I_n\rlap,\cr
@@ -1094,7 +1094,7 @@ Et operaatorite korrutamine tähendab väravate järjestikku rakendamist ja täi
 Seda võimaldab nn treppalgoritm~\cite{nielsen+chuang, mansky+etal}.
 Vaatame selle põhimõtet.
 
-Lihtsaim juht on on kommuteeruvate Pauli \(Z\) operaatorite korrutis
+Lihtsaim juht on kommuteeruvate Pauli \(Z\) operaatorite korrutis
 \begin{equation}\label{eq:onlyz}
   h_i = Z_{j_1}Z_{j_2}\cdots Z_{j_n} \rlap{.}
 \end{equation}
