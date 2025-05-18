@@ -24,7 +24,7 @@
 
 \usepackage{yquant} \useyquantlanguage{groups} \newcommand*{\yquanton}{}
 
-\usepackage[sorting=none, style=ieee, maxbibnames=99]{biblatex}
+\usepackage[sorting=none, style=ieee, citestyle=numeric, maxbibnames=99]{biblatex}
 \addbibresource{srcs.bib}
 
 \def\paren#1{\left(#1\right)}
@@ -89,7 +89,7 @@ Selles töös tutvustataksegi faasi hindamise algoritmil põhinevat meetodit ele
 Meetodit rakendatakse lihtsa molekuli \(\rm H_2\) põhienergia leidmiseks.
 Esmalt tutvustatakse elektronstruktuuri ülesande teoreetilist tausta.
 Järgmisena antakse ülevaade molekulaarse süsteemi hamiltoniaani põhienergia leidmiseks vajalikest vahenditest: Jordan-Wigneri teisendusest, trotteriseerimisest, treppalgoritmist ja faasi hindamise algoritmist.
-Arvutused viiakse läbi kasutades kvantarvuti klassikalist simulaatorit.
+Arvutused viiakse läbi kasutades kvantarvuti klassikalist simulaatorit, mis põhineb arvutustel olekuvektoriga.
 Lõpuks käsitletakse vajalike parameetrite valikut ja ülesande lahendamise võimalikkust kvantarvutil.
 
 \vspace*{1ex}
@@ -143,11 +143,25 @@ Keerukamate süsteemide klassikaliseks simuleerimiseks kasutatakse numbrilisi me
 Kvantsüsteemi simuleerimisülesande klassikaline lahendamine on aga möödapääsmatult kulukas: Schrödingeri võrrandi klassikalise lahendamise ressursikulu sõltub süsteemi suurusest eksponentsiaalselt~\cite{whitfield+etal2011, mcardle+etal, cao+etal, kassal+etal}.
 Klassikaliselt ei pruugi suuremaid ülesandeid olla kunagi võimalik lahendada, ammugi täpselt, kuid neid võib olla võimalik lahendada kvantarvutuslikult.
 
-Nimelt on teada mitu kvantalgoritmi, mille teoreetiline efektiivsus ületab klassikalise analoogi oma.
-Komplekssusteoorias öeldakse, et lahenduvad on need ülesanded, mille ressursikulu sõltub süsteemi suurusest polünoomselt; lahendamatud on need ülesanded, mille ressursikulu sõltub süsteemi suurusest eksponentsiaalselt.
+Siiani pole ühte kindlat vastust, milles peitub kvantarvutite eelis klassikaliste arvutite ees, ent vastuse põhipunktid on järgmised.
+Klassikaliste arvutite kasulikkus peitub selles, et paistab kehtivat Chruchi-Turingi tees: kõiki arvutusi, mida võib läbi viia matemaatik paberi ja pliiatsiga, võib läbi viia ka arvuti eeldusel, et sellega on võimalik matikda Turingu masina tööd.
+Siin on mõeldud, et matemaatik on eksimatu ja tal ei ole vaja arvutuste läbi viimiseks kasutada loovust: ta vaid järgib algoritmi.
+Turingu masin on üks võimalus realiseerida arvutit: see pole küll kõige efektiivsem, ent teised efektiivsemad meetodid on sellega ekvivalentsed.
+Füüsika seisukohalt on oluline, et paistab kehtivat ka Churchi-Turnigu teesi edasiarendus, Deutchi printsiip, mis ütleb, et Turingu masinaga on võimalik simuleerida kõiki võimalike füüsikalisi protsesse.
+Et Deutschi printsiip kehtib nii klassikaliste kui ka kvantarvutite jaoks, siis võib edasi küsida, miks teist esimesele eelistada.
+Vastuseks sobib viide informaatika suurimale lahendamata probleemile ``kas \(P=NP\)?''
+Kui vastus on ``jah'' (\(P=NP\)), siis pole kvantarvutitel eelist klassikaliste ees.
+Kuna aga ülesanne on lahendamata, siis peame eeldame üldisemat vastust ``ei'' (\(P\subset NP\)).
+Veidike lihtsutavalt öeldes on siis olemas kaks ülesannete klassi: need, mille parim lahendamisalgoritm on polünoomse keerukusklassiga (\(P\)), ja need, mille lahendamine on keerulisem, ent lahendus verifitseerimise keerukusklass on siiski polünoome (\(NP\)).
+Klassi \(NP\) ülesannete lahendamine võib käia üle jõu ka võimsaimatele arvutitele.
+Samas on meil alust arvata, et \(P\subset BQP\), kus \(BQP\) on ülesannete klass, mille lahendamise kavantalgoritm on efektiivsem kui klassikaline~--- sellisel juhul tuleks mõnede ülesannete lahendamiseks eelistada kvantarvuteid.~\cite{stanford, nielsen+chuang}.
+
+Praeguseks on teada mitu kvantalgoritmi, mille teoreetiline efektiivsus ületab parima teadaoleva klassikalise analoogi oma.
+Komplekssusteoorias öeldakse, et lahenduvad on need ülesanded, mille ressursikulu sõltub süsteemi suurusest polünoomselt (klass \(P\)); lahendamatud on need ülesanded, mille ressursikulu sõltub süsteemi suurusest eksponentsiaalselt (klass \(NP\)).
 Mitmed klassikaliselt lahendamatud ülesanded on kvantarvutuslikult lahendatavad, nende hulgas ka kvantsüsteemide simuleerimise ülesanne.
 Arvatakse, et kvantalgoritmidega saab tulevikus lahendada ülesandeid, mille klassikalist lahendamist peetakse jäädavalt liiga kulukaks.
-Klassikalisest efektiivsemad kvantalgoritmid on võimalikud tänu kvantarvutuse ainulaadsetele vahenditele.
+Klassikalisest efektiivsemad kvantalgoritmid on võimalikud tänu kvantarvutuse ainulaadsetele vahenditele: muuhulgas superpositsioonide ja põimituse võimalus.
+
 
 Siiani pole kvantarvututitega õnnestunud lahendada veel ühtegi sellist praktilise väärtusega probleemi, mida ei saa lahendada on klassikilaliselt.
 Nimelt takistab kvantarvutite kasutamist nende ebatäiuslik riistvara: arvutusi segab kõrge müratase~\cite{whitfield+etal2022}.
@@ -286,7 +300,7 @@ Et kehtib
 \end{align}
 siis sellise süsteemi koguenergia on üksikute elektronide energiate summa, mis näitabki Hartree korrutise sobivust lainefunktsiooniks mitme elektroniga süsteemi lihtsustatud juhul.
 
-Antisümmeetria printsiipi ja elektronide vastasmõju arvestab Slateri determinant
+Antisümmeetria printsiipi ja elektronide vastastikmõju arvestab Slateri determinant
 \begin{align}\label{eq:slater}
     \Psi(\vec{x_1}, \vec{x_2}, \ldots, \vec{x_n}) =
     \frac{1}{\sqrt{N!}} \begin{vmatrix}
@@ -388,7 +402,7 @@ Need integraalid saab arvutada klassikaliselt ja need on põhienergia leidmise �
 See peatükk annab ülevaate molekulaarse süsteemi põhienergia kvantarvutuslikust leidmisest.
 Esimene alapeatükk~\ref{sec:terms} käsitleb kvantarvutuse põhitõdesid.
 Teise alapeatüki~\ref{sec:pea} teemaks on faasi hindamise algoritm ise.
-Kolmas alapeatükk~\ref{sec:hamsim} räägib hamiltoniaani simuleerimisest kvantahelana.
+Kolmas alapeatükk~\ref{sec:hamsim} on hamiltoniaani simuleerimisest kvantahelana.
 Alapeatükid~\ref{sec:terms} ja~\ref{sec:pea} toetuvad Nielseni ja Chuangi~\cite{nielsen+chuang}; Kaye, Laflamme'i ja Mosca~\cite{kaye+laflamme+mosca} ning Whitfield jt~\cite{whitfield+etal2011} käsitlusele.
 Alpeatüki~\ref{sec:hamsim} viited on teksti sees.
 
@@ -630,7 +644,7 @@ Siiski tähistatakse ahelates seda väravatega sarnaselt.
         \fi} \\
         \bottomrule
     \end{tabular}
-    \caption{Töös kasutatud operaatorid, nende definitsioonid maatriksina ja tähistused ahelas.}
+    \caption{Töös kasutatud operaatorid, nende definitsioonid maatriksitena ja tähistused ahelas.}
     \label{tab:gates}
 \end{table}
 
@@ -720,7 +734,7 @@ Näitame, et kvantarvutusliku Fourier' teisenduse realiseerib ahel joonisel~\ref
 Selleks on ilmekas kasutada tähistust
 \begin{multline}
     j_1j_2\cdots j_n.j_{n+1}j_{n+2}\cdots j_m \\
-    = j_1 2^{n-1} j_2 2^{n-2} + \cdots + j_n 2^0 + j_{n+1} 2^{-1} j_{n+2} 2^{-2} + \cdots j_m 2^{-m} \rlap{,}
+    = j_1 2^{n-1} + j_2 2^{n-2} + \cdots + j_n 2^0 + j_{n+1} 2^{-1} + j_{n+2} 2^{-2} + \cdots + j_m 2^{-m} \rlap{,}
     \qquad j_i \in \{0, 1\} \rlap{.}
 \end{multline}
 Teisisõnu, selles ja järgmises jaotises on komaga arvud kahendmurrud, mitte kümnendmurrud.
@@ -1034,7 +1048,7 @@ siis on tagatud, et suurima tõenäosusega mõõtmistulemus on põhienergia \(E_
 
 \section{Hamiltoniaani simuleerimine}\label{sec:hamsim}
 
-See alapeatükk räägib hamiltoniaani simuleerimist kvantahelana.
+See alapeatükk on hamiltoniaani simuleerimist kvantahelana.
 Esiteks tuleb selleks esitada teise kvantiseerimise kujul hamiltoniaan kvantbittide ruumis, mis on võimalik Jordan-Wigneri teisendusega ja mida käsitleb jaotis~\ref{sec:jw}.
 Järgmiseks on vaja kvantbittide ruumis esitatud hamiltoniaani põhjal koostada ajalise arengu operaator, milleks saab kasutada trotteriseerimist ja treppalgoritmi, nagu näitame jaotises~\ref{sec:qcirc}.
 Viimaks on vaja ajalise arengu operaatori põhjal koostada kontrollitud ajalise arengu operaator, mida käsitleb jaotis~\ref{sec:cu}.
@@ -1281,7 +1295,7 @@ Joonisel~\ref{fig:trotexctrl} on näide juhitud ajalise arengu operaatorist, kui
 Kui hamiltoniaanis esineb liige, mis on vaid ühikmaatriksite tensorkorrutis, tuleb seda eraldi arvestada.
 Sellise liikme eksponent on globaalse faasi operaator, mille võib mittejuhitud ajalise arengu operaatori juhul arvestamata jätta.
 Samas juhitud globaalse faasi operaator rakendamine muudab suhtelist faasi ja seda peab arvestama.
-Juhitud globaalse faasi operaatori võib asendanda juhtkvantbitil rakendatud suhtelise faasi operaatoriga, nagu näha joonisel~\ref{fig:globphase}, kus võrduse vasak ja parem pool on samaväärsed globaalse faasi täpsusega.
+Juhitud globaalse faasi operaatori võib asendanda juhtkvantbitil rakendatud faasinihkega, nagu näha joonisel~\ref{fig:globphase}, kus võrduse vasak ja parem pool on samaväärsed globaalse faasi täpsusega.
 
 \begin{figure}[h]
     \centering
@@ -1302,7 +1316,7 @@ Juhitud globaalse faasi operaatori võib asendanda juhtkvantbitil rakendatud suh
         \end{yquantgroup}
     \end{tikzpicture}
     \fi
-    \caption{Juhitud globaalse faasi operaatori saab asendada juhtkvantbitile rakendatud faasi operaatoriga, mille argument peab olema vastupidine. Vasakul ja paremal pool olevate operaatorite mõju kvantregistrile on globaalse faasi täpsusega sama.}
+    \caption{Juhitud globaalse faasi operaatori saab asendada juhtkvantbitile rakendatud faasinihkega, mille argument peab olema vastupidine. Vasakul ja paremal pool olevate operaatorite mõju kvantregistrile on globaalse faasi täpsusega sama.}
     \label{fig:globphase}
 \end{figure}
 
@@ -1355,7 +1369,7 @@ Antud juhul kasutati põhiolekulähedast Hartree-Focki olekut
   \ket{\rm HF}=\ket{1100}\rlap.
 \end{equation}
 Arvutustes taotleti keemilist täpsust, nimelt seda, et arvutatud energia ei erineks võrdlusväärtusest rohkem kui \(\Delta E_{\rm chem}=1{,}6\,{\rm mHa}\).
-Võrdlusväärtuseks loeti täieliku konfiguratsiooni vastasmõju meetodil arvutatu\footnote{Selle võimaldas arvutada teek OpenFermion.}, kuivõrd tegemist on klassikaline meetodiga, mis annab nii täpse tulemuse, kui keemiline baas lubab~\cite{mcardle+etal}.
+Võrdlusväärtuseks loeti täieliku konfiguratsiooni vastastikmõju meetodil arvutatu\footnote{Selle võimaldas arvutada teek OpenFermion.}, kuivõrd tegemist on klassikaline meetodiga, mis annab nii täpse tulemuse, kui keemiline baas lubab~\cite{mcardle+etal}.
 Energiaid otsiti ülemise piiri \(E_h=1\,{\rm Ha}\) ja alumise piiri \(E_l=-2\,{\rm Ha}\) vahelt~--- skaleerimiskonstant oli \(t={1\over E_h-E_l}\).
 Faasi hindamise parameeter $N$, mis on täpsusbittide arv, leiti kriteeriumi
 \begin{equation}
@@ -1388,10 +1402,9 @@ Miinimum vastab tasakaalugeomeetriale, mille puhul on sidemepikkus \(\apporx0{,}
 Keskmisel paneelil on kujutatud, kuidas sõltub energiaviga trotterisammude arvust ja sidemepikkusest.
 Energiavea all peame silmas leitud energia erinevust võrdlusväärtusest.
 Energiavea alaliik on tortteriviga: s.o viga, mis tuleneb lõplikust tortterisammude arvust.
-Keskmiselt paneelilt võib välja lugeda, et trotteriviga on kõikide sidemepikkust jaoks väiksem keemilisest täpsusest alles siis, kui trotterisammude arv on vähemalt \(8\).
+Keskmiselt paneelilt võib välja lugeda, et, kui välja arvata mõned anomaaliad, siis on trotteriviga kõikide sidemepikkuste jaoks väiksem keemilisest täpsusest alles siis, kui trotterisammude arv on vähemalt \(8\).
 Üldine tendents on, et trotteriviga on seda suurem, mida lühem on sidemepikkus.
-% Selline käitumine on põhjendatav: lühem sidemepikkus tähendab suuremat interaktsiooni ja interaktsiooniga on seotud just need liikmed, mis panustavad trotterivikka.
-% Teisisõnu, kui hamiltoniaan koosneks vaid kommuteeruvatest liikmetest, mis oleks tõsi lõpmatu sidemepiikkuse juures, siis trotteriviga ei esineks.
+Anomaaliad oleks võimalik kõrvaldada tõstes trotterisammude arvu, ent antud töös ei jätkunud selleks arvutusressurssi.
 
 Alumine paneel on ahela arvutusliku kulukuse kohta.
 Selgub, et väravate arv sõltub trotterisammude arvust lineaarselt.
@@ -1445,7 +1458,7 @@ Samuti näidati, kuidas hamiltoniaani omaväärtust sobivalt skaleerida, et see 
 
 Töö praktilises osas koostati teoreetilise osa tulemuste põhjal programm, millega arvutati \(\rm H_2\) põhienergia.
 Arvutused viidi läbi kvantarvuti klassikalisel simulaatoril.
-Tulemusi võrreldi täieliku konfiguratsiooni vastasmõju meetodil arvutatutega.
+Tulemusi võrreldi täieliku konfiguratsiooni vastastikmõju meetodil arvutatutega.
 Leiti, et töös esitatud meetod on tõepoolest ülesande lahendamiseks sobiv.
 
 Lõpuks käsitleti töö võimalik edasiarendusi, st seda, kuidas oleks võimalik antud ülesannet lahendada juba praegu, NISQ perioodil.
