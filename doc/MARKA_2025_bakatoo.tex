@@ -151,8 +151,8 @@ Klassikaliselt ei pruugi suuremaid ülesandeid olla kunagi võimalik lahendada, 
 
 {\bf Esialgne lõik:}
 Nimelt on teada mitu kvantalgoritmi, mille teoreetiline efektiivsus ületab klassikalise analoogi oma.
-Komplekssuteooria liigitab ülesandeid nende lahendamisalgoritmide komplekssuse kaudu.
-Komplekssus on algoritmi ressursikulu~--- st mälu- või ajakulu~--- sõltuvus ülesande parameetritest.
+Keerukusteooria liigitab ülesandeid nende lahendamisalgoritmide keerukuse kaudu.
+Keerikus on algoritmi ressursikulu~--- st mälu- või ajakulu~--- sõltuvus ülesande parameetritest.
 Öeldakse, et lahenduvad on polünomiaalse keerukusega, lahendumatud aga eksponentsiaalse keerukusega ülesanded.
 Praegu levinud arusaama põhjal on mitmed klassikaliselt lahendamatud ülesanded kvantarvutuslikult lahendatavad, nende hulgas ka kvantsüsteemide simuleerimise ülesanne.
 Arvatakse, et kvantalgoritmidega saab tulevikus lahendada ülesandeid, mille klassikalist lahendamist peetakse jäädavalt liiga kulukaks.
@@ -167,15 +167,15 @@ On teada, et kehtib
 \[
   \text{P}\subseteq\text{NP}\subseteq\text{EXPTIME}\subseteq\text{EXPSPACE}\rlap,
 \]
-kus \(P\) on polünoomiaalse ajakeerukukusega klassikalise lahendusalgoritmiga, \(\text{NP}\) polünomiaalse ajakeerukukusega lahenduse kontrollimise algoritmiga, \(\text{EXPTIME}\) eksponentsiaalse ajakeerukusega klassikalise lahendusalgoritmiga ja \(\text{EXPSPACE}\) eksponentsiaalse ruumikeerukusega klassikalise lahendusalgoritmiga ülesanded.
+kus \(P\) on polünoomiaalse ajakeerukusega klassikalise lahendusalgoritmiga, \(\text{NP}\) polünomiaalse ajakeerukusega lahenduse kontrollimise algoritmiga, \(\text{EXPTIME}\) eksponentsiaalse ajakeerukusega klassikalise lahendusalgoritmiga ja \(\text{EXPSPACE}\) eksponentsiaalse ruumikeerukusega klassikalise lahendusalgoritmiga ülesanded.
 Samas on teada, et kehtib
 \[
   \text{P}\subseteq\text{BPP}\subseteq\text{BQP}\rlap,
 \]
 kus \(\text{BPP}\) on klassikaliselt suure tõenäosusega lahendavata polünoomiaalse ajakeerukusega lahendusalgoritmiga ülesannete klass ja \(\text{BQP}\) on kvantarvutuslikult suure tõenäosusega lahenduvate polünoomiaalse ajakeerukusega ülesannete klass.
 Informaatika suurim lahendamata küsimus on, kas \(\text{P}=\text{NP}\).
-Arvatakse, et vatus on ei.
-Kvantinformaatika suurimaks lahendamta küsimuseks võib pidada seda, kas \(\text{BPP}=\text{BQP}\).
+Arvatakse, et vastus on ei.
+Kvantinformaatika suurimaks lahendamata küsimuseks võib pidada seda, kas \(\text{BPP}=\text{BQP}\).
 Ka selle küsimuse vastus arvatakse olevat ei.
 Mõlema küsimuse eitav vastus tähendab aga seda, et klassis \(\text{NP}\) on hulk klassikaliselt lahendumatuid, ent kvantarvutuslikult lahenduvaid, ülesandeid.~\cite{stanford, nielsen+chuang}.
 Antud töö kontekstis on oluline, et Scrödingeri võrrandi klassikalise lahendamise mälukasutus sõltub lainefunktsiooni tensorkorrutiste arvust eksponentsiaalselt, ent kvantarvutusliku lahendamise mälukasutus vaid lineaarselt.~\cite{whitfield+etal2011, mcardle+etal, cao+etal, kassal+etal}
@@ -1159,7 +1159,7 @@ Teisisõnu, bitile \(j_n\) tuleb järjest rakenda bittide \(j_1\), \(j_2\), \(\c
 Siis tuleb bitti \(j_n\) pöörata \(z\)-telje sihis nurga \(2a\) võrra.
 Viimaks tuleb bitile \(j_n\) järjest rakendada bittide \(j_{n-1}\), \(j_{n-2}\), \(\cdots\), \(j_1\) juhitud eitusi.
 Bitte, mis \(j_1\), \(j_2\), \(\cdots\), \(j_n\) hulgas ei esine, ei mõjutata.
-Ahelat tuleks mõista nii, et kesksele väravale \(R_z(2a)\) eelnev juhitud eituste osa arvutab bittide \(j_1\), \(j_2\), \(\cdots\), \(j_n\) paarsuse, keskne värav \(R_z(2a)\) teeb sobiva pöörde ja järgnev juhitud eituste osa on paarsuse arvutamise pöördoperaatsioon.
+Ahelat tuleks mõista nii, et kesksele väravale \(R_z(2a)\) eelnev juhitud eituste osa arvutab bittide \(j_1\), \(j_2\), \(\cdots\), \(j_n\) paarsuse, keskne värav \(R_z(2a)\) teeb sobiva pöörde ja järgnev juhitud eituste osa on paarsuse arvutamise pöördoperatsioon.
 
 Üldjuhul koosneb \(h_i\) nii Pauli \(I\) ja \(Z\) kui ka \(X\) ja \(Y\) operaatoritest, kuid \(h_i\) saab alati viia kujule~\eqref{eq:onlyz} rakendades sobivaid baasiteisendusi.
 Vajalikud baasiteisendused on järgmised:
@@ -1342,18 +1342,18 @@ Juhitud globaalse faasi operaatori võib asendanda juhtkvantbitil rakendatud faa
 \begin{tikzpicture}[node distance=2cm]
     \node[draw] (geom) {Ülesande geomeetria};
     \node[draw] (molham) [below of=geom, xshift=-2.5cm] {Üldine molekulaarne hamiltoniaan};
-    \node[draw] (slater) [below of=geom, xshift=2.5cm] {Slateri determiant};
+    \node[draw] (slater) [below of=geom, xshift=2.5cm] {Slateri determinant};
     \node[draw] (elecham) [below of=molham] {Elektrooniline hamiltoniaan};
     \node[draw] (hartfock) [below of=slater] {Hartree-Focki olek};
     \node[draw] (secquant) [below of=elecham] {Teise kvantiseerimise kuju};
-    \node[draw] (occ) [below of=hartfock] {Täiteravude esitus};
+    \node[draw] (occ) [below of=hartfock] {Täitearvude esitus};
     \node[draw] (qubitham) [below of=secquant] {\vbox{\centering\hbox{Hamiltoniaan}\hbox{kvantbittide ruumis}}};
     \node[draw] (qubitstate) [below of=occ] {Olek kvantbittide ruumis};
     \node[draw] (unitary) [below of=qubitham] {Ajalise arengu operaator};
     \node[draw] (pea) [below of=unitary, xshift=2.5cm] {Faasi hindamise algoritm};
     \node[draw] (energy) [below of=pea] {Energia};
     \draw[->] (geom) -- node[anchor=east] {Läbinägelikkus} (molham);
-    \draw[->] (geom) -- node[anchor=west] {Antisümmetria prinstiip} (slater);
+    \draw[->] (geom) -- node[anchor=west] {Antisümmeetria printsiip} (slater);
     \draw[->] (molham) -- node[anchor=east] {\vbox{\hbox{Born-Oppenheimeri}\hbox{lähendus}}}(elecham);
     \draw[->] (slater) -- node[anchor=west] {\vbox{\hbox{Hartree-Focki võrrand}\hbox{ja keemilise baasi valik}}} (hartfock);
     (hartfock);
@@ -1497,7 +1497,7 @@ Siin esitatud lahendamisskeem on siiski võimalikest edasiarendustest üldisem, 
 
 \chapter{Kokkuvõte}
 
-Töös leiti molekulaare süsteemi põhienergia kasutades kvantarvutusliku meetodit.
+Töös leiti molekulaarse süsteemi põhienergia kasutades kvantarvutusliku meetodit.
 Selleks vajalik teooria esitati lähtudes alustõdedest, kusjuures erilist tähelepanu pöörati kvantarvutuslikule osale.
 
 Esmalt käsitletigi elektronstruktuuri ülesande teoreetilist tausta.
