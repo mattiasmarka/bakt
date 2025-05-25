@@ -81,8 +81,8 @@
 \vspace*{1ex}
 
 \noindent\textbf{Lühikokkuvõte:}
-Klassikaliste arvutitega saab täpselt simuleerida vaid lihtsamaid kvantsüsteeme, kuivõrd parim täpne klassikaline algoritm kuulub eksponentsiaalse keerukuse klassi.
-Kvantarvutitega saab kvantsüsteemi simuleerimiseks kasutada faasi hindamise algoritmi, mille keerukus on aga kõigest polünoomne.
+Klassikaliste arvutitega saab täpselt simuleerida vaid lihtsamaid kvantsüsteeme, kuivõrd parim täpne klassikaline algoritm selleks kuulub eksponentsiaalsesse keerukusklassi.
+Kvantarvutitega saab kvantsüsteemi simuleerimiseks kasutada faasi hindamise algoritmi, mille keerukus on aga kõigest polünomiaalne.
 Sestap loodetakse kvantarvutitega tulevikus simuleerida klassikaliste arvutitega täpselt simuleerimiseks liialt keerulisi kvantsüsteeme.
 Üks selliseid süsteeme, mille täpne simuleerimine võib käia klassikalistele arvutitele üle jõu, on molekuli elektronstruktuur.
 Selles töös tutvustataksegi faasi hindamise algoritmil põhinevat meetodit elektronstruktuuri ülesande lahendamiseks, täpsemalt molekulaarse süsteemi põhienergia leidmiseks.
@@ -134,8 +134,8 @@ mechanics, relativity, gravitation, statistical physics, thermodynamics; P410 Th
 
 \chapter{Sissejuhatus}
 
-Kvantarvutuste valdkonna üks peamine arengumotivatsioon oli soov simuleerida keerulisi kvantsüsteeme.
-Juba 1980ndatel, kui valdkond oli alles tekkimas, käisid Juri Manin ja Richard Feynman teineteisest eraldi välja idee, et kvantsüsteemide simuleerimiseks võiks hästi sobida just kvantarvuti~\cite{manin, feynman}.
+Kvantarvutuste valdkonna üks peamine arengumotivatsioon on olnud soov simuleerida keerulisi kvantsüsteeme.
+Juba 1980ndatel, kui valdkond oli alles tekkimas, käisid Juri Manin ja Richard Feynman teineteisest eraldi välja idee, et kvantsüsteemide simuleerimiseks võiks hästi sobida just kvantarvutid~\cite{manin, feynman}.
 
 Klassikaline simuleerimine on füüsikalise süsteemi käitumise uurimine arvutuslikult; kvantsimuleerimine on käitumise uurimine kvantarvutuslikult.
 Simulatsiooniülesande saab analüütiliselt lahendada vaid lihtsaimate kvantsüsteemide jaoks, mille tuntuimad näited on harmooniline ostsillaator ja vesiniku aatom.
@@ -143,27 +143,38 @@ Keerukamate süsteemide klassikaliseks simuleerimiseks kasutatakse numbrilisi me
 Kvantsüsteemi simuleerimisülesande klassikaline lahendamine on aga möödapääsmatult kulukas: Schrödingeri võrrandi klassikalise lahendamise ressursikulu sõltub süsteemi suurusest eksponentsiaalselt~\cite{whitfield+etal2011, mcardle+etal, cao+etal, kassal+etal}.
 Klassikaliselt ei pruugi suuremaid ülesandeid olla kunagi võimalik lahendada, ammugi täpselt, kuid neid võib olla võimalik lahendada kvantarvutuslikult.
 
-Siiani pole ühte kindlat vastust, milles peitub kvantarvutite eelis klassikaliste arvutite ees, ent vastuse põhipunktid on järgmised.
-Klassikaliste arvutite kasulikkus peitub selles, et paistab kehtivat Chruchi-Turingi tees: kõiki arvutusi, mida võib läbi viia matemaatik paberi ja pliiatsiga, võib läbi viia ka arvuti eeldusel, et sellega on võimalik matikda Turingu masina tööd.
-Siin on mõeldud, et matemaatik on eksimatu ja tal ei ole vaja arvutuste läbi viimiseks kasutada loovust: ta vaid järgib algoritmi.
-Turingu masin on üks võimalus realiseerida arvutit: see pole küll kõige efektiivsem, ent teised efektiivsemad meetodid on sellega ekvivalentsed.
-Füüsika seisukohalt on oluline, et paistab kehtivat ka Churchi-Turnigu teesi edasiarendus, Deutchi printsiip, mis ütleb, et Turingu masinaga on võimalik simuleerida kõiki võimalike füüsikalisi protsesse.
-Et Deutschi printsiip kehtib nii klassikaliste kui ka kvantarvutite jaoks, siis võib edasi küsida, miks teist esimesele eelistada.
-Vastuseks sobib viide informaatika suurimale lahendamata probleemile ``kas \(P=NP\)?''
-Kui vastus on ``jah'' (\(P=NP\)), siis pole kvantarvutitel eelist klassikaliste ees.
-Kuna aga ülesanne on lahendamata, siis peame eeldame üldisemat vastust ``ei'' (\(P\subset NP\)).
-Veidike lihtsutavalt öeldes on siis olemas kaks ülesannete klassi: need, mille parim lahendamisalgoritm on polünoomse keerukusklassiga (\(P\)), ja need, mille lahendamine on keerulisem, ent lahendus verifitseerimise keerukusklass on siiski polünoome (\(NP\)).
-Klassi \(NP\) ülesannete lahendamine võib käia üle jõu ka võimsaimatele arvutitele.
-Samas on meil alust arvata, et \(P\subset BQP\), kus \(BQP\) on ülesannete klass, mille lahendamise kavantalgoritm on efektiivsem kui klassikaline~--- sellisel juhul tuleks mõnede ülesannete lahendamiseks eelistada kvantarvuteid.~\cite{stanford, nielsen+chuang}.
-
-Praeguseks on teada mitu kvantalgoritmi, mille teoreetiline efektiivsus ületab parima teadaoleva klassikalise analoogi oma.
-Komplekssusteoorias öeldakse, et lahenduvad on need ülesanded, mille ressursikulu sõltub süsteemi suurusest polünoomselt (klass \(P\)); lahendamatud on need ülesanded, mille ressursikulu sõltub süsteemi suurusest eksponentsiaalselt (klass \(NP\)).
-Mitmed klassikaliselt lahendamatud ülesanded on kvantarvutuslikult lahendatavad, nende hulgas ka kvantsüsteemide simuleerimise ülesanne.
+{\bf Esialgne lõik:}
+Nimelt on teada mitu kvantalgoritmi, mille teoreetiline efektiivsus ületab klassikalise analoogi oma.
+Komplekssuteooria liigitab ülesandeid nende lahendamisalgoritmide komplekssuse kaudu.
+Komplekssus on algoritmi ressursikulu~--- st mälu- või ajakulu~--- sõltuvus ülesande parameetritest.
+Öeldakse, et lahenduvad on polünomiaalse keerukusega, lahendumatud aga eksponentsiaalse keerukusega ülesanded.
+Praegu levinud arusaama põhjal on mitmed klassikaliselt lahendamatud ülesanded kvantarvutuslikult lahendatavad, nende hulgas ka kvantsüsteemide simuleerimise ülesanne.
 Arvatakse, et kvantalgoritmidega saab tulevikus lahendada ülesandeid, mille klassikalist lahendamist peetakse jäädavalt liiga kulukaks.
-Klassikalisest efektiivsemad kvantalgoritmid on võimalikud tänu kvantarvutuse ainulaadsetele vahenditele: muuhulgas superpositsioonide ja põimituse võimalus.
+Klassikalisest efektiivsemad kvantalgoritmid on võimalikud tänu kvantarvutuse ainulaadsetele vahenditele.
 
+{\bf Alternatiivne lõik:}
+Üleüldse arvatakse, et kvantarvutid on paljude ülesannete lahendamiseks efektiivsemad kui klassikalised arvutid.
+Põhjendusi on mitmeid, ent levinum on üldjoontes järgmine.
+Keerukus on algoritmi ressursikulu~--- enamast aja- või ruumikulu~--- sõltuvus ülesande parameetritest.
+Öeldakse, et polünomiaalse ajakeerukusega lahendusalgoritmiga ülesanded on lahenduvad ja eksponentsiaalse ajakeerukusega lahendumatud.
+On teada, et kehtib
+\[
+  \text{P}\subseteq\text{NP}\subseteq\text{EXPTIME}\subseteq\text{EXPSPACE}\rlap,
+\]
+kus \(P\) on polünoomiaalse ajakeerukukusega klassikalise lahendusalgoritmiga, \(\text{NP}\) polünomiaalse ajakeerukukusega lahenduse kontrollimise algoritmiga, \(\text{EXPTIME}\) eksponentsiaalse ajakeerukusega klassikalise lahendusalgoritmiga ja \(\text{EXPSPACE}\) eksponentsiaalse ruumikeerukusega klassikalise lahendusalgoritmiga ülesanded.
+Samas on teada, et kehtib
+\[
+  \text{P}\subseteq\text{BPP}\subseteq\text{BQP}\rlap,
+\]
+kus \(\text{BPP}\) on klassikaliselt suure tõenäosusega lahendavata polünoomiaalse ajakeerukusega lahendusalgoritmiga ülesannete klass ja \(\text{BQP}\) on kvantarvutuslikult suure tõenäosusega lahenduvate polünoomiaalse ajakeerukusega ülesannete klass.
+Informaatika suurim lahendamata küsimus on, kas \(\text{P}=\text{NP}\).
+Arvatakse, et vatus on ei.
+Kvantinformaatika suurimaks lahendamta küsimuseks võib pidada seda, kas \(\text{BPP}=\text{BQP}\).
+Ka selle küsimuse vastus arvatakse olevat ei.
+Mõlema küsimuse eitav vastus tähendab aga seda, et klassis \(\text{NP}\) on hulk klassikaliselt lahendumatuid, ent kvantarvutuslikult lahenduvaid, ülesandeid.~\cite{stanford, nielsen+chuang}.
+Antud töö kontekstis on oluline, et Scrödingeri võrrandi klassikalise lahendamise mälukasutus sõltub lainefunktsiooni tensorkorrutiste arvust eksponentsiaalselt, ent kvantarvutusliku lahendamise mälukasutus vaid lineaarselt.~\cite{whitfield+etal2011, mcardle+etal, cao+etal, kassal+etal}
 
-Siiani pole kvantarvututitega õnnestunud lahendada veel ühtegi sellist praktilise väärtusega probleemi, mida ei saa lahendada on klassikilaliselt.
+Siiski peab möönma, et siiani pole kvantarvututitega õnnestunud lahendada veel ühtegi sellist praktilise väärtusega probleemi, mida ei saa lahendada on klassikilaliselt.
 Nimelt takistab kvantarvutite kasutamist nende ebatäiuslik riistvara: arvutusi segab kõrge müratase~\cite{whitfield+etal2022}.
 
 Ent kvantalgoritme on mõttekas uurida tuleviku tarvis, sest kvantarvutite riistvara areneb pidevalt.
