@@ -151,7 +151,7 @@ Klassikaliselt ei pruugi suuremaid ülesandeid olla kunagi võimalik lahendada, 
 
 {\bf Esialgne lõik:}
 Nimelt on teada mitu kvantalgoritmi, mille teoreetiline efektiivsus ületab klassikalise analoogi oma.
-Keerukusteooria liigitab ülesandeid nende lahendamisalgoritmide keerukuse kaudu.
+Keerukusteooria liigitab ülesandeid nende lahendamisalgoritmide keerukuse põhjal.
 Keerukus on algoritmi ressursikulu~--- st mälu- või ajakulu~--- sõltuvus ülesande parameetritest.
 Öeldakse, et lahenduvad on polünomiaalse keerukusega, lahendumatud aga eksponentsiaalse keerukusega ülesanded.
 Praegu levinud arusaama põhjal on mitmed klassikaliselt lahendamatud ülesanded kvantarvutuslikult lahendatavad, nende hulgas ka kvantsüsteemide simuleerimise ülesanne.
@@ -180,7 +180,7 @@ Ka selle küsimuse vastus arvatakse olevat ei.
 Mõlema küsimuse eitav vastus tähendab aga seda, et klassis \(\text{NP}\) on hulk klassikaliselt lahendumatuid, ent kvantarvutuslikult lahenduvaid, ülesandeid.~\cite{stanford, nielsen+chuang}.
 Antud töö kontekstis on oluline, et Scrödingeri võrrandi klassikalise lahendamise mälukasutus sõltub lainefunktsiooni tensorkorrutiste arvust eksponentsiaalselt, ent kvantarvutusliku lahendamise mälukasutus vaid lineaarselt.~\cite{whitfield+etal2011, mcardle+etal, cao+etal, kassal+etal}
 
-Siiski peab möönma, et siiani pole kvantarvututitega õnnestunud lahendada veel ühtegi sellist praktilise väärtusega probleemi, mida ei saa lahendada on klassikilaliselt.
+Siiski peab möönma, et siiani pole kvantarvututitega õnnestunud lahendada veel ühtegi sellist praktilise väärtusega probleemi, mida ei saa lahendada klassikilaliselt.
 Nimelt takistab kvantarvutite kasutamist nende ebatäiuslik riistvara: arvutusi segab kõrge müratase~\cite{whitfield+etal2022}.
 
 Ent kvantalgoritme on mõttekas uurida tuleviku tarvis, sest kvantarvutite riistvara areneb pidevalt.
@@ -363,7 +363,7 @@ Meie jaoks on oluline, et põhiolekus on täidetud vaid madalaima energiaga orbi
 Hartree-Focki võrrandil on lõpmata palju lahendeid: tulemuseks on lõpmata palju spinnorbitaale.
 Praktikas valitakse arvutamiseks siiski lõpliku suurusega baasifunktsioonide komplekt $\cparen{\phi_i \middle| i = 1, 2, \ldots, K}$, mille tulemusena saadakse lõplik arv spinnorbitaale.
 Baasifunktsioonide komplekti nimetatakse keemiliseks baasiks, kusjuures baasi valik on üks elektronstruktuuri arvutuste olulisi eeldusi.
-Piirangud valikus seab ülesande keerukus: suuremad baasid annavad täpsemad tulemused, ent arvutused nendega on kulukamad.
+Piirangud valikuks seab ülesande keerukus: suuremad baasid annavad täpsemad tulemused, ent arvutused nendega on kulukamad.
 
 \section{Teine kvantiseerimine}\label{sec:secquant}
 
@@ -412,7 +412,8 @@ on ühe keha operaatori maatrikselement ja
 \end{align}
 on kahe keha operaatori maatrikselement.
 Nimetame suurusi \eqref{eq:molint1} ja \eqref{eq:molint2} molekulaarseteks integraalideks, sest need seovad hamiltoniaani esimese ja teise kvantiseerimise kuju.
-Need integraalid saab arvutada klassikaliselt ja need on põhienergia leidmise ülesande esimeseks eelarvutuseks. Teine eelarvutus on Jordan-Wigneri teisendus, mis on teemaks järgmises peatükis.
+Need integraalid saab arvutada klassikaliselt ja need on põhienergia leidmise ülesande eelarvutuseks.
+Järgmiseks sammuks on Jordan-Wigneri teisendus, mis on teemaks järgmises peatükis.
 
 \chapter{Kvantarvutuslik lahendamine}\label{chap:qcomp}
 
@@ -671,7 +672,7 @@ Igat üksikut kvantbitti või -registrit tervikuna tähistab horisontaalne traat
 Traadist vasakul on sisend- ja paremal väljundolekud, kui need on olulised.
 Operaatoreid tähitavad kastid.
 Operaator rakendub igale kavantbitile, mille traat kasti läbib.
-Katsutid~--- otspunktiga lõppevad vertikaalsed jooned~--- ühendavad operaatoreid juhtkvantbitile või juhtkvantregistritega, kui neid on.
+Katsutid~--- otspunktiga lõppevad vertikaalsed jooned~--- ühendavad operaatoreid juhtkvantbittidega või juhtkvantregistritega, kui neid on.
 
 \begin{figure}
     \centering
@@ -950,7 +951,7 @@ Olek pärast juhitud unitaarse operaator rakendamist on seda tähistust arvestad
     \otimes \paren{\alpha \ket{0} + \beta \ket{1}} \rlap{,}
 \end{align}
 mis ongi olek~\eqref{f:peau0}.
-Jätkates ahela uurimisega, tuleb edasi seisundiregistrile mõjuda operaatoritega \(U^{2^1}\), \(U^{2^2}\), \(\ldots\), \(U^{2^{n-1}}\) juhinduvalt vastaval tööregistri \(n-1\)-ndast, \(n-2\)-ndast, \(\ldots\), esimest kvantbitist.
+Jätkates ahela uurimisega, tuleb edasi seisundiregistrile mõjuda operaatoritega \(U^{2^1}\), \(U^{2^2}\), \(\ldots\), \(U^{2^{n-1}}\) juhinduvalt vastavalt tööregistri \((n-1)\)-ndast, \((n-2)\)-ndast, \(\ldots\), esimest kvantbitist.
 Nende operaatorite rakendamise lõpuks on koguregister olekus
 \begin{align}\label{f:peauend}
     \frac{\ket{0}+ e^{2\pi i2^{n-1}\phi}}{\sqrt{2}}
@@ -1038,20 +1039,20 @@ kus $E_l \le E_{min}$ ja $E_h>E_{max}$ on vastavalt alumine ja ülemine piir, mi
 Skeemist nähtub, et primmiga hamiltoniaani jaoks $E_n'=\phi$.
 Algse hamiltoniaani omaväärtuse saab arvutada
 \begin{equation}
-  E_n=\phi t+E_l\rlap.
+  E_n=\frac{\phi}{t}+E_l\rlap.
 \end{equation}
 Niisiis diagonaalkujul esitatud hamiltoniaani omaväärtuse leidmise saab alati taandada faasi hindamisele.
 Ent viimane omadus jääb kehtima ka siis, kui hamiltoniaan pole esitatud diagonaalkujul, sest
 \begin{align}
 H'&=P^{-1}H_D'P\cr
-  &=P^{-1}\frac{1}{t}(H_D'E_{l}I_n)P\cr
-  &=P^{-1}\frac{1}{t}(H_D'P-E_{l}I_n)\cr
-  &=\frac{1}{t}(H-E_{l}I_n)\rlap,\cr
+  &=P^{-1}t(H_D-E_{l}I_n)P\cr
+  &=P^{-1}t(H_DP-E_{l}I_n)\cr
+  &=t(H-E_{l}I_n)\rlap,\cr
 \end{align}
 kus $P$ viib suvalisse esitusse, mis ei pruugi olla diagonaalne.
 Sellega oleme näidanud, et hamiltoniaani omaväärtuste spektrit saab nihutada ja skaleerida nii, et see on pärast väljaloetav perioodilisest faasist.
 
-Et omaväärtuste leidmine ongi elektronstruktuuri ülesande lahendamise kulukaimaid osi, siis on oluline, et faasi hindamise algoritm on sama eesmärgiga klassikalistest algoritmidest efektiivsem.
+Et omaväärtuste leidmine ongi elektronstruktuuri ülesande üks lahendamise kulukaimaid osi, siis on oluline, et faasi hindamise algoritm on sama eesmärgiga klassikalistest algoritmidest efektiivsem.
 Faasi hindamise algoritmiga loodetakse tulevikus lahendada keerulisemaid ülesandeid, kui on võimalik klassikaliselt.
 
 Faasi hindamise algoritmi täiendavaks eeliseks on, et näiteks põhienergia leidmiseks pole vaja teada põhioleku vektori täpset kuju.
@@ -1094,7 +1095,7 @@ Edaspidi tähistame Pauli sõnesid lühidalt
 \begin{equation} h_i=P_{j_1}P_{j_2}\cdots P_{j_k} \rlap{,}\end{equation}
 kus \(j_1\), \(j_2\), $\ldots$, \(j_k\) tähistavad kvantbitte, millele \(P_{j_1}\), \(P_{j_2}\), \(\ldots\), \(P_{j_k}\in\{X,Y,Z\}\) mõjuvad.
 Näiteks \(X_1Y_2Z_4=X\otimes Y\otimes I\otimes Z.\)
-Selles tähistuse peab ruumi dimensiooni, millele Pauli sõne mõjub, määrama konteksti põhjal, sest viimase Pauli \(X\), \(Y\) või \(Z\) operaatori järel võib olla kuitahes palju ühikmaatrikseid.
+Selles tähistuse peab kvantregistri suuruse, millele Pauli sõne mõjub, määrama konteksti põhjal, sest viimase Pauli \(X\), \(Y\) või \(Z\) operaatori järel võib olla kuitahes palju ühikmaatrikseid.
 
 \subsection{Trotteriseerimine ja treppalgoritm}\label{sec:qcirc}
 
@@ -1334,6 +1335,7 @@ Juhitud globaalse faasi operaatori võib asendanda juhtkvantbitil rakendatud faa
     \end{tikzpicture}
     \fi
     \caption{Juhitud globaalse faasi operaatori saab asendada juhtkvantbitile rakendatud faasinihkega, mille argument peab olema vastupidine. Vasakul ja paremal pool olevate operaatorite mõju kvantregistrile on globaalse faasi täpsusega sama.}
+    \label{fig:globphase}
 \end{figure}
 
 \section{Vahekokkuvõte}
@@ -1447,14 +1449,14 @@ Töö tulemused võtab kokku joonis~\ref{fig:h2plots}, mille kohta käivad järg
   \includegraphics[height=.75\vsize]{h2plots.jpg}
   \caption{Üleval: energia sõltuvus sidemepikkusest erinevate trotterisammude arvude jaoks.
     Keskel: energia vea sõltuvus sidemepikkusest erinevate trotterisammude arvude jaos.
-    Nii üleval kui ka keskel on kaheksale trotterisammule, mis on antud ülesandes keemilise täpsuse jaoks piisav, vastav sõltuvus esitatud rõhutatult punktidega joonega.
+    Nii üleval kui ka keskel on kaheksale trotterisammule, mis on antud ülesandes keemilise täpsuse jaoks piisav (v.a anomaaliad), vastav sõltuvus esitatud rõhutatult punktidega joonega.
     All: ahela väravate arvu sõltuvus trotterisammude arvust (vasakpoolne vertikaaltelg, pidevjoon); koostamiseks, kompileerimiseks ja käitamiseks kulunud aegade sõltuvus trotterisammude arvust (parempoolne vertikaaltelg, katkendjoon).}
   \label{fig:h2plots}
 \end{figure}
 
-Ülemisel paneelil on a energia sõltuvus sidemepikkusest.
+Ülemisel paneelil on energia sõltuvus sidemepikkusest.
 Juhul, kui trotterisammude arv on piisav, on sõltuvus selline, nagu võiks füüsikalistel kaalutlustel oodata: energial on üksainus negatiivse väärtusega miinimum.
-Miinimum vastab tasakaalugeomeetriale, mille puhul on sidemepikkus \(\apporx0{,}75\,{\rm Å}\).
+Miinimum vastab tasakaalugeomeetriale, mille puhul on sidemepikkus \(0{,}75\,{\rm Å}\).
 
 Keskmisel paneelil on kujutatud, kuidas sõltub energiaviga trotterisammude arvust ja sidemepikkusest.
 Energiavea all peame silmas leitud energia erinevust võrdlusväärtusest.
