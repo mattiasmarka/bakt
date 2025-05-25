@@ -20,6 +20,12 @@
 
 \usepackage{booktabs}
 
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{positioning}
+\usetikzlibrary{shapes}
+
 \usepackage{graphicx}
 
 \usepackage{yquant} \useyquantlanguage{groups} \newcommand*{\yquanton}{}
@@ -1032,15 +1038,15 @@ kus $E_l \le E_{min}$ ja $E_h>E_{max}$ on vastavalt alumine ja ülemine piir, mi
 Skeemist nähtub, et primmiga hamiltoniaani jaoks $E_n'=\phi$.
 Algse hamiltoniaani omaväärtuse saab arvutada
 \begin{equation}
-  E_n=\frac{\phi}{t}+E_l\rlap.
+  E_n=\phi t+E_l\rlap.
 \end{equation}
 Niisiis diagonaalkujul esitatud hamiltoniaani omaväärtuse leidmise saab alati taandada faasi hindamisele.
 Ent viimane omadus jääb kehtima ka siis, kui hamiltoniaan pole esitatud diagonaalkujul, sest
 \begin{align}
-H&=P^{-1}H_D'P\cr
-  &=P^{-1}\frac{1}{t}(H_D-E_{l}I_n)P\cr
-  &=P^{-1}\frac{1}{t}H_DP-E_{l}I_n\cr
-  &=tH-E_{l}I_n\rlap,\cr
+H'&=P^{-1}H_D'P\cr
+  &=P^{-1}\frac{1}{t}(H_D'E_{l}I_n)P\cr
+  &=P^{-1}\frac{1}{t}(H_D'P-E_{l}I_n)\cr
+  &=\frac{1}{t}(H-E_{l}I_n)\rlap,\cr
 \end{align}
 kus $P$ viib suvalisse esitusse, mis ei pruugi olla diagonaalne.
 Sellega oleme näidanud, et hamiltoniaani omaväärtuste spektrit saab nihutada ja skaleerida nii, et see on pärast väljaloetav perioodilisest faasist.
@@ -1328,13 +1334,53 @@ Juhitud globaalse faasi operaatori võib asendanda juhtkvantbitil rakendatud faa
     \end{tikzpicture}
     \fi
     \caption{Juhitud globaalse faasi operaatori saab asendada juhtkvantbitile rakendatud faasinihkega, mille argument peab olema vastupidine. Vasakul ja paremal pool olevate operaatorite mõju kvantregistrile on globaalse faasi täpsusega sama.}
-    \label{fig:globphase}
 \end{figure}
 
 \section{Vahekokkuvõte}
+\begin{figure}[h]
+    \centering
+\begin{tikzpicture}[node distance=2cm]
+    \node[draw] (geom) {Ülesande geomeetria};
+    \node[draw] (molham) [below of=geom, xshift=-2.5cm] {Üldine molekulaarne hamiltoniaan};
+    \node[draw] (slater) [below of=geom, xshift=2.5cm] {Slateri determiant};
+    \node[draw] (elecham) [below of=molham] {Elektrooniline hamiltoniaan};
+    \node[draw] (hartfock) [below of=slater] {Hartree-Focki olek};
+    \node[draw] (secquant) [below of=elecham] {Teise kvantiseerimise kuju};
+    \node[draw] (occ) [below of=hartfock] {Täiteravude esitus};
+    \node[draw] (qubitham) [below of=secquant] {\vbox{\centering\hbox{Hamiltoniaan}\hbox{kvantbittide ruumis}}};
+    \node[draw] (qubitstate) [below of=occ] {Olek kvantbittide ruumis};
+    \node[draw] (unitary) [below of=qubitham] {Ajalise arengu operaator};
+    \node[draw] (pea) [below of=unitary, xshift=2.5cm] {Faasi hindamise algoritm};
+    \node[draw] (energy) [below of=pea] {Energia};
+    \draw[->] (geom) -- node[anchor=east] {Läbinägelikkus} (molham);
+    \draw[->] (geom) -- node[anchor=west] {Antisümmetria prinstiip} (slater);
+    \draw[->] (molham) -- node[anchor=east] {\vbox{\hbox{Born-Oppenheimeri}\hbox{lähendus}}}(elecham);
+    \draw[->] (slater) -- node[anchor=west] {\vbox{\hbox{Hartree-Focki võrrand}\hbox{ja keemilise baasi valik}}} (hartfock);
+    (hartfock);
+    \draw[->] (elecham) -- node[anchor=east] {\vbox{\hbox{Molekulaarse integraalide}\hbox{arvutamine}}} (secquant);
+    \draw[->] (hartfock) -- node[anchor=west] {Lühitähistus} (occ);
+    \draw[->] (secquant) -- node[anchor=east] {Jordan-Wigneri teisendus} (qubitham);
+    \draw[->] (occ) -- node[anchor=west] {Jordan-Wigneri teisendus} (qubitstate);
+    \draw[->] (qubitham) -- node[anchor=east] {Treppalgoritm ja trotteriseermine} (unitary);
+    \draw[->] (unitary) -- (pea);
+    \draw[->] (qubitstate) -- (pea);
+    \draw[->] (pea) -- node[anchor=west] {Klassikaline arvutus} (energy);
+    \draw [dotted,inner sep=2mm]
+       (-7.5, 1)
+    -- (7.5, 1)
+    |- (7.5, -6.5)
+    -- (-7.5, -6.5)
+    |- cycle
+    ;
+    \node at (-5cm, 0cm) {Klassikalised eelarvutused};
+\end{tikzpicture}
+\caption{Molekulaarse hamiltoniaani energia leidmise sammude skemaatiline kokkuvõte.}
+\label{fig:steps}
+\end{figure}
 
 Nüüdseks on meil olemas kõik osad põhienergia leidmise ülesande lahendamiseks.
-Eelmise peatükis nägime, millised on vajalikud klassikalised eelarvutused~--- nende tulemuseks on hamiltoniaan teise kvantiseerimise kujul ja Hartree-Focki hinnang põhiolekule.
+Sammud võtab kokku joonis~\ref{fig:steps}.
+Eelmises peatükis nägime, millised on vajalikud klassikalised eelarvutused~--- nende tulemuseks on hamiltoniaan teise kvantiseerimise kujul ja Hartree-Focki hinnang põhiolekule.
 Selles peatükis nägime, kuidas see hamiltoniaan realiseerida kvantahelana, kasutades trotteriseerimist ja treppalgoritmi.
 Samuti nägime selles peatükis, kuidas leida niiviisi realiseeritud hamiltoniaani omaväärtused, kui teada on huvipakkuvate omaolekute hinnangud.
 Järgmises peatükis pöörame tähelepanu teoreetiliselt praktilisele.
@@ -1344,7 +1390,7 @@ Järgmises peatükis pöörame tähelepanu teoreetiliselt praktilisele.
 Töö praktilises osas valmis programm molekulaarse süsteemi põhienergia leidmiseks.
 Kõik selleks vajalikud kvantalgoritmid~--- kvantarvutuslik Fourier' teisendus ja pöördteisendus, faasi hindamine, treppalgoritm ja trotteriseerimine~--- implementeeriti iseseisvalt, lähtudes vaid primitiivsetest kvantväravatest.
 Samuti implementeeriti iseseisvalt klassikaline algoritm faasi hindamise tulemuse väljalugemiseks.
-Valmislahendusi kasutati vaid kvantkeemiliste eelarvutuste jaoks: molekulaarsete integraalide arvutamiseks ja Jordan-Wigneri teisenduseks.
+Valmislahendusi kasutati vaid kvantkeemiliste eelarvutuste jaoks~--- molekulaarsete integraalide arvutamiseks~--- ja Jordan-Wigneri teisenduseks.
 Töö teoreetilises osas nägime, et faasi hindamine on universaalne meetod, kuivõrd seda saab kasutada mistahes molekuli mistahes taseme energia leidmiseks.
 Sestap taotleti ka töö praktilises osas universaalsust, milleks oli vajalik ka programmi modulaarsus.
 Praktilise osa tulemuseks on programm, mille osad on kapseldatud ja parametriseeritud: andes ette sobiva hamiltoniaani ja olekuvektori saab programmi kasutada soovitud molekuli soovitud energiataseme leidmiseks, kui muidugi arvutusvõimekus lubab.
@@ -1357,7 +1403,7 @@ Arvutused viidi läbi kasutades kvantarvuti klassikalist simulaatorit~--- seega 
 Töös kasutati läbivalt programmeerimiskeelt Python (versioon 30.10.12)~\cite{python}.
 Kasutatud teegid on järgmised.
 \begin{itemize}
-  \item Molekulaarsete integraalide arvutamiseks ja Jordan-Wigneri teisenduseks~--- klassikalisteks eelarvutusteks kasutati teeki OpenFermion (versioon 1.6.1)~\cite{openfermion}, mis omakorda kasutas kvantkeemiaprogrammi Psi4~\cite{psi4}.
+  \item Molekulaarsete integraalide arvutamiseks ja Jordan-Wigneri teisenduseks kasutati teeki OpenFermion (versioon 1.6.1)~\cite{openfermion}, mis omakorda kasutas kvantkeemiaprogrammi Psi4~\cite{psi4}.
   \item Ahela koostamiseks kasutati teeki Qiskit (versioon 1.6.1)~\cite{qiskit}.
   \item Ahela simuleerimiseks kasutati olekuvektori simulaatorit teegist Qiskit Aer (vt eelmine punkt).
 \end{itemize}
@@ -1373,14 +1419,14 @@ Koostatud programmi lähtekood on saadaval töö repositooriumis~\cite{repo}, ku
 \section{Metoodika}
 
 Arvutati \(\rm H_2\) põhienergia erinevatel sidemepikkustel.
-Lainefunktsiooni esitati keemilises baasis STO-3G, mis põhineb küll vaid kolmel reaalsel Gaussi funktsioonil, ent on siiski tihti praktikas piisavalt täpne~\cite{whitfield+etal2011, omalley+etal}}.
+Lainefunktsiooni esitati keemilises baasis STO-3G, mis põhineb küll vaid kolmel reaalsel Gaussi funktsioonil, ent on siiski tihti praktikas piisavalt täpne~\cite{whitfield+etal2011,omalley+etal}.
 Selleks, et mõõtmistulemuste seast tõenäoliseim vastaks põhienergiale, tuleb enne faasi hindamist seisundiregistrisse tekitada olek, millel on suur kattuvus põhiolekuga.
 Antud juhul kasutati põhiolekulähedast Hartree-Focki olekut
 \begin{equation}
   \ket{\rm HF}=\ket{1100}\rlap.
 \end{equation}
 Arvutustes taotleti keemilist täpsust, nimelt seda, et arvutatud energia ei erineks võrdlusväärtusest rohkem kui \(\Delta E_{\rm chem}=1{,}6\,{\rm mHa}\).
-Võrdlusväärtuseks loeti täieliku konfiguratsiooni vastastikmõju meetodil arvutatu\footnote{Selle võimaldas arvutada teek OpenFermion.}, kuivõrd tegemist on klassikaline meetodiga, mis annab nii täpse tulemuse, kui keemiline baas lubab~\cite{mcardle+etal}.
+Võrdlusväärtuseks loeti täieliku konfiguratsiooni vastastikmõju meetodil arvutatu\footnote{Selle võimaldas arvutada teek OpenFermion.}, kuivõrd tegemist on klassikalise meetodiga, mis annab nii täpse tulemuse, kui keemiline baas lubab~\cite{mcardle+etal}.
 Energiaid otsiti ülemise piiri \(E_h=1\,{\rm Ha}\) ja alumise piiri \(E_l=-2\,{\rm Ha}\) vahelt~--- skaleerimiskonstant oli \(t={1\over E_h-E_l}\).
 Faasi hindamise parameeter $N$, mis on täpsusbittide arv, leiti kriteeriumi
 \begin{equation}
@@ -1473,6 +1519,11 @@ Tulemusi võrreldi täieliku konfiguratsiooni vastastikmõju meetodil arvutatute
 Leiti, et töös esitatud meetod on tõepoolest ülesande lahendamiseks sobiv.
 
 Lõpuks käsitleti töö võimalik edasiarendusi, st seda, kuidas oleks võimalik antud ülesannet lahendada juba praegu, NISQ perioodil.
+
+\chapter*{Tänuavaldus}
+\addcontentsline{toc}{chapter}{Tänuavaldus}  
+
+Autor soovib tänada oma juhendajat, kes panustas töö valmimisse palju aega ja mõttetööd~--- oli üleüldse igakülgselt abiks.
 
 \printbibliography[heading=bibintoc, title=Kirjandus]
 
