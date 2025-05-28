@@ -141,7 +141,7 @@ mechanics, relativity, gravitation, statistical physics, thermodynamics; P410 Th
 \chapter{Sissejuhatus}
 
 Kvantarvutuste valdkonna üks peamine arengumotivatsioon on olnud soov simuleerida keerulisi kvantsüsteeme.
-Juba 1980ndatel, kui valdkond oli alles tekkimas, käisid Juri Manin ja Richard Feynman teineteisest eraldi välja idee, et kvantsüsteemide simuleerimiseks võiks hästi sobida just kvantarvutid~\cite{manin, feynman}.
+Juba 1980ndatel, kui valdkond oli alles tekkimas, käisid Juri Manin ja Richard Feynman teineteisest eraldi välja idee, et kvantsüsteemide simuleerimiseks võiksid hästi sobida just kvantarvutid~\cite{manin, feynman}.
 
 Klassikaline simuleerimine on füüsikalise süsteemi käitumise uurimine arvutuslikult; kvantsimuleerimine on käitumise uurimine kvantarvutuslikult.
 Simulatsiooniülesande saab analüütiliselt lahendada vaid lihtsaimate kvantsüsteemide jaoks, mille tuntuimad näited on harmooniline ostsillaator ja vesiniku aatom.
@@ -1331,7 +1331,7 @@ Juhitud globaalse faasi operaatori võib asendanda juhtkvantbitil rakendatud faa
     \node[draw] (unitary) [below of=qubitham] {Ajalise arengu operaator};
     \node[draw] (pea) [below of=unitary, xshift=2.5cm] {Faasi hindamise algoritm};
     \node[draw] (energy) [below of=pea] {Energia};
-    \draw[->] (geom) -- node[anchor=east] {Läbinägelikkus} (molham);
+    \draw[->] (geom) -- node[anchor=east] {} (molham);
     \draw[->] (geom) -- node[anchor=west] {Antisümmeetria printsiip} (slater);
     \draw[->] (molham) -- node[anchor=east] {\vbox{\hbox{Born-Oppenheimeri}\hbox{lähendus}}}(elecham);
     \draw[->] (slater) -- node[anchor=west] {\vbox{\hbox{Hartree-Focki võrrand}\hbox{ja keemilise baasi valik}}} (hartfock);
@@ -1476,7 +1476,7 @@ Siin esitatud lahendamisskeem on siiski võimalikest edasiarendustest üldisem, 
 
 \chapter{Kokkuvõte}
 
-Töös leiti molekulaarse süsteemi põhienergia kasutades kvantarvutuslikkEt omaväärtusEt omaväärtusu meetodit.
+Töös leiti molekulaarse süsteemi põhienergia kasutades kvantarvutusliku meetodit
 Selleks vajalik teooria esitati lähtudes alustõdedest, kusjuures erilist tähelepanu pöörati kvantarvutuslikule osale.
 
 Esmalt käsitletigi elektronstruktuuri ülesande teoreetilist tausta.
@@ -1532,6 +1532,5 @@ Kinnitan, et lihtlitsentsi andmisega ei riku ma teiste isikute intellektuaaloman
 \noindent
 Mattias Märka\\ %author's name
 \textbf{\textsl{28.05.2025}}
-}}%\newcommand\EstLicence
 
 \end{document}
