@@ -149,7 +149,6 @@ Keerukamate süsteemide klassikaliseks simuleerimiseks kasutatakse numbrilisi me
 Kvantsüsteemi simuleerimisülesande klassikaline lahendamine on aga möödapääsmatult kulukas: Schrödingeri võrrandi klassikalise lahendamise ressursikulu sõltub süsteemi suurusest eksponentsiaalselt~\cite{whitfield+etal2011, mcardle+etal, cao+etal, kassal+etal}.
 Klassikaliselt ei pruugi suuremaid ülesandeid olla kunagi võimalik lahendada, ammugi täpselt, kuid neid võib olla võimalik lahendada kvantarvutuslikult.
 
-{\bf Esialgne lõik:}
 Nimelt on teada mitu kvantalgoritmi, mille teoreetiline efektiivsus ületab klassikalise analoogi oma.
 Keerukusteooria liigitab ülesandeid nende lahendamisalgoritmide keerukuse põhjal.
 Keerukus on algoritmi ressursikulu~--- st mälu- või ajakulu~--- sõltuvus ülesande parameetritest.
@@ -157,28 +156,6 @@ Keerukus on algoritmi ressursikulu~--- st mälu- või ajakulu~--- sõltuvus üle
 Praegu levinud arusaama põhjal on mitmed klassikaliselt lahendamatud ülesanded kvantarvutuslikult lahendatavad, nende hulgas ka kvantsüsteemide simuleerimise ülesanne.
 Arvatakse, et kvantalgoritmidega saab tulevikus lahendada ülesandeid, mille klassikalist lahendamist peetakse jäädavalt liiga kulukaks.
 Klassikalisest efektiivsemad kvantalgoritmid on võimalikud tänu kvantarvutuse ainulaadsetele vahenditele.
-
-{\bf Alternatiivne lõik:}
-Üleüldse arvatakse, et kvantarvutid on paljude ülesannete lahendamiseks efektiivsemad kui klassikalised arvutid.
-Põhjendusi on mitmeid, ent levinum on üldjoontes järgmine.
-Keerukus on algoritmi ressursikulu~--- enamast aja- või ruumikulu~--- sõltuvus ülesande parameetritest.
-Öeldakse, et polünomiaalse ajakeerukusega lahendusalgoritmiga ülesanded on lahenduvad ja eksponentsiaalse ajakeerukusega lahendumatud.
-On teada, et kehtib
-\[
-  \text{P}\subseteq\text{NP}\subseteq\text{EXPTIME}\subseteq\text{EXPSPACE}\rlap,
-\]
-kus \(P\) on polünoomiaalse ajakeerukusega klassikalise lahendusalgoritmiga, \(\text{NP}\) polünomiaalse ajakeerukusega lahenduse kontrollimise algoritmiga, \(\text{EXPTIME}\) eksponentsiaalse ajakeerukusega klassikalise lahendusalgoritmiga ja \(\text{EXPSPACE}\) eksponentsiaalse ruumikeerukusega klassikalise lahendusalgoritmiga ülesanded.
-Samas on teada, et kehtib
-\[
-  \text{P}\subseteq\text{BPP}\subseteq\text{BQP}\rlap,
-\]
-kus \(\text{BPP}\) on klassikaliselt suure tõenäosusega lahendavata polünoomiaalse ajakeerukusega lahendusalgoritmiga ülesannete klass ja \(\text{BQP}\) on kvantarvutuslikult suure tõenäosusega lahenduvate polünoomiaalse ajakeerukusega ülesannete klass.
-Informaatika suurim lahendamata küsimus on, kas \(\text{P}=\text{NP}\).
-Arvatakse, et vastus on ei.
-Kvantinformaatika suurimaks lahendamata küsimuseks võib pidada seda, kas \(\text{BPP}=\text{BQP}\).
-Ka selle küsimuse vastus arvatakse olevat ei.
-Mõlema küsimuse eitav vastus tähendab aga seda, et klassis \(\text{NP}\) on hulk klassikaliselt lahendumatuid, ent kvantarvutuslikult lahenduvaid, ülesandeid.~\cite{stanford, nielsen+chuang}.
-Antud töö kontekstis on oluline, et Scrödingeri võrrandi klassikalise lahendamise mälukasutus sõltub lainefunktsiooni tensorkorrutiste arvust eksponentsiaalselt, ent kvantarvutusliku lahendamise mälukasutus vaid lineaarselt.~\cite{whitfield+etal2011, mcardle+etal, cao+etal, kassal+etal}
 
 Siiski peab möönma, et siiani pole kvantarvututitega õnnestunud lahendada veel ühtegi sellist praktilise väärtusega probleemi, mida ei saa lahendada klassikilaliselt.
 Nimelt takistab kvantarvutite kasutamist nende ebatäiuslik riistvara: arvutusi segab kõrge müratase~\cite{whitfield+etal2022}.
@@ -209,7 +186,7 @@ Metoodikat, tulemusi ja edasiarendusi käsitleb peatükk~\ref{chap:results}.
 Kuigi töös käsitletav kvantarvutuslik meetod sobib molekulaarse süsteemi mistahes omaoleku energia leidmiseks, siis piirdume käsitluse lihtsuse huivides siin töös põhioleku energia leidmisega.
 Viimast kitsendust on eeldatud ka siin peatükis.
 Põhioleku energia leidmiseks on tarvis teada, milline on elektronkatet iseloomustav hamiltoniaan \(H\).
-Hiljem näeme, et samuti on vajalik põhioleku lainefunktsiooni $\Psi_0$ lähendus, kuid see ei pea olema täpne.
+Hiljem näeme, et samuti on vajalik põhioleku lainefunktsiooni $\Psi_0$ lähendus.
 Selle peatüki teemaks ongi arvutused hamiltoniaani ja põhioleku lainefunktsiooni lähenduse leidmiseks.
 Need arvutused on ülesande lahendamiseks vajalikud, kuid mitte töö põhiosa, sestap nimetame neid eelarvutusteks.
 Peatükis on vaatluse all järgmised teemad.
@@ -395,7 +372,7 @@ Kehtivad kommutatsioonireeglid
     \qquad \sparen{a_i, a_j^\dagger} = \delta_{ij} \rlap{.}
 \end{align}
 
-Tekke- ja kaoperaatorite kaudu saab hamiltoniaani esitada teise kvantiseerimise kujul järgmiselt,
+Tekke- ja kaooperaatorite kaudu saab hamiltoniaani esitada teise kvantiseerimise kujul järgmiselt,
 \begin{align}
     H = \sum_{pq}h_{pq}a_p^\dagger a_q
     + \frac{1}{2} \sum_{pqrs} a_p^\dagger a_q^\dagger a_r a_s \rlap{,}
@@ -430,7 +407,7 @@ Selles töös kasutame kvantarvutuse ahelamudelit, mille põhimõisted on kvantb
 Kvantahelamudel sarnaneb üldpildis klassikalisele ahelamudelile.
 Järgneb kvantahelamudeli lühike ülevaade rõhutamaks mõnesid erinevusi.
 
-Kvantarvutuses on informatsiooni põhiühikuks kvantbitt, mis on Hilberti ruumi objekt.
+Kvantarvutuses on informatsiooni põhiühikuks kvantbitt, mis on Hilberti ruumi element.
 Kõik kvantbiti olekud saab kirja panna kujul
 \begin{align}
     \ket{\phi} = \alpha \ket{0} + \beta \ket{1} \rlap{,}
@@ -1052,7 +1029,7 @@ H'&=P^{-1}H_D'P\cr
 kus $P$ viib suvalisse esitusse, mis ei pruugi olla diagonaalne.
 Sellega oleme näidanud, et hamiltoniaani omaväärtuste spektrit saab nihutada ja skaleerida nii, et see on pärast väljaloetav perioodilisest faasist.
 
-Et omaväärtuste leidmine ongi elektronstruktuuri ülesande üks lahendamise kulukaimaid osi, siis on oluline, et faasi hindamise algoritm on sama eesmärgiga klassikalistest algoritmidest efektiivsem.
+Et omaväärtuste leidmine ongi elektronstruktuuri ülesande lahendamise üks kulukaimaid osi, siis on oluline, et faasi hindamise algoritm on sama eesmärgiga klassikalistest algoritmidest efektiivsem.
 Faasi hindamise algoritmiga loodetakse tulevikus lahendada keerulisemaid ülesandeid, kui on võimalik klassikaliselt.
 
 Faasi hindamise algoritmi täiendavaks eeliseks on, et näiteks põhienergia leidmiseks pole vaja teada põhioleku vektori täpset kuju.
@@ -1077,7 +1054,7 @@ Antud töös kasutame teise kvantiseerimise formalismis antud ülesande kvantbit
 Selle põhimõte on järgmine.
 Seos täitearvude esituses lainefunktsiooni ja sellele vastava kvantregistri oleku vahel on lihtsaim võimalik: täitmata orbitaalile vastab kvantbitt olekus \(\ket{0}\) ja täidetud orbitaalile kvantbitt olekus \(\ket{1}\).
 % Tuleb arvestada, et elektronid molekulaarses süsteemis on eristamatud, kuid kvantbitid kvantregistris on eristatavad.
-Hamiltoniaani kodeerimiseks seostatakse Focki ruumi tekke- ja kaoperaatorid \(\cparen{a_i, a_i^\dagger}\) kvantbittide ruumi Pauli operaatoritega \(\cparen{I, X, Y, Z}\) sedasi, et
+Hamiltoniaani kodeerimiseks seostatakse Focki ruumi tekke- ja kaooperaatorid \(\cparen{a_i, a_i^\dagger}\) kvantbittide ruumi Pauli operaatoritega \(\cparen{I, X, Y, Z}\) sedasi, et
 \begin{align}
     a_j &\mapsto I^{\otimes j-1} \otimes \frac{X+iY}{2} \otimes Z^{N-j-1} \rlap{,} \\
     a_j^\dagger &\mapsto I^{\otimes j-1} \otimes \frac{X-iY}{2} \otimes Z^{N-j-1} \rlap{,}
@@ -1359,7 +1336,7 @@ Juhitud globaalse faasi operaatori võib asendanda juhtkvantbitil rakendatud faa
     \draw[->] (molham) -- node[anchor=east] {\vbox{\hbox{Born-Oppenheimeri}\hbox{lähendus}}}(elecham);
     \draw[->] (slater) -- node[anchor=west] {\vbox{\hbox{Hartree-Focki võrrand}\hbox{ja keemilise baasi valik}}} (hartfock);
     (hartfock);
-    \draw[->] (elecham) -- node[anchor=east] {\vbox{\hbox{Molekulaarse integraalide}\hbox{arvutamine}}} (secquant);
+    \draw[->] (elecham) -- node[anchor=east] {\vbox{\hbox{Molekulaarsete integraalide}\hbox{arvutamine}}} (secquant);
     \draw[->] (hartfock) -- node[anchor=west] {Lühitähistus} (occ);
     \draw[->] (secquant) -- node[anchor=east] {Jordan-Wigneri teisendus} (qubitham);
     \draw[->] (occ) -- node[anchor=west] {Jordan-Wigneri teisendus} (qubitstate);
@@ -1467,7 +1444,7 @@ Anomaaliad oleks võimalik kõrvaldada tõstes trotterisammude arvu, ent antud t
 
 Alumine paneel on ahela arvutusliku kulukuse kohta.
 Selgub, et väravate arv sõltub trotterisammude arvust lineaarselt.
-Samas ahela klassikalise simuleerimise käiguaeg sõltub trotterisammude arvust eksponentsiaalselt, jõudes \(10\) trotterisammu juures \(20\,{\rm min}\).
+Samas ahela klassikalise simuleerimise käiguaeg sõltub trotterisammude arvust eksponentsiaalselt, jõudes \(10\) trotterisammu juures \(20\,{\rm minutini}\).
 % Viimasest kahest väitest nähtub, et kvantahelat klassikaliselt simuleerides ei ole võimalik saavutada seda ajavõitu, mida kvantalgortm muidu klassikalise ees võimaldab.
 Lisaks on alumiselt paneelilt näha, et ka ahela koostamise ja kompileerimise ajad pole tühised.
 
@@ -1499,7 +1476,7 @@ Siin esitatud lahendamisskeem on siiski võimalikest edasiarendustest üldisem, 
 
 \chapter{Kokkuvõte}
 
-Töös leiti molekulaarse süsteemi põhienergia kasutades kvantarvutusliku meetodit.
+Töös leiti molekulaarse süsteemi põhienergia kasutades kvantarvutuslikkEt omaväärtusEt omaväärtusu meetodit.
 Selleks vajalik teooria esitati lähtudes alustõdedest, kusjuures erilist tähelepanu pöörati kvantarvutuslikule osale.
 
 Esmalt käsitletigi elektronstruktuuri ülesande teoreetilist tausta.
@@ -1528,5 +1505,33 @@ Lõpuks käsitleti töö võimalik edasiarendusi, st seda, kuidas oleks võimali
 Autor soovib tänada oma juhendajat, kes panustas töö valmimisse palju aega ja mõttetööd~--- oli üleüldse igakülgselt abiks.
 
 \printbibliography[heading=bibintoc, title=Kirjandus]
+
+\chapter*{Lihtlitsents lõputöö reprodutseerimiseks ja üldsusele kättesaadavaks tegemiseks}
+\addcontentsline{toc}{chapter}{Litsents}  
+
+Mina, \textbf{Mattias Märka},
+
+\begin{enumerate}
+\item
+annan Tartu Ülikoolile tasuta loa (lihtlitsentsi) minu loodud teose
+\par
+\textbf{Molekulaarse hamiltoniaani põhioleku
+energia leidmine faasi hindamise algoritmi
+abil}, %title of thesis
+mille juhendaja on Veiko Palge, %supervisor's name(s)
+reprodutseerimiseks eesmärgiga seda säilitada, sealhulgas lisada digitaalarhiivi DSpace kuni autoriõiguse kehtivuse lõppemiseni.
+\par
+\item
+Annan Tartu Ülikoolile loa teha punktis 1 nimetatud teos üldsusele kättesaadavaks Tartu Ülikooli veebikeskkonna, sealhulgas digitaalarhiivi DSpace kaudu Creative Commonsi litsentsiga CC BY NC ND 3.0, mis lubab autorile viidates teost reprodutseerida, levitada ja üldsusele suunata ning keelab luua tuletatud teost ja kasutada teost ärieesmärgil, kuni autoriõiguse kehtivuse lõppemiseni.
+\item
+Olen teadlik, et punktides 1 ja 2 nimetatud õigused jäävad alles ka autorile.
+\item
+Kinnitan, et lihtlitsentsi andmisega ei riku ma teiste isikute intellektuaalomandi ega isikuandmete kaitse õigusaktidest tulenevaid õigusi. 
+\end{enumerate}
+
+\noindent
+Mattias Märka\\ %author's name
+\textbf{\textsl{28.05.2025}}
+}}%\newcommand\EstLicence
 
 \end{document}
